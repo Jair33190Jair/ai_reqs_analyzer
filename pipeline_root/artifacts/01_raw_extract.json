@@ -1,19 +1,32 @@
 {
-  "source": {
-    "filename": "spec.pdf",
-    "type": "pdf",
-    "sha256": "<hash>",
-    "page_count": 6
-  },
-  "test": {
-    "name": "jair"
-  },
-  "pages": [
-    { "page": 1, "text": "..." },
-    { "page": 2, "text": "..." }
-  ],
-  "warnings": [
-    "detected_ligatures",
-    "line_hyphenation_present"
-  ]
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["source", "pages", "warnings"],
+  "properties": {
+    "source": {
+      "type": "object",
+      "required": ["filename", "type", "sha256", "page_count"],
+      "properties": {
+        "filename":   { "type": "string" },
+        "type":       { "type": "string" },
+        "sha256":     { "type": "string" },
+        "page_count": { "type": "integer" }
+      }
+    },
+    "pages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["page", "text"],
+        "properties": {
+          "page": { "type": "integer" },
+          "text": { "type": "string" }
+        }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
 }

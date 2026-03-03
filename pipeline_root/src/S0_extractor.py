@@ -8,9 +8,10 @@ import re
 from pathlib import Path
 
 # --- Configuration ---
-SCHEMA_PATH = Path(__file__).parent.parent / "artifacts" / "01_raw_extract.json"
-INPUT_DIR   = Path("input")
-OUTPUT_DIR  = Path("artifacts")
+ROOT_DIR = Path(__file__).parent.parent
+SCHEMA_PATH = ROOT_DIR / "artifacts" / "01_raw_extract.json"
+INPUT_DIR   = ROOT_DIR / "input"
+OUTPUT_DIR  = ROOT_DIR / "artifacts"
 MAX_PAGES   = 10
 MAX_CHARS   = 30_000
 
@@ -76,13 +77,16 @@ def extract_pdf_to_json(pdf_path: str | Path) -> dict:
 def resolve_output_path(input_path: Path) -> Path:
     spec_folder = input_path.relative_to(INPUT_DIR).parent
     output_dir = OUTPUT_DIR / spec_folder
-    output_dir.mkdir(parents=True, exist_ok=True)
+    output_dir.mkdir(parents=True, exist_ok=True) # output.dir created if not exist, if it exists -> no error raised
     return output_dir / input_path.with_suffix(".json").name
 
 
 def save_result(input_path: Path) -> Path:
     result = extract_pdf_to_json(input_path)
-    jsonschema.validate(instance=result, schema=load_schema())
+    try:
+        jsonschema.validate(instance=result, schema=load_schema())
+    except jsonschema.ValidationError as e:
+        raise ValueError(f"Extracted data does not conform to schema: {e.message}")
     output_path = resolve_output_path(input_path)
     with open(output_path, "w", encoding="utf-8") as f:
         # python dict/list -> json
@@ -97,7 +101,7 @@ def main() -> None:
         sys.exit(1)
 
     try:
-        output_path = save_result(Path(sys.argv[1]))
+        output_path = save_result(Path(sys.argv[1]).resolve())
         logging.info(f"Saved to {output_path}")
     except (FileNotFoundError, ValueError) as e:
         logging.error(e)
