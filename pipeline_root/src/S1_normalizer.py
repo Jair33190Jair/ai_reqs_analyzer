@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-OUTPUT_FILENAME = "02_normalized_text.json"
+OUTPUT_FILENAME = "01_normalized_text.json"
 
 LIGATURE_MAP = {
     "ﬀ": "ff",

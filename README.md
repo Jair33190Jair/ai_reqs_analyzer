@@ -51,12 +51,12 @@ Each stage writes an intermediate artifact to `pipeline_root/artifacts/<project>
 
 | File                    | Stage         | Contents                              |
 |-------------------------|---------------|---------------------------------------|
-| `01_raw_extract.json`   | S0 Extractor  | Per-page text, SHA-256, warnings      |
-| `02_normalized_text.json` | S1 Normalizer | Cleaned text, normalization metadata |
-| `03_after_preflight.json` | S2 Preflight  | Check results, score, gate decision  |
-| `04_llm_structured.json`  | S3 Structurer | Structured spec (documents, chapters, requirements, info nodes) |
-| `05_llm_analyzed.json`    | S4 Analyzer   | Flags, statistics, AI analysis summary |
-| `06_report.html`          | S5 Renderer   | Human-readable report                |
+| `00_raw_extract.json`   | S0 Extractor  | Per-page text, SHA-256, warnings      |
+| `01_normalized_text.json` | S1 Normalizer | Cleaned text, normalization metadata |
+| `02_after_preflight.json` | S2 Preflight  | Check results, score, gate decision  |
+| `03_llm_structured.json`  | S3 Structurer | Structured spec (documents, chapters, requirements, info nodes) |
+| `04_llm_analyzed.json`    | S4 Analyzer   | Flags, statistics, AI analysis summary |
+| `05_report.html`          | S5 Renderer   | Human-readable report                |
 
 ---
 
@@ -94,7 +94,7 @@ cd pipeline_root
 python src/S0_extractor.py input/<project>/<spec>.pdf
 
 # S1 — Normalize extracted text
-python src/S1_normalizer.py artifacts/<project>/01_raw_extract.json
+python src/S1_normalizer.py artifacts/<project>/00_raw_extract.json
 
 # S2–S5 — In development (see Status below)
 ```

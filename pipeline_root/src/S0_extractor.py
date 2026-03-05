@@ -9,7 +9,7 @@ from pathlib import Path
 
 # --- Configuration ---
 ROOT_DIR = Path(__file__).parent.parent
-SCHEMA_PATH = ROOT_DIR / "artifacts" / "01_raw_extract.json"
+SCHEMA_PATH = ROOT_DIR / "artifacts" / "00_raw_extract.json"
 INPUT_DIR   = ROOT_DIR / "input"
 OUTPUT_DIR  = ROOT_DIR / "artifacts"
 MAX_PAGES   = 10
@@ -69,6 +69,7 @@ def extract_pdf_to_json(pdf_path: str | Path) -> dict:
             "type": "pdf",
             "sha256": compute_sha256(pdf_path),
             "page_count": len(pages),
+            "char_count": total_chars,
         },
         "pages": pages,
         "warnings": warnings,
@@ -82,7 +83,7 @@ def resolve_output_path(input_path: Path) -> Path:
         raise ValueError(f"Input path is not within INPUT_DIR: {input_path}")
     output_dir = OUTPUT_DIR / spec_folder
     output_dir.mkdir(parents=True, exist_ok=True)
-    return output_dir / input_path.with_suffix(".json").name
+    return output_dir / f"00_raw_extract_{input_path.stem}.json"
 
 def save_result(input_path: Path) -> Path:
     result = extract_pdf_to_json(input_path)

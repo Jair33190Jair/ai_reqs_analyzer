@@ -7,8 +7,8 @@
 #   - Detect "shall" usage and section headings
 #   - Compute a quality score and decide whether to proceed to LLM
 #
-# Input:  02_normalized_text.json
-# Output: 03_after_preflight.json
+# Input:  01_normalized_text.json
+# Output: 02_after_preflight.json
 #
 # Gate policy: LLM is called only if score >= 0.80 and >= 5 requirements detected.
 # See architecture/plan_v1.md §6 for full spec.

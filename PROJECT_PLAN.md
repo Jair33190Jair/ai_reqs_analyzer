@@ -10,7 +10,7 @@ The fastest path to value is end-to-end validation, not stage-by-stage perfectio
 > Design is done. One diagram to capture it, then freeze.
 
 - [ ] **0.0** `architecture/pipeline_overview.puml` — one diagram showing all 6 stages
-      and the JSON artifact between each (e.g. S0 → `01_raw_extract.json` → S1).
+      and the JSON artifact between each (e.g. S0 → `00_raw_extract.json` → S1).
       This is the single source of truth. Updated only if a stage interface changes.
       Each stage file gets a one-line header comment: `# See: plan_v1.md §4`
 

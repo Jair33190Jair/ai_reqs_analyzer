@@ -10,7 +10,8 @@
         "filename":   { "type": "string" },
         "type":       { "type": "string" },
         "sha256":     { "type": "string" },
-        "page_count": { "type": "integer" }
+        "page_count": { "type": "integer" },
+        "char_count": { "type": "integer" }
       }
     },
     "pages": {

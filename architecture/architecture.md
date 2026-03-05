@@ -29,7 +29,7 @@ This is designed as an **engineering-grade pipeline**, not a prompt experiment.
 # 2️⃣ High-Level Architecture
 
 ```
-[Input Spec: PDF/DOCX]
+[Input Spec: PDF]
         |
         v
 (1) Extractor
@@ -66,13 +66,13 @@ pipeline_run/
   input/
     spec.pdf | spec.docx
   artifacts/
-    01_raw_extract.json
-    02_normalized_text.json
-    03_preflight.json
-    04_spec.json
-    05_analysis.json
-    06_report.html
-    06_report.pdf          (optional)
+    00_raw_extract.json
+    01_normalized_text.json
+    02_preflight.json
+    03_spec.json
+    04_analysis.json
+    05_report.html
+    05_report.pdf          (optional)
   logs/
     pipeline.log
 ```
@@ -85,33 +85,16 @@ All stages must be reproducible from stored artifacts.
 
 ## Purpose
 
-Extract raw per-page text from PDF or DOCX.
+Extract raw per-page text from PDF
 
 ## Input
 
 * Born-digital PDF (preferred)
-* DOCX (preferred for premium tier)
 
-## Output → `01_raw_extract.json`
+## Output → `00_raw_extract.json`
 
-```json
-{
-  "source": {
-    "filename": "spec.pdf",
-    "type": "pdf",
-    "sha256": "<hash>",
-    "page_count": 6
-  },
-  "pages": [
-    { "page": 1, "text": "..." },
-    { "page": 2, "text": "..." }
-  ],
-  "warnings": [
-    "detected_ligatures",
-    "line_hyphenation_present"
-  ]
-}
-```
+@import "../pipeline_root/artifacts/00_raw_extract.json"
+
 
 ## Acceptance Criteria
 
@@ -130,13 +113,13 @@ Reduce token waste and stabilize downstream parsing.
 
 ## Input
 
-`01_raw_extract.json`
+`00_raw_extract.json`
 
-## Output → `02_normalized_text.json`
+## Output → `01_normalized_text.json`
 
 ```json
 {
-  "source_ref": "01_raw_extract.json",
+  "source_ref": "00_raw_extract.json",
   "normalization": {
     "dehyphenation": true,
     "ligature_map": true,
@@ -194,9 +177,9 @@ Avoid wasting money on broken input.
 
 ## Input
 
-`02_normalized_text.json`
+`01_normalized_text.json`
 
-## Output → `03_preflight.json`
+## Output → `02_preflight.json`
 
 ```json
 {
@@ -245,7 +228,7 @@ Otherwise:
 
 Convert normalized text into structured specification JSON.
 
-## Output → `04_spec.json`
+## Output → `03_spec.json`
 
 Schema: `spec.schema.v1`
 
@@ -305,7 +288,7 @@ Schema: `spec.schema.v1`
 
 Assess quality, completeness, safety, and sellable insights.
 
-## Output → `05_analysis.json`
+## Output → `04_analysis.json`
 
 Schema: `analysis.schema.v1`
 
@@ -372,8 +355,8 @@ Transform JSON into human-consumable report.
 
 ## Output
 
-* `06_report.html` (mandatory)
-* `06_report.pdf` (optional)
+* `05_report.html` (mandatory)
+* `05_report.pdf` (optional)
 
 ## Report Sections
 
@@ -399,7 +382,6 @@ Transform JSON into human-consumable report.
 * 3 medium specs (15–30 pages)
 * Include:
 
-  * 1 DOCX
   * 1 born-digital PDF
   * 1 scanned PDF (expected fail)
   * 1 table-heavy layout
