@@ -81,7 +81,7 @@ All stages must be reproducible from stored artifacts.
 
 ---
 
-# 4️⃣ Stage (1) Extractor
+# 4️⃣ Stage (0) Extractor
 
 ## Purpose
 
@@ -105,7 +105,7 @@ Extract raw per-page text from PDF
 
 ---
 
-# 5️⃣ Stage (2) Normalizer
+# 5️⃣ Stage (1) Normalizer
 
 ## Purpose
 
@@ -128,7 +128,11 @@ Reduce token waste and stabilize downstream parsing.
   },
   "pages": [
     { "page": 1, "text": "..." }
-  ]
+  ],
+  "structural_patterns": {
+    "req_id_pattern": "<regex>",
+    "section_pattern": "<regex>"
+  }
 }
 ```
 
@@ -157,19 +161,18 @@ Replace:
 Join lines only if:
 
 * previous line does NOT end in `. : ;`
-* next line starts lowercase or number
+* next line starts lowercase
+* this or next line is standalone requirement id
 
 ### 4. Preserve Requirement IDs
 
 Never merge in a way that breaks:
 
-```
-SYS-[A-Z]{2,8}-\d{3}
-```
+* Requirements IDs
 
 ---
 
-# 6️⃣ Stage (3) Preflight — Cost Protection Layer
+# 6️⃣ Stage (2) Preflight — Cost Protection Layer
 
 ## Purpose
 
@@ -188,8 +191,9 @@ Avoid wasting money on broken input.
     "req_id_count": 42,
     "unique_req_id_count": 42,
     "duplicate_req_ids": [],
-    "missing_id_gaps": [],
-    "section_detected": true,
+    "sections_count": 11,
+    "unique_section_count": 11,
+    "duplicate_sections": [],
     "possible_table_layout": false
   },
   "score": 0.92,
@@ -200,11 +204,9 @@ Avoid wasting money on broken input.
 
 ## Deterministic Checks
 
-* Regex: `\bSYS-[A-Z]{2,8}-\d{3}\b`
+* Count requirements with regex from normalizer
 * Count duplicates
-* Detect numeric gaps
-* Detect “shall” usage
-* Basic section heading heuristic
+* Count sections with regex from normalizer
 * Detect suspicious table patterns
 
 ## Gate Policy
@@ -222,7 +224,7 @@ Otherwise:
 
 ---
 
-# 7️⃣ Stage (4) LLM Structurer
+# 7️⃣ Stage (3) LLM Structurer
 
 ## Purpose
 
@@ -251,6 +253,7 @@ Schema: `spec.schema.v1`
       {
         "section_id": "3.1",
         "title": "Navigation",
+        "content": "Navigation is the blablabla",
         "path": ["3", "3.1"],
         "page_range": [2, 2]
       }
@@ -260,13 +263,9 @@ Schema: `spec.schema.v1`
     {
       "req_id": "SYS-FUNC-001",
       "kind": "functional",
-      "shall": true,
-      "text": "...",
+      "content": "...",
       "section_id": "3.1",
-      "evidence": {
-        "page": 2,
-        "quote": "short excerpt"
-      }
+      "page": 2
     }
   ]
 }
@@ -278,11 +277,11 @@ Schema: `spec.schema.v1`
 * Preserve thresholds, units, operators
 * Evidence must include page reference
 * Strict valid JSON only
-* No hallucinated IDs
+* No modification of content of any type
 
 ---
 
-# 8️⃣ Stage (5) LLM Analyzer
+# 8️⃣ Stage (4) LLM Analyzer
 
 ## Purpose
 
@@ -347,7 +346,7 @@ Schema: `analysis.schema.v1`
 
 ---
 
-# 9️⃣ Stage (6) Renderer — Sellable Output
+# 9️⃣ Stage (5) Renderer — Sellable Output
 
 ## Purpose
 
@@ -401,7 +400,9 @@ Normalizer:
 Preflight:
 
 * ID count correct
-* Duplicate detection working
+* Duplicate ID detection working
+* Heading count correct
+* Duplicate heading detection working
 
 ## Golden End-to-End Tests
 
@@ -420,21 +421,11 @@ Preflight:
 
 ---
 
-# 1️⃣2️⃣ Versioning Strategy
-
-Schemas are versioned:
-
-* `spec.schema.v1`
-* `analysis.schema.v1`
-
-Backward-compatible additions allowed.
-Breaking changes require v2.
-
----
+what
 
 # 1️⃣3️⃣ Definition of Done (V1)
 
-For born-digital PDFs and DOCX:
+For born-digital PDFs:
 
 * ≥ 95% requirement ID extraction accuracy
 * ≥ 90% correct section assignment
@@ -456,5 +447,3 @@ This V1 pipeline is:
 * Architecturally clean
 * Scalable to enterprise use
 * Sellable as an “AI Requirements Quality Auditor”
-
-You now have a machine-grade contract for your AI specification analyzer.

@@ -14,7 +14,7 @@ $INPUT :receive PDF spec;
 !ifdef show_constraints
 note right
   Input:  input/<project>/<doc>.pdf
-  Output: artifacts/<project>/<doc>.json  [00_raw_extract.json]
+  Output: artifacts/<project>/00_raw_extract_<doc>.json  [00_raw_extract.json]
   Limits: max 10 pages, max 30,000 chars
 end note
 !endif
@@ -24,13 +24,12 @@ end note
   strip noise, structure respecting req_id_pattern;
 !ifdef show_constraints
 note right
-  Input:  00_raw_extract.json
-  Output: 01_normalized_text.json
+  Input:  00_raw_extract_<doc>.json
+  Output: 01_normalized_<doc>.json
 end note
 !endif
 
-if ((S2) Preflight — quality gate) then (fail\nscore < 0.80 or < 5 reqs)
-  :emit guidance to user;
+if ((S2) Preflight\n evaluate doc quality incl. section count \n requirements count and formatting noise) then (fail\nscore < 0.80 or < 5 reqs\n emit user guidance)
   stop
 endif
 !ifdef show_constraints
