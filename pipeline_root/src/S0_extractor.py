@@ -20,7 +20,7 @@ def load_schema() -> dict:
     with open(SCHEMA_PATH, encoding="utf-8") as f:
         return json.load(f)
 
-def compute_sha256(pdf_path: str) -> str:
+def compute_sha256(pdf_path: Path) -> str:
     h = hashlib.sha256()
     with open(pdf_path, "rb") as f:
         for chunk in iter(lambda: f.read(8192), b""):
@@ -38,7 +38,6 @@ def detect_warnings(text: str) -> list[str]:
     warnings.append(f"line_hyphenation_present: {hyphenation_count}")
     return warnings
 
-
 def extract_pdf_to_json(pdf_path: str | Path) -> dict:
     pdf_path = Path(pdf_path)
     if not pdf_path.exists():
@@ -47,7 +46,8 @@ def extract_pdf_to_json(pdf_path: str | Path) -> dict:
         raise ValueError(f"Expected a .pdf file, got: {pdf_path.suffix}")
 
     pages = []
-    all_text = []
+    total_chars = 0
+    full_text = []
 
     with fitz.open(pdf_path) as doc:
         if len(doc) > MAX_PAGES:
@@ -55,16 +55,17 @@ def extract_pdf_to_json(pdf_path: str | Path) -> dict:
         for page_num, page in enumerate(doc, start=1):
             text = page.get_text()
             pages.append({"page": page_num, "text": text})
-            all_text.append(text)
+            full_text.append(text)
+            total_chars += len(text)
+            if total_chars > MAX_CHARS:
+                raise ValueError(f"PDF exceeds character limit ({total_chars} chars, max {MAX_CHARS})")
 
-    combined_text = "\n".join(all_text)
-    if len(combined_text) > MAX_CHARS:
-        raise ValueError(f"PDF exceeds character limit ({len(combined_text)} chars, max {MAX_CHARS})")
+    combined_text = "\n".join(full_text)
     warnings = detect_warnings(combined_text)
 
     return {
         "source": {
-            "filename": Path(pdf_path).name,
+            "filename": pdf_path.name,
             "type": "pdf",
             "sha256": compute_sha256(pdf_path),
             "page_count": len(pages),
@@ -75,11 +76,13 @@ def extract_pdf_to_json(pdf_path: str | Path) -> dict:
 
 
 def resolve_output_path(input_path: Path) -> Path:
-    spec_folder = input_path.relative_to(INPUT_DIR).parent
+    try:
+        spec_folder = input_path.relative_to(INPUT_DIR).parent
+    except ValueError:
+        raise ValueError(f"Input path is not within INPUT_DIR: {input_path}")
     output_dir = OUTPUT_DIR / spec_folder
-    output_dir.mkdir(parents=True, exist_ok=True) # output.dir created if not exist, if it exists -> no error raised
+    output_dir.mkdir(parents=True, exist_ok=True)
     return output_dir / input_path.with_suffix(".json").name
-
 
 def save_result(input_path: Path) -> Path:
     result = extract_pdf_to_json(input_path)
@@ -89,7 +92,6 @@ def save_result(input_path: Path) -> Path:
         raise ValueError(f"Extracted data does not conform to schema: {e.message}")
     output_path = resolve_output_path(input_path)
     with open(output_path, "w", encoding="utf-8") as f:
-        # python dict/list -> json
         json.dump(result, f, indent=2, ensure_ascii=False)
     return output_path
 
