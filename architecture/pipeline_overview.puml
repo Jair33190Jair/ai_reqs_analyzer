@@ -7,15 +7,16 @@ title AI Requirements Analyzer — Pipeline Overview
 
 
 start
-$INPUT :receive PDF spec;
+$INPUT :receive <doc>.pdf spec;
 
 : (S0) Extractor
   PDF → raw text per page and file metadata;
 !ifdef show_constraints
 note right
-  Input:  input/<project>/<doc>.pdf
-  Output: artifacts/<project>/00_raw_extract_<doc>.json  [00_raw_extract.json]
-  Limits: max 10 pages, max 30,000 chars
+  Constraints:
+  - Input:  input/<project>/<doc>.pdf
+  - Output: artifacts/<project>/00_raw_extract_<doc>.json  [00_raw_extract.json]
+  - Limits: max 10 pages, max 30,000 chars
 end note
 !endif
 
@@ -24,8 +25,9 @@ end note
   strip noise, structure respecting req_id_pattern;
 !ifdef show_constraints
 note right
-  Input:  00_raw_extract_<doc>.json
-  Output: 01_normalized_<doc>.json
+  Constraints:
+  - Input:  00_raw_extract_<doc>.json
+  - Output: 01_normalized_<doc>.json
 end note
 !endif
 
@@ -34,9 +36,10 @@ if ((S2) Preflight\n evaluate doc quality incl. section count \n requirements co
 endif
 !ifdef show_constraints
 note right
-  Input:  01_normalized_text.json
-  Output: 02_after_preflight.json
-  Gate:   score ≥ 0.80 AND req_count ≥ 5
+  Constraints:
+    - Input:  01_normalized_text.json
+    - Output: 02_after_preflight.json
+    - Gate:   score ≥ 0.80 AND req_count ≥ 5
 end note
 !endif
 
@@ -44,9 +47,10 @@ end note
   text → structured requirements JSON;
 !ifdef show_constraints
 note right
-  Input:  02_after_preflight.json
-  Output: 03_llm_structured.json  [spec.schema.v1]
-  LLM:    called here (cost incurred)
+  Constraints:
+    - Input:  02_after_preflight.json
+    - Output: 03_llm_structured.json  [spec.schema.v1]
+    - LLM:    called here (cost incurred)
 end note
 !endif
 
@@ -54,9 +58,10 @@ end note
   assess quality, completeness, safety;
 !ifdef show_constraints
 note right
-  Input:  03_llm_structured.json
-  Output: 04_llm_analyzed.json  [analysis.schema.v1]
-  LLM:    called here (cost incurred)
+  Constraints:
+    - Input:  03_llm_structured.json
+    - Output: 04_llm_analyzed.json  [analysis.schema.v1]
+    - LLM:    called here (cost incurred)
 end note
 !endif
 
@@ -64,13 +69,21 @@ end note
   JSON → HTML report;
 !ifdef show_constraints
 note right
-  Input:  04_llm_analyzed.json
-  Output: 05_report.html
-  No AI calls — deterministic templating only
+  Constraints:
+  - Input:  04_llm_analyzed.json
+  - Output: 05_report<doc>.html
+  - No AI calls — deterministic templating only
 end note
 !endif
 
-$OUTPUT :deliver 05_report.html;
+$OUTPUT :deliver 05_report<doc>.html;
+!ifdef show_constraints
+note right
+  Constraint:
+  - Output path: output/<project>/<doc>.html
+  - (i) project and doc name derived from input PDF path
+end note
+!endif
 stop
 
 @enduml
