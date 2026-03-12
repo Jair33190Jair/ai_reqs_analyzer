@@ -21,11 +21,11 @@
       "properties": {
         "dehyphenation":      { "type": "boolean" },
         "ligature_map":       { "type": "boolean" },
-        "line_joining":       { "type": "string", "enum": ["soft", "none"] },
+        "line_joining":       { "type": "string", "enum": ["none"] },
         "header_footer_strip":{ "type": "string", "enum": ["heuristic", "none"] },
         "item_id_pattern": {
-          "type": "string",
-          "description": "Python regex that matches a standalone requirement ID line (e.g. REQ-001)."
+          "type": ["string", "null"],
+          "description": "Python regex that matches a standalone requirement ID line (e.g. REQ-001), or null for raw specs without formal IDs."
         },
         "heading_pattern": {
           "type": ["string", "null"],

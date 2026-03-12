@@ -139,20 +139,6 @@ Replace:
 * ﬃ → ffi
 * ﬄ → ffl
 
-### 3. Soft Line Join
-
-Join lines only if:
-
-* previous line does NOT end in `. : ;`
-* next line starts lowercase
-* this or next line is standalone requirement id
-
-### 4. Preserve Requirement IDs
-
-Never merge in a way that breaks:
-
-* Requirements IDs
-
 ---
 
 # 6️⃣ Stage (2) Preflight — Cost Protection Layer

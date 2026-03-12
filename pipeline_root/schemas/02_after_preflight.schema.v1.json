@@ -7,29 +7,31 @@
     "checks": {
       "type": "object",
       "required": [
+        "has_item_ids",
         "item_id_count",
         "unique_item_id_count",
         "duplicate_item_ids",
         "sections_count",
         "unique_section_count",
         "duplicate_sections",
-        "table_layout_lines",
+        "messy_layout_lines",
         "total_lines"
       ],
       "properties": {
+        "has_item_ids":         { "type": "boolean" },
         "item_id_count":        { "type": "integer", "minimum": 0 },
         "unique_item_id_count": { "type": "integer", "minimum": 0 },
         "duplicate_item_ids":   { "type": "array", "items": { "type": "string" } },
         "sections_count":       { "type": "integer", "minimum": 0 },
         "unique_section_count": { "type": "integer", "minimum": 0 },
         "duplicate_sections":   { "type": "array", "items": { "type": "string" } },
-        "table_layout_lines":   { "type": "integer", "minimum": 0 },
+        "messy_layout_lines":   { "type": "integer", "minimum": 0 },
         "total_lines":          { "type": "integer", "minimum": 0 }
       },
       "additionalProperties": false
     },
-    "score":   { "type": "number", "minimum": 0, "maximum": 1 },
-    "pass":    { "type": "boolean" }
+    "score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "pass":  { "type": "boolean" }
   },
   "additionalProperties": false
 }

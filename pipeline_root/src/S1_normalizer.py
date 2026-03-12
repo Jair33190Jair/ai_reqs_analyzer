@@ -45,51 +45,13 @@ def _clean_text(text: str) -> str:
     return text
 
 
-def _soft_join(text: str, item_id_pattern: re.Pattern, heading_pattern: re.Pattern | None) -> str:
-    """
-    Join line N to line N+1 with a space when:
-      - line N does not end in .  ;  :
-      - line N+1 starts with a lowercase letter
-      - neither line is a standalone item ID or heading
 
-    This should be very conservative and only join lines where it is certain they belong together.
-    """
-    lines = text.split('\n')
-    out = []
-    i = 0
-    while i < len(lines):
-        cur = lines[i]
-        if i + 1 < len(lines):
-            nxt = lines[i + 1]
-            cur_s = cur.strip()
-            nxt_s = nxt.strip()
-            is_structural = (
-                item_id_pattern.match(cur_s)
-                or item_id_pattern.match(nxt_s)
-                or (heading_pattern and heading_pattern.match(cur_s))
-                or (heading_pattern and heading_pattern.match(nxt_s))
-            )
-            can_join = (
-                cur
-                and nxt
-                and not re.search(r'[.;:]\s*$', cur)
-                and re.match(r'^[a-z]', nxt)  # Only if next word starts with lowercase
-                and not is_structural
-            )
-            if can_join:
-                lines[i] = cur + ' ' + nxt
-                del lines[i + 1]
-                continue
-        out.append(cur)
-        i += 1
-    return '\n'.join(out)
-
-
-def _detect_patterns(pages: list[dict]) -> tuple[re.Pattern, re.Pattern | None]:
+def _detect_patterns(pages: list[dict]) -> tuple[re.Pattern | None, re.Pattern | None]:
     """Sample lines from 3 pages around the middle of the document and ask the LLM to infer the item ID and heading patterns.
 
     Returns:
-        (item_id_pattern, heading_pattern) — heading_pattern is None if the LLM replied NONE.
+        (item_id_pattern, heading_pattern) — either may be None if the LLM could not identify it.
+        A None item_id_pattern means the document is a raw spec without formal requirement IDs.
     """
     mid = len(pages) // 2
     sample_lines = []
@@ -118,12 +80,13 @@ def _detect_patterns(pages: list[dict]) -> tuple[re.Pattern, re.Pattern | None]:
         heading_str = response_data.get("heading", "Empty")
 
         if item_id_str == "NONE":
-            raise ValueError("LLM could not identify an item ID pattern.")
+            logging.info("LLM could not identify an item ID pattern; document will be processed as a raw spec.")
+            item_id_pattern = None
         elif item_id_str == "Empty":
             raise ValueError(f"LLM left the pattern attribute empty: {response_data}")
-        
-        item_id_pattern = re.compile(item_id_str, re.IGNORECASE)
-        logging.info(f"LLM detected item ID pattern: {item_id_str}")
+        else:
+            item_id_pattern = re.compile(item_id_str, re.IGNORECASE)
+            logging.info(f"LLM detected item ID pattern: {item_id_str}")
 
         heading_pattern = None
         if heading_str not in ("NONE", "Empty"):
@@ -133,6 +96,7 @@ def _detect_patterns(pages: list[dict]) -> tuple[re.Pattern, re.Pattern | None]:
             logging.info("LLM could not identify a heading pattern; headings will not be detected.")
 
         return item_id_pattern, heading_pattern
+
 
     except (json.JSONDecodeError):
         raise ValueError(f"LLM returned unparseable response: {raw_response}")
@@ -177,26 +141,20 @@ def _strip_headers_footers(pages: list[dict]) -> list[dict]:
 
 
 def _normalize(raw: dict, source_ref: str) -> dict:
-    # clean once, use everywhere
     cleaned_pages = [{"page": p["page"], "text": _clean_text(p["text"])} for p in raw["pages"]]
-    # LLM detects item ID and heading patterns for structuring the document
     stripped_pages = _strip_headers_footers(cleaned_pages)
     item_id_pattern, heading_pattern = _detect_patterns(stripped_pages)
-    norm_pages = []
-    for p in stripped_pages:
-        text = _soft_join(p["text"], item_id_pattern, heading_pattern)
-        norm_pages.append({"page": p["page"], "text": text})
     return {
         "source_ref": source_ref,
         "normalization": {
             "dehyphenation": True,
             "ligature_map": True,
-            "line_joining": "soft",
+            "line_joining": "none",
             "header_footer_strip": "heuristic",
-            "item_id_pattern": item_id_pattern.pattern,
+            "item_id_pattern": item_id_pattern.pattern if item_id_pattern else None,
             "heading_pattern": heading_pattern.pattern if heading_pattern else None,
         },
-        "pages": norm_pages,
+        "pages": stripped_pages,
     }
 
 

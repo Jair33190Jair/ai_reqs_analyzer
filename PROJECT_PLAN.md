@@ -27,7 +27,7 @@ The fastest path to value is end-to-end validation, not stage-by-stage perfectio
 - [x] **1.3** `S2_preflight.py` — gatekeeper logic (ID count, duplicate detection, score threshold)
   - V2 adds: validate returned pattern (size, matches), validate exact fields' names
 - [ ] **1.4** `S3_llm_chunker.py` — cheap llm chunked text for LLM context limits
-  - V2 adds: strap context blocks to pass to teh analyzer
+  - V2 adds: strap context blocks to pass to teh analyzer (non-llm), identify context_blocks with script
 - [ ] **1.5** `S4_llm_analyzer.py` — expensive LLM analyzer call and response parsing
   - V2 adds: context caching for refining spec.
 - [ ] **1.6** `S5_renderer.py` — Jinja2 HTML report generation
