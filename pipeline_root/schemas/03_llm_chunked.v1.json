@@ -11,7 +11,7 @@
       "type": "object",
       "required": ["page", "line_start", "line_end"],
       "additionalProperties": false,
-      "description": "Line range in 01_normalized pages[].text split by \\n. line_start is the first line (1), line_end is the last (inclusive) = len(lines).",
+      "description": "Line range in 01_normalized pages[].text split by \\n. line_start and line_end are 1-based and inclusive.",
       "properties": {
         "page":       { "type": "integer", "minimum": 1 },
         "line_start": { "type": "integer", "minimum": 1 },
@@ -33,85 +33,90 @@
     },
 
     "sections": {
-    "type": "array",
-    "description": "All headings in document order.",
-    "items": {
-      "type": "object",
-      "required": ["section_number", "title", "parent_number", "loc"],
-      "additionalProperties": false,
-      "properties": {
-        "section_number": {
-          "type": ["string", "null"],
-          "description": "Heading number verbatim (e.g. '3.1') if present. Null otherwise."
-        },
-        "item_id": {
-          "type": ["string", "null"],
-          "description": "Spec item ID if the heading has one (e.g. 'SYS-NAV-HDR-001'). Null otherwise."
-        },
-        "title": {
-          "type": "string",
-          "description": "Heading text verbatim. Only field in this schema where copying is allowed — needed to build the section tree before loc resolution."
-        },
-        "parent_number": {
-          "type": ["string", "null"],
-          "description": "item_id of the immediate parent. Null if root."
-        },
-        "loc": {
-          "$ref": "#/definitions/loc",
-          "description": "Full heading block. Use line_end > line_start if the heading wraps lines."
+      "type": "array",
+      "description": "All headings in document order.",
+      "items": {
+        "type": "object",
+        "required": ["gen_section_number", "section_number", "title", "parent_gen_section_number", "loc"],
+        "additionalProperties": false,
+        "properties": {
+          "gen_section_number": {
+            "type": "string",
+            "pattern": "^GS[0-9]{3,}$",
+            "description": "Pipeline-internal sequential ID assigned by S3 (e.g. 'GS001'). Always present. Used as cross-reference key by parent_gen_section_number. Prefix G = generated."
+          },
+          "section_number": {
+            "type": ["string", "null"],
+            "description": "Heading number verbatim from the document (e.g. '3.1') if present. Null for unnumbered headings."
+          },
+          "item_id": {
+            "type": ["string", "null"],
+            "description": "Spec item ID if the heading line itself carries one (e.g. 'SYS-NAV-HDR-001'). Null otherwise."
+          },
+          "title": {
+            "type": "string",
+            "description": "Heading text verbatim. Only field where copying is allowed — needed to build the section tree before loc resolution."
+          },
+          "parent_gen_section_number": {
+            "type": ["string", "null"],
+            "description": "gen_section_number of the immediate parent heading. Null if this is a top-level section."
+          },
+          "loc": {
+            "$ref": "#/definitions/loc",
+            "description": "Location of the heading line(s). Use line_end > line_start only if the heading wraps across lines."
+          }
         }
       }
-    }
-  },
+    },
 
-  "spec_items": {
-    "type": "array",
-    "description": "One entry per requirement ID occurrence. Duplicates are preserved — emit both with their respective loc. The analyzer detects the conflict.",
-    "items": {
-      "type": "object",
-      "required": ["item_id", "parent_number", "loc", "source"],
-      "additionalProperties": false,
-      "properties": {
-        "item_id": {
-          "type": ["string", "null"],
-          "description": "Requirement ID verbatim (e.g. 'SYS-FUNC-001')."
-        },
-        "item_type": {
-          "type": ["string", "null"],
-          "enum": ["requirement", "information", "assumption", "constraint", "goal", "other", null],
-          "description": "(1) Check if an explicit attribute in the item states it, or (2) the item_id prefix clearly implies it. Map to the closest enum value. Null in all other cases."
-        },
-        "classification": {
-          "type": ["string", "null"],
-          "enum": ["functional", "performance", "safety", "security", "interface", "other", null],
-          "description": "(1) Check if an explicit attribute in the item states it, or (2) the item_id prefix clearly implies it. Map to the closest enum value. Null in all other cases."
-        },
-        "source": {
-          "type": "string",
-          "enum": ["inline", "table", "list", "other"],
-          "description": "Layout the item was extracted from. 'table' signals potential extraction noise — Stage 4 should treat content with lower confidence."
-        },
-        "parent_number": {
-          "type": ["string", "null"],
-          "description": "section_number of the immediate containing section."
-        },
-        "loc": {
-          "$ref": "#/definitions/loc",
-          "description": "Full requirement block, from the item_id line to the last line before the next item or heading."
-        },
-        "extra_attrs": {
-          "type": "object",
-          "description": "Any other explicitly labeled sub-fields not covered above. Keys: snake_case of the label as written. Values: loc. Do not invent — only emit if the label is present in the text.",
-          "propertyNames": { "pattern": "^[a-z][a-z0-9_]*$" },
-          "additionalProperties": { "$ref": "#/definitions/loc" }
-        },
-        "flags": {
-          "type": "array",
-          "description": "Uncertainty flags the LLM can attach to an item (e.g. 'ambiguous_boundary', 'possible_table_noise').",
-          "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" }
+    "spec_items": {
+      "type": "array",
+      "description": "One entry per requirement or requirement-like statement. For docs with IDs, one entry per ID occurrence (duplicates preserved). For raw specs, one entry per distinct logical statement.",
+      "items": {
+        "type": "object",
+        "required": ["item_id", "parent_gen_section_number", "loc", "source"],
+        "additionalProperties": false,
+        "properties": {
+          "item_id": {
+            "type": ["string", "null"],
+            "description": "Requirement ID verbatim (e.g. 'SYS-FUNC-001'). Null for raw specs without formal IDs."
+          },
+          "item_type": {
+            "type": ["string", "null"],
+            "enum": ["requirement", "information", "assumption", "constraint", "goal", "other", null],
+            "description": "Infer from explicit attribute or unambiguous ID prefix only. Null in all other cases."
+          },
+          "classification": {
+            "type": ["string", "null"],
+            "enum": ["functional", "performance", "safety", "security", "interface", "other", null],
+            "description": "Infer from explicit attribute or unambiguous ID prefix only. Null in all other cases."
+          },
+          "source": {
+            "type": "string",
+            "enum": ["inline", "table", "list", "other"],
+            "description": "Layout the item was extracted from. 'table' signals potential extraction noise — Stage 4 treats content with lower confidence."
+          },
+          "parent_gen_section_number": {
+            "type": ["string", "null"],
+            "description": "gen_section_number of the immediately enclosing section heading. Null if no heading precedes this item."
+          },
+          "loc": {
+            "$ref": "#/definitions/loc",
+            "description": "Full item block, from the first line of the item to the last line before the next item or heading."
+          },
+          "extra_attrs": {
+            "type": "object",
+            "description": "Explicitly labeled sub-fields in the item text (e.g. 'Rationale:', 'Note:'). Keys: snake_case of the label. Values: loc. Do not invent — only emit if the label is present.",
+            "propertyNames": { "pattern": "^[a-z][a-z0-9_]*$" },
+            "additionalProperties": { "$ref": "#/definitions/loc" }
+          },
+          "flags": {
+            "type": "array",
+            "description": "Uncertainty flags (e.g. 'ambiguous_boundary', 'possible_table_noise').",
+            "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" }
+          }
         }
       }
     }
-  }
   }
 }
