@@ -150,8 +150,7 @@ def save_result(input_path: Path) -> Path:
         jsonschema.validate(result, schema)
     except jsonschema.ValidationError as exc:
         raise ValueError(f"Preflight output failed schema validation: {exc.message}") from exc
-    stem = input_path.stem.removeprefix("01_normalized_")
-    output_path = input_path.parent / f"02_after_preflight_{stem}.json"
+    output_path = input_path.parent / f"02_after_preflight.json"
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(result, f, indent=2, ensure_ascii=False)
     return output_path

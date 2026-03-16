@@ -21,7 +21,7 @@ The fastest path to value is end-to-end validation, not stage-by-stage perfectio
 > Stage specs: `architecture_v1.md`
 
 - [x] **1.1** `S0_extractor.py` — PDF ingestion, page/char limit enforcement
-  - V2 adds: spatial information, reconstruct reading order, detect page structure incl. tables and AI cost estimation
+  - V2 adds: font, spatial information, reconstruct reading order, detect page structure, incl. tables and AI cost estimation. Haiku suppport for low for messy content.
 - [x] **1.2** `S1_normalizer.py` — ligature replacement, dehyphenation, item ID preservation
   - V2 adds: exact labeled fields (attribute names e.g. test_method, acceptance_criteria, safety_level, rationale, upstram_link, extra_attrs)
 - [x] **1.3** `S2_preflight.py` — gatekeeper logic (ID count, duplicate detection, score threshold)

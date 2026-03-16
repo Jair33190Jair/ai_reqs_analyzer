@@ -84,7 +84,7 @@ def resolve_output_path(input_path: Path) -> Path:
         raise ValueError(f"Input path is not within INPUT_DIR: {input_path}")
     output_dir = OUTPUT_DIR / spec_folder
     output_dir.mkdir(parents=True, exist_ok=True)
-    return output_dir / f"00_raw_extract_{input_path.stem}.json"
+    return output_dir / f"00_raw_extract.json"
 
 def save_result(input_path: Path) -> Path:
     result = extract_pdf_to_json(input_path)

@@ -170,8 +170,7 @@ def save_result(input_path: Path) -> Path:
         jsonschema.validate(normalized, schema)
     except jsonschema.ValidationError as exc:
         raise ValueError(f"Normalized output failed schema validation: {exc.message}") from exc
-    source_stem = Path(raw["source"]["filename"]).stem
-    output_path = input_path.parent / f"01_normalized_{source_stem}.json"
+    output_path = input_path.parent / f"01_normalized.json"
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(normalized, f, indent=2, ensure_ascii=False)
     return output_path
