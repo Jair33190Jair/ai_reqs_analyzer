@@ -22,7 +22,7 @@ The fastest path to value is end-to-end validation, not stage-by-stage perfectio
 
 - [x] **1.1** `S0_extractor.py` — PDF ingestion, page/char limit enforcement
   - V2 adds: font, spatial information, reconstruct reading order, detect page structure, incl. tables and AI cost estimation. Haiku suppport for low for messy content.
-- [x] **1.2** `S1_normalizer.py` — ligature replacement, dehyphenation, item ID preservation
+- [x] **1.2** `S1_normalizer.py` — ligature replacement, dehyphenation, item ID and heading pattern recognition
   - V2 adds: exact labeled fields (attribute names e.g. test_method, acceptance_criteria, safety_level, rationale, upstram_link, extra_attrs)
 - [x] **1.3** `S2_preflight.py` — gatekeeper logic (ID count, duplicate detection, score threshold)
   - V2 adds: validate returned pattern (size, matches), validate exact fields' names
@@ -61,6 +61,10 @@ The fastest path to value is end-to-end validation, not stage-by-stage perfectio
 ## Phase 4 — Targeted tests (only what matters)
 > Don't test everything. Test the parts that are risky or have already broken.
 
+**Test corpus:**
+- 10–15 small specs (2–6 pages), 3 medium specs (15–30 pages)
+- Must include: 1 born-digital PDF, 1 scanned PDF (expected reject), 1 table-heavy layout
+
 **Deterministic stages (S0, S1, S2) — unit tests worth writing:**
 - [ ] **4.1** S0: page limit, char limit, bad extension, file not found
   → S0 test plan already exists and passes manually — automate it with pytest
@@ -73,6 +77,11 @@ The fastest path to value is end-to-end validation, not stage-by-stage perfectio
 
 **Renderer (S5) — one test:**
 - [ ] **4.5** Known analysis JSON → HTML contains all req IDs and issue counts
+
+**Golden end-to-end criteria (per run):**
+- All expected requirement IDs present in `03_llm_structured.json`
+- All intermediate artifacts present and schema-valid
+- HTML report renders in browser without manual edits
 
 ---
 

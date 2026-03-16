@@ -7,7 +7,7 @@ title AI Requirements Analyzer — Pipeline Overview
 
 
 start
-$INPUT :receive <doc>.pdf spec;
+:receive <doc>.pdf spec; <<$INPUT>>
 
 : (S0) Extractor
   PDF → raw text per page and file metadata;
@@ -76,7 +76,7 @@ note right
 end note
 !endif
 
-$OUTPUT :deliver 05_report<doc>.html;
+:deliver 05_report<doc>.html; <<$OUTPUT>>
 !ifdef show_constraints
 note right
   Constraint:

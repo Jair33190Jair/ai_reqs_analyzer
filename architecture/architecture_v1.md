@@ -28,27 +28,9 @@ This is designed as an **engineering-grade pipeline**, not a prompt experiment.
 
 # 2️⃣ High-Level Architecture
 
-```
-[Input Spec: PDF]
-        |
-        v
-(1) Extractor
-        |
-        v
-(2) Normalizer
-        |
-        v
-(3) Preflight (Gatekeeper)
-        |
-        v
-(4) LLM Structurer
-        |
-        v
-(5) LLM Analyzer
-        |
-        v
-(6) Renderer (HTML/PDF)
-```
+![Pipeline Overview](pipeline_overview.svg)
+
+> Source: [`pipeline_overview_v1.puml`](pipeline_overview_v1.puml)
 
 ### Design Philosophy
 
@@ -291,46 +273,7 @@ Transform JSON into human-consumable report.
 
 ---
 
-# 🔟 V1 Test Strategy (Cost-Optimized)
-
-## Corpus
-
-* 10–15 small specs (2–6 pages)
-* 3 medium specs (15–30 pages)
-* Include:
-
-  * 1 born-digital PDF
-  * 1 scanned PDF (expected fail)
-  * 1 table-heavy layout
-
-## Deterministic Unit Tests
-
-Extractor:
-
-* Page count match
-* Non-empty text
-
-Normalizer:
-
-* Ligatures removed
-* Hyphen patterns reduced
-
-Preflight:
-
-* ID count correct
-* Duplicate ID detection working
-* Heading count correct
-* Duplicate heading detection working
-
-## Golden End-to-End Tests
-
-* All expected requirement IDs present
-* JSON schema valid
-* HTML renders without manual edits
-
----
-
-# 1️⃣1️⃣ Operational Controls
+# 🔟 Operational Controls
 
 * Hard max token limit
 * Chunk by section if too large (Using chapters as sections)
@@ -339,9 +282,7 @@ Preflight:
 
 ---
 
-what
-
-# 1️⃣3️⃣ Definition of Done (V1)
+# 1️⃣1️⃣ Definition of Done (V1)
 
 For born-digital PDFs:
 
