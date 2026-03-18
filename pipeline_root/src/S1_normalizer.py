@@ -9,6 +9,7 @@ from pathlib import Path
 import anthropic
 import jsonschema
 from dotenv import load_dotenv
+from llm_pricing import get_cost
 
 _SCHEMA_PATH = Path(__file__).parent.parent / "schemas" / "01_normalized.schema.v1.json"
 
@@ -22,6 +23,9 @@ LIGATURE_MAP = {
     "ﬃ": "ffi",
     "ﬄ": "ffl",
 }
+
+_LLM_MODEL = "claude-haiku-4-5-20251001"
+_LLM_MAX_TOKENS = 300
 
 _DETECT_PATTERNS_SYSTEM = (
     "You are a regex expert analysing requirements documents. "
@@ -67,11 +71,14 @@ def _detect_patterns(pages: list[dict]) -> tuple[re.Pattern | None, re.Pattern |
     try:
         client = anthropic.Anthropic()
         message = client.messages.create(
-            model="claude-haiku-4-5-20251001",
-            max_tokens=300,
+            model=_LLM_MODEL,
+            max_tokens=_LLM_MAX_TOKENS,
             system=_DETECT_PATTERNS_SYSTEM,
             messages=[{"role": "user", "content": f"Lines:\n{sample}"}],
         )
+        usage = message.usage
+        cost = get_cost(_LLM_MODEL, usage.input_tokens, usage.output_tokens)
+        logging.info(f"[S1 LLM] {usage.input_tokens} in / {usage.output_tokens} out — ${cost:.6f}")
         raw_response = message.content[0].text.strip()
         cleaned_response = re.sub(r"```json\s*([\s\S]*?)\s*```", r"\1", raw_response).strip()
         response_data = json.loads(cleaned_response)

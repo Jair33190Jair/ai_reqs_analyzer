@@ -1,5 +1,6 @@
 {
-  "doc_id": "01_normalized_arvms_spec",
+  "doc_id": "01_normalized",
+  "source_ref": "01_normalized.json",
   "checks": {
     "has_item_ids": true,
     "item_id_count": 42,

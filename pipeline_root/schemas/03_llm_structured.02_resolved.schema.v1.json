@@ -11,11 +11,12 @@
       "type": "object",
       "required": ["page", "line_start", "line_end"],
       "additionalProperties": false,
-      "description": "Line range in 01_normalized pages[].text split by \\n. line_start and line_end are 1-based and inclusive.",
+      "description": "Line range in 01_normalized pages[].text split by \\n. line_start and line_end are 1-based and inclusive. For items spanning multiple pages, set page_end; line_start is on page, line_end is on page_end.",
       "properties": {
-        "page":       { "type": "integer", "minimum": 1 },
-        "line_start": { "type": "integer", "minimum": 1 },
-        "line_end":   { "type": "integer", "minimum": 1 }
+        "page":       { "type": "integer", "minimum": 1, "description": "Start page (1-based)." },
+        "page_end":   { "type": "integer", "minimum": 1, "description": "End page (1-based). Omit for single-page items." },
+        "line_start": { "type": "integer", "minimum": 1, "description": "First line on page." },
+        "line_end":   { "type": "integer", "minimum": 1, "description": "Last line on page_end (or page if single-page)." }
       }
     }
   },
@@ -37,7 +38,7 @@
       "description": "All headings in document order, each with verbatim content resolved from loc.",
       "items": {
         "type": "object",
-        "required": ["hierarchical_number", "title", "loc", "content"],
+        "required": ["hierarchical_number", "title", "loc", "content", "internal_id"],
         "additionalProperties": false,
         "properties": {
           "hierarchical_number": {
@@ -63,6 +64,11 @@
           "content": {
             "type": "string",
             "description": "Verbatim text resolved from loc by map_content()."
+          },
+          "internal_id": {
+            "type": "string",
+            "description": "Generated stable reference. 'G' prefix + hierarchical number (from doc or inferred from level/position). E.g. 'G3.2'. Always present.",
+            "pattern": "^G[0-9]+(\\.[0-9]+)*$"
           }
         }
       }
@@ -73,7 +79,7 @@
       "description": "One entry per item or requirement-like statement, each with verbatim content resolved from loc.",
       "items": {
         "type": "object",
-        "required": ["item_id", "hierarchical_number", "item_type", "classification", "loc", "source", "content"],
+        "required": ["item_id", "hierarchical_number", "item_type", "classification", "loc", "source", "content", "internal_id"],
         "additionalProperties": false,
         "properties": {
           "item_id": {
@@ -105,9 +111,14 @@
             "type": "string",
             "description": "Verbatim text resolved from loc by map_content()."
           },
+          "internal_id": {
+            "type": "string",
+            "description": "Generated stable reference. 'G' prefix + parent section number + 3-digit sequential counter within that section. E.g. 'G3.2-001'. Always present.",
+            "pattern": "^G[0-9]+(\\.[0-9]+)*-[0-9]{3}$"
+          },
           "extra_attrs": {
             "type": "object",
-            "description": "Explicitly labeled sub-fields (e.g. 'Rationale:', 'Note:'). Keys: snake_case. Values: loc.",
+            "description": "Explicitly labeled sub-fields (e.g. 'Rationale:', 'Note:'). Keys: snake_case. Values: loc pointing to the sub-field lines within the item block.",
             "propertyNames": { "pattern": "^[a-z][a-z0-9_]*$" },
             "additionalProperties": { "$ref": "#/definitions/loc" }
           },

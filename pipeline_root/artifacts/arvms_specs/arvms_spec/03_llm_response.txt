@@ -1,0 +1,745 @@
+```json
+{
+  "source_ref": "00_raw_extract.json",
+  "skip_pages": [],
+  "sections": [
+    {
+      "hierarchical_number": "1",
+      "title": "Introduction",
+      "level": 1,
+      "item_id": null,
+      "loc": {
+        "page": 1,
+        "line_start": 7,
+        "line_end": 7
+      }
+    },
+    {
+      "hierarchical_number": "1.1",
+      "title": "Purpose",
+      "level": 2,
+      "item_id": null,
+      "loc": {
+        "page": 1,
+        "line_start": 8,
+        "line_end": 8
+      }
+    },
+    {
+      "hierarchical_number": "2",
+      "title": "System Overview",
+      "level": 1,
+      "item_id": null,
+      "loc": {
+        "page": 1,
+        "line_start": 14,
+        "line_end": 14
+      }
+    },
+    {
+      "hierarchical_number": "2.1",
+      "title": "Product Description",
+      "level": 2,
+      "item_id": null,
+      "loc": {
+        "page": 1,
+        "line_start": 15,
+        "line_end": 15
+      }
+    },
+    {
+      "hierarchical_number": "2.2",
+      "title": "Operating Environment",
+      "level": 2,
+      "item_id": null,
+      "loc": {
+        "page": 1,
+        "line_start": 21,
+        "line_end": 21
+      }
+    },
+    {
+      "hierarchical_number": "3",
+      "title": "Functional Requirements",
+      "level": 1,
+      "item_id": null,
+      "loc": {
+        "page": 2,
+        "line_start": 1,
+        "line_end": 1
+      }
+    },
+    {
+      "hierarchical_number": "3.1",
+      "title": "Navigation",
+      "level": 2,
+      "item_id": null,
+      "loc": {
+        "page": 2,
+        "line_start": 2,
+        "line_end": 2
+      }
+    },
+    {
+      "hierarchical_number": "3.2",
+      "title": "Vacuuming",
+      "level": 2,
+      "item_id": null,
+      "loc": {
+        "page": 2,
+        "line_start": 13,
+        "line_end": 13
+      }
+    },
+    {
+      "hierarchical_number": "3.3",
+      "title": "Mopping",
+      "level": 2,
+      "item_id": null,
+      "loc": {
+        "page": 2,
+        "line_start": 20,
+        "line_end": 20
+      }
+    },
+    {
+      "hierarchical_number": "3.4",
+      "title": "Docking",
+      "level": 2,
+      "item_id": null,
+      "loc": {
+        "page": 3,
+        "line_start": 5,
+        "line_end": 5
+      }
+    },
+    {
+      "hierarchical_number": "3.5",
+      "title": "User Interaction",
+      "level": 2,
+      "item_id": null,
+      "loc": {
+        "page": 3,
+        "line_start": 13,
+        "line_end": 13
+      }
+    },
+    {
+      "hierarchical_number": "4",
+      "title": "Safety Requirements",
+      "level": 1,
+      "item_id": null,
+      "loc": {
+        "page": 3,
+        "line_start": 20,
+        "line_end": 20
+      }
+    },
+    {
+      "hierarchical_number": "4.1",
+      "title": "Mechanical Safety",
+      "level": 2,
+      "item_id": null,
+      "loc": {
+        "page": 3,
+        "line_start": 21,
+        "line_end": 21
+      }
+    },
+    {
+      "hierarchical_number": "4.2",
+      "title": "Electrical Safety",
+      "level": 2,
+      "item_id": null,
+      "loc": {
+        "page": 4,
+        "line_start": 5,
+        "line_end": 5
+      }
+    },
+    {
+      "hierarchical_number": "5",
+      "title": "Performance Requirements",
+      "level": 1,
+      "item_id": null,
+      "loc": {
+        "page": 4,
+        "line_start": 10,
+        "line_end": 10
+      }
+    },
+    {
+      "hierarchical_number": "6",
+      "title": "Cybersecurity Requirements",
+      "level": 1,
+      "item_id": null,
+      "loc": {
+        "page": 4,
+        "line_start": 19,
+        "line_end": 19
+      }
+    },
+    {
+      "hierarchical_number": "7",
+      "title": "Hardware Requirements",
+      "level": 1,
+      "item_id": null,
+      "loc": {
+        "page": 5,
+        "line_start": 5,
+        "line_end": 5
+      }
+    },
+    {
+      "hierarchical_number": "7.1",
+      "title": "Sensors",
+      "level": 2,
+      "item_id": null,
+      "loc": {
+        "page": 5,
+        "line_start": 6,
+        "line_end": 6
+      }
+    },
+    {
+      "hierarchical_number": "7.2",
+      "title": "Actuators",
+      "level": 2,
+      "item_id": null,
+      "loc": {
+        "page": 5,
+        "line_start": 17,
+        "line_end": 17
+      }
+    },
+    {
+      "hierarchical_number": "8",
+      "title": "Software Architecture Requirements",
+      "level": 1,
+      "item_id": null,
+      "loc": {
+        "page": 6,
+        "line_start": 3,
+        "line_end": 3
+      }
+    },
+    {
+      "hierarchical_number": "9",
+      "title": "System States",
+      "level": 1,
+      "item_id": null,
+      "loc": {
+        "page": 6,
+        "line_start": 13,
+        "line_end": 13
+      }
+    }
+  ],
+  "spec_items": [
+    {
+      "item_id": "SYS-FUNC-001",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 2,
+        "line_start": 3,
+        "line_end": 4
+      }
+    },
+    {
+      "item_id": "SYS-FUNC-002",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 2,
+        "line_start": 5,
+        "line_end": 6
+      }
+    },
+    {
+      "item_id": "SYS-FUNC-003",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 2,
+        "line_start": 7,
+        "line_end": 8
+      }
+    },
+    {
+      "item_id": "SYS-FUNC-004",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 2,
+        "line_start": 9,
+        "line_end": 10
+      }
+    },
+    {
+      "item_id": "SYS-FUNC-005",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 2,
+        "line_start": 11,
+        "line_end": 12
+      }
+    },
+    {
+      "item_id": "SYS-FUNC-010",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 2,
+        "line_start": 14,
+        "line_end": 15
+      }
+    },
+    {
+      "item_id": "SYS-FUNC-011",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 2,
+        "line_start": 16,
+        "line_end": 17
+      }
+    },
+    {
+      "item_id": "SYS-FUNC-012",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 2,
+        "line_start": 18,
+        "line_end": 19
+      }
+    },
+    {
+      "item_id": "SYS-FUNC-020",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 2,
+        "line_start": 21,
+        "line_end": 22
+      }
+    },
+    {
+      "item_id": "SYS-FUNC-021",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 2,
+        "line_start": 23,
+        "line_end": 24
+      }
+    },
+    {
+      "item_id": "SYS-FUNC-022",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 3,
+        "line_start": 1,
+        "line_end": 2
+      }
+    },
+    {
+      "item_id": "SYS-FUNC-023",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 3,
+        "line_start": 3,
+        "line_end": 4
+      }
+    },
+    {
+      "item_id": "SYS-FUNC-030",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 3,
+        "line_start": 6,
+        "line_end": 8
+      }
+    },
+    {
+      "item_id": "SYS-FUNC-031",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 3,
+        "line_start": 9,
+        "line_end": 10
+      }
+    },
+    {
+      "item_id": "SYS-FUNC-032",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 3,
+        "line_start": 11,
+        "line_end": 12
+      }
+    },
+    {
+      "item_id": "SYS-FUNC-040",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 3,
+        "line_start": 14,
+        "line_end": 15
+      }
+    },
+    {
+      "item_id": "SYS-FUNC-041",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 3,
+        "line_start": 16,
+        "line_end": 17
+      }
+    },
+    {
+      "item_id": "SYS-FUNC-042",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 3,
+        "line_start": 18,
+        "line_end": 19
+      }
+    },
+    {
+      "item_id": "SYS-SAFE-001",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "safety",
+      "source": "inline",
+      "loc": {
+        "page": 3,
+        "line_start": 22,
+        "line_end": 23
+      }
+    },
+    {
+      "item_id": "SYS-SAFE-002",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "safety",
+      "source": "inline",
+      "loc": {
+        "page": 4,
+        "line_start": 1,
+        "line_end": 2
+      }
+    },
+    {
+      "item_id": "SYS-SAFE-003",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "safety",
+      "source": "inline",
+      "loc": {
+        "page": 4,
+        "line_start": 3,
+        "line_end": 4
+      }
+    },
+    {
+      "item_id": "SYS-SAFE-010",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "safety",
+      "source": "inline",
+      "loc": {
+        "page": 4,
+        "line_start": 6,
+        "line_end": 7
+      }
+    },
+    {
+      "item_id": "SYS-SAFE-011",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "safety",
+      "source": "inline",
+      "loc": {
+        "page": 4,
+        "line_start": 8,
+        "line_end": 9
+      }
+    },
+    {
+      "item_id": "SYS-PERF-001",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "performance",
+      "source": "inline",
+      "loc": {
+        "page": 4,
+        "line_start": 11,
+        "line_end": 12
+      }
+    },
+    {
+      "item_id": "SYS-PERF-002",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "performance",
+      "source": "inline",
+      "loc": {
+        "page": 4,
+        "line_start": 13,
+        "line_end": 14
+      }
+    },
+    {
+      "item_id": "SYS-PERF-003",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "performance",
+      "source": "inline",
+      "loc": {
+        "page": 4,
+        "line_start": 15,
+        "line_end": 16
+      }
+    },
+    {
+      "item_id": "SYS-PERF-004",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "performance",
+      "source": "inline",
+      "loc": {
+        "page": 4,
+        "line_start": 17,
+        "line_end": 18
+      }
+    },
+    {
+      "item_id": "SYS-SEC-001",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "security",
+      "source": "inline",
+      "loc": {
+        "page": 4,
+        "line_start": 20,
+        "line_end": 21
+      }
+    },
+    {
+      "item_id": "SYS-SEC-002",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "security",
+      "source": "inline",
+      "loc": {
+        "page": 5,
+        "line_start": 1,
+        "line_end": 2
+      }
+    },
+    {
+      "item_id": "SYS-SEC-003",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "security",
+      "source": "inline",
+      "loc": {
+        "page": 5,
+        "line_start": 3,
+        "line_end": 4
+      }
+    },
+    {
+      "item_id": "SYS-HW-001",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "other",
+      "source": "inline",
+      "loc": {
+        "page": 5,
+        "line_start": 7,
+        "line_end": 8
+      }
+    },
+    {
+      "item_id": "SYS-HW-002",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "other",
+      "source": "inline",
+      "loc": {
+        "page": 5,
+        "line_start": 9,
+        "line_end": 10
+      }
+    },
+    {
+      "item_id": "SYS-HW-003",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "other",
+      "source": "inline",
+      "loc": {
+        "page": 5,
+        "line_start": 11,
+        "line_end": 12
+      }
+    },
+    {
+      "item_id": "SYS-HW-004",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "other",
+      "source": "inline",
+      "loc": {
+        "page": 5,
+        "line_start": 13,
+        "line_end": 14
+      }
+    },
+    {
+      "item_id": "SYS-HW-005",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "other",
+      "source": "inline",
+      "loc": {
+        "page": 5,
+        "line_start": 15,
+        "line_end": 16
+      }
+    },
+    {
+      "item_id": "SYS-HW-010",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "other",
+      "source": "inline",
+      "loc": {
+        "page": 5,
+        "line_start": 18,
+        "line_end": 19
+      }
+    },
+    {
+      "item_id": "SYS-HW-011",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "other",
+      "source": "inline",
+      "loc": {
+        "page": 5,
+        "line_start": 20,
+        "line_end": 21
+      }
+    },
+    {
+      "item_id": "SYS-HW-012",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "other",
+      "source": "inline",
+      "loc": {
+        "page": 5,
+        "line_start": 22,
+        "line_end": 23
+      }
+    },
+    {
+      "item_id": "SYS-HW-013",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "other",
+      "source": "inline",
+      "loc": {
+        "page": 6,
+        "line_start": 1,
+        "line_end": 2
+      }
+    },
+    {
+      "item_id": "SYS-SW-001",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "other",
+      "source": "inline",
+      "loc": {
+        "page": 6,
+        "line_start": 4,
+        "line_end": 8
+      }
+    },
+    {
+      "item_id": "SYS-SW-002",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "other",
+      "source": "inline",
+      "loc": {
+        "page": 6,
+        "line_start": 9,
+        "line_end": 10
+      }
+    },
+    {
+      "item_id": "SYS-SW-003",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "other",
+      "source": "inline",
+      "loc": {
+        "page": 6,
+        "line_start": 11,
+        "line_end": 12
+      }
+    }
+  ]
+}
+```

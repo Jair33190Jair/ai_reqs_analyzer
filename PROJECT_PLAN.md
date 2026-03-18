@@ -29,7 +29,7 @@ The fastest path to value is end-to-end validation, not stage-by-stage perfectio
   - V2 adds: validate returned patternS (size, matches), validate exact fields' names + ask user
               if he is okay with the amount of requirements, chapters and total cost of the
               analysis.
-- [x] **1.4** `S3_llm_structurer.py` — cheap LLM identifies structure (items, attributes and locations). Python resolves loc coordinates to verbatim content via map_content(); validated against two schemas: llm_response (internal) and resolved (artifact).
+- [x] **1.4** `S3_llm_structurer.py` — cheap LLM identifies structure (items, attributes and locations). Python resolves loc coordinates to verbatim content via map_content() and generates internal ids; validated against two schemas: llm_response (internal) and resolved (artifact).
   - V2 adds: strap context blocks to pass to the analyzer (non-llm), identify context_blocks with script
 - [ ] **1.5** `S5_llm_analyzer.py` — Calls the analyzer
   - V2 adds: context caching for refining spec.

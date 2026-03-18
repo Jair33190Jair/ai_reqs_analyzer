@@ -19,12 +19,16 @@ from pathlib import Path
 import anthropic
 import jsonschema
 from dotenv import load_dotenv
+from llm_pricing import get_cost
 
 load_dotenv()
 
 _SCHEMAS_DIR = Path(__file__).parent.parent / "schemas"
 _LLM_RESPONSE_SCHEMA = json.loads((_SCHEMAS_DIR / "03_llm_structured.01_llm_response.schema.v1.json").read_text(encoding="utf-8"))
 _ARTIFACT_SCHEMA = json.loads((_SCHEMAS_DIR / "03_llm_structured.02_resolved.schema.v1.json").read_text(encoding="utf-8"))
+
+_LLM_MODEL = "claude-haiku-4-5-20251001"
+_LLM_MAX_TOKENS = 8000
 
 _SYSTEM = """\
 You are an expert requirements document parser.
@@ -90,17 +94,23 @@ def _format_pages(pages: list[dict]) -> str:
     return "\n\n".join(parts)
 
 
+def _log_usage(input_tokens: int, output_tokens: int) -> None:
+    cost = get_cost(_LLM_MODEL, input_tokens, output_tokens)
+    logging.info(f"[S3 LLM] {input_tokens} in / {output_tokens} out — ${cost:.6f}")
+
+
 def _call_llm(system_prompt: str, user_message: str) -> tuple[str, dict]:
     """Input: fully rendered system and user prompt strings.
     Output: (raw_response, parsed JSON dict).
     Raises ValueError on unparseable response."""
     client = anthropic.Anthropic()
     message = client.messages.create(
-        model="claude-haiku-4-5-20251001",
-        max_tokens=8192,
+        model=_LLM_MODEL,
+        max_tokens=_LLM_MAX_TOKENS,
         system=system_prompt,
         messages=[{"role": "user", "content": user_message}],
     )
+    _log_usage(message.usage.input_tokens, message.usage.output_tokens)
     raw_response = message.content[0].text.strip()
     cleaned = re.sub(r"```json\s*([\s\S]*?)\s*```", r"\1", raw_response).strip()
     try:
@@ -128,21 +138,79 @@ def run_structurer(normalized: dict) -> tuple[str, dict]:
 
 
 def _resolve_loc(loc: dict, pages_with_lines: dict[int, list[str]]) -> str:
-    """Input: a loc dict {page, line_start, line_end} and a mapping of page number → lines (0-indexed list).
-    Output: the resolved text for that loc range (1-based, inclusive line numbers)."""
-    lines = pages_with_lines.get(loc["page"], [])
-    start = loc["line_start"] - 1  # convert to 0-based
-    end = loc["line_end"]          # slice end is exclusive, so line_end (1-based inclusive) works as-is
-    return "\n".join(lines[start:end])
+    """Input: a loc dict {page, line_start, line_end, page_end?} and a page→lines map.
+    Output: the resolved verbatim text (1-based, inclusive line numbers).
+    Supports multi-page items: line_start is on page, line_end is on page_end."""
+    page_start = loc["page"]
+    page_end = loc.get("page_end", page_start)
+    if page_start == page_end:
+        lines = pages_with_lines.get(page_start, [])
+        return "\n".join(lines[loc["line_start"] - 1 : loc["line_end"]])
+    parts = []
+    for page_num in range(page_start, page_end + 1):
+        page_lines = pages_with_lines.get(page_num, [])
+        if page_num == page_start:
+            parts.extend(page_lines[loc["line_start"] - 1 :])
+        elif page_num == page_end:
+            parts.extend(page_lines[: loc["line_end"]])
+        else:
+            parts.extend(page_lines)
+    return "\n".join(parts)
 
 
-def map_content(result: dict, normalized: dict) -> dict:
-    """Input: validated 03_llm_structured dict and the source 01_normalized dict.
+def _section_internal_id(section: dict, level_counters: dict[int, int]) -> str:
+    """Input: a section dict and the running level-counter state (mutated in place).
+    Output: internal_id string of the form 'G{n1}.{n2}...' derived from hierarchical_number
+    if present, otherwise computed from level and position."""
+    hier = section.get("hierarchical_number")
+    if hier:
+        return f"G{hier}"
+    level = section.get("level") or 1
+    level_counters[level] = level_counters.get(level, 0) + 1
+    for l in list(level_counters):
+        if l > level:
+            del level_counters[l]
+    return "G" + ".".join(str(level_counters.get(l, 1)) for l in range(1, level + 1))
+
+
+def generate_internal_ids(enriched: dict) -> dict:
+    """Input: enriched dict (output of map_content — sections and spec_items have 'content').
+    Output: copy with 'internal_id' added to every section and spec_item.
+    Section IDs: G{hierarchical_number} or G{inferred from level/position}.
+    Spec item IDs: G{parent_section_number}-{NNN} (3-digit, sequential per section)."""
+    level_counters: dict[int, int] = {}
+    sections_with_ids = []
+    for s in enriched.get("sections", []):
+        internal_id = _section_internal_id(s, level_counters)
+        sections_with_ids.append({**s, "internal_id": internal_id})
+
+    # Build sorted (page, line_start, internal_id) for parent lookup — use start page
+    section_positions = sorted(
+        (s["loc"]["page"], s["loc"]["line_start"], s["internal_id"])
+        for s in sections_with_ids
+    )
+
+    item_counters: dict[str, int] = {}
+    spec_items_with_ids = []
+    for item in enriched.get("spec_items", []):
+        loc = item["loc"]
+        page, line = loc["page"], loc["line_start"]  # start position for parent lookup
+        parent_id = "G0"  # fallback: item appears before any section
+        for s_page, s_line, s_id in section_positions:
+            if (s_page, s_line) <= (page, line):
+                parent_id = s_id
+        item_counters[parent_id] = item_counters.get(parent_id, 0) + 1
+        internal_id = f"{parent_id}-{item_counters[parent_id]:03d}"
+        spec_items_with_ids.append({**item, "internal_id": internal_id})
+
+    return {**enriched, "sections": sections_with_ids, "spec_items": spec_items_with_ids}
+
+
+def map_content(result: dict, pages_with_lines: dict[int, list[str]]) -> dict:
+    """Input: validated 03_llm_structured dict and a page→lines map.
     Output: enriched copy of result where every section and spec_item gains a
-    'content' field — the verbatim text resolved from its loc coordinates."""
-    pages_with_lines: dict[int, list[str]] = {
-        p["page"]: p["text"].split("\n") for p in normalized["pages"]
-    }
+    'content' field — the verbatim text resolved from its loc coordinates.
+    extra_attrs locs are preserved as-is for downstream use."""
     enriched = dict(result)
     enriched["sections"] = [
         {**s, "content": _resolve_loc(s["loc"], pages_with_lines)}
@@ -153,6 +221,71 @@ def map_content(result: dict, normalized: dict) -> dict:
         for item in result.get("spec_items", [])
     ]
     return enriched
+
+
+def validate_resolved(enriched: dict, pages_with_lines: dict[int, list[str]]) -> None:
+    """Input: fully enriched artifact dict and page→lines map from the normalized source.
+    Raises ValueError with the offending internal_id if any semantic check fails.
+    Checks (in order):
+      1. content non-empty for every section and spec_item
+      2. loc.line_start ≤ loc.line_end for every loc (items, sections, extra_attrs)
+      3. loc line numbers within actual page length
+      4. item_id present in content (when not null)
+      5. extra_attrs locs fall within the parent item's loc range"""
+
+    def _check_loc_bounds(loc: dict, ref: str) -> None:
+        page_s = loc["page"]
+        page_e = loc.get("page_end", page_s)
+        if page_e < page_s:
+            raise ValueError(f"{ref}: page_end ({page_e}) < page ({page_s})")
+        start_page_lines = pages_with_lines.get(page_s)
+        if start_page_lines is None:
+            raise ValueError(f"{ref}: page {page_s} not found in normalized source")
+        if loc["line_start"] > len(start_page_lines):
+            raise ValueError(
+                f"{ref}: line_start ({loc['line_start']}) exceeds page {page_s} length ({len(start_page_lines)})"
+            )
+        end_page_lines = pages_with_lines.get(page_e)
+        if end_page_lines is None:
+            raise ValueError(f"{ref}: page_end {page_e} not found in normalized source")
+        if loc["line_end"] > len(end_page_lines):
+            raise ValueError(
+                f"{ref}: line_end ({loc['line_end']}) exceeds page {page_e} length ({len(end_page_lines)})"
+            )
+        if page_s == page_e and loc["line_start"] > loc["line_end"]:
+            raise ValueError(f"{ref}: line_start ({loc['line_start']}) > line_end ({loc['line_end']}) on same page")
+
+    for s in enriched.get("sections", []):
+        ref = s.get("internal_id", "section?")
+        if not s.get("content", "").strip():
+            raise ValueError(f"{ref}: content is empty after loc resolution")
+        _check_loc_bounds(s["loc"], ref)
+
+    for item in enriched.get("spec_items", []):
+        ref = item.get("internal_id", "item?")
+        if not item.get("content", "").strip():
+            raise ValueError(f"{ref}: content is empty after loc resolution")
+        _check_loc_bounds(item["loc"], ref)
+
+        item_id = item.get("item_id")
+        if item_id and item_id not in item["content"]:
+            raise ValueError(
+                f"{ref}: item_id '{item_id}' not found in resolved content — "
+                "loc boundary may be wrong"
+            )
+
+        item_loc = item["loc"]
+        item_page_s = item_loc["page"]
+        item_page_e = item_loc.get("page_end", item_page_s)
+        for attr_name, attr_loc in (item.get("extra_attrs") or {}).items():
+            attr_ref = f"{ref}.extra_attrs.{attr_name}"
+            _check_loc_bounds(attr_loc, attr_ref)
+            attr_page_s = attr_loc["page"]
+            attr_page_e = attr_loc.get("page_end", attr_page_s)
+            if attr_page_s < item_page_s or attr_page_e > item_page_e:
+                raise ValueError(
+                    f"{attr_ref}: pages {attr_page_s}–{attr_page_e} outside item page range {item_page_s}–{item_page_e}"
+                )
 
 
 def save_result(input_path: Path) -> Path:
@@ -183,7 +316,15 @@ def save_result(input_path: Path) -> Path:
             f"Raw LLM response saved to: {raw_path}"
         ) from exc
 
-    enriched = map_content(result, normalized)
+    pages_with_lines: dict[int, list[str]] = {
+        p["page"]: p["text"].split("\n") for p in normalized["pages"]
+    }
+    enriched = generate_internal_ids(map_content(result, pages_with_lines))
+
+    try:
+        validate_resolved(enriched, pages_with_lines)
+    except ValueError as exc:
+        raise ValueError(f"Resolved artifact failed semantic validation: {exc}\nRaw LLM response saved to: {raw_path}") from exc
 
     try:
         jsonschema.validate(enriched, _ARTIFACT_SCHEMA)

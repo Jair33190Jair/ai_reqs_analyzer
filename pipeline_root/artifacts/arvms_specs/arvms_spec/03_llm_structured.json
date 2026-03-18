@@ -1,0 +1,869 @@
+{
+  "source_ref": "00_raw_extract.json",
+  "skip_pages": [],
+  "sections": [
+    {
+      "hierarchical_number": "1",
+      "title": "Introduction",
+      "level": 1,
+      "item_id": null,
+      "loc": {
+        "page": 1,
+        "line_start": 7,
+        "line_end": 7
+      },
+      "content": "1. Introduction",
+      "internal_id": "G1"
+    },
+    {
+      "hierarchical_number": "1.1",
+      "title": "Purpose",
+      "level": 2,
+      "item_id": null,
+      "loc": {
+        "page": 1,
+        "line_start": 8,
+        "line_end": 8
+      },
+      "content": "1.1 Purpose",
+      "internal_id": "G1.1"
+    },
+    {
+      "hierarchical_number": "2",
+      "title": "System Overview",
+      "level": 1,
+      "item_id": null,
+      "loc": {
+        "page": 1,
+        "line_start": 14,
+        "line_end": 14
+      },
+      "content": "2. System Overview",
+      "internal_id": "G2"
+    },
+    {
+      "hierarchical_number": "2.1",
+      "title": "Product Description",
+      "level": 2,
+      "item_id": null,
+      "loc": {
+        "page": 1,
+        "line_start": 15,
+        "line_end": 15
+      },
+      "content": "2.1 Product Description",
+      "internal_id": "G2.1"
+    },
+    {
+      "hierarchical_number": "2.2",
+      "title": "Operating Environment",
+      "level": 2,
+      "item_id": null,
+      "loc": {
+        "page": 1,
+        "line_start": 21,
+        "line_end": 21
+      },
+      "content": "2.2 Operating Environment",
+      "internal_id": "G2.2"
+    },
+    {
+      "hierarchical_number": "3",
+      "title": "Functional Requirements",
+      "level": 1,
+      "item_id": null,
+      "loc": {
+        "page": 2,
+        "line_start": 1,
+        "line_end": 1
+      },
+      "content": "3. Functional Requirements",
+      "internal_id": "G3"
+    },
+    {
+      "hierarchical_number": "3.1",
+      "title": "Navigation",
+      "level": 2,
+      "item_id": null,
+      "loc": {
+        "page": 2,
+        "line_start": 2,
+        "line_end": 2
+      },
+      "content": "3.1 Navigation",
+      "internal_id": "G3.1"
+    },
+    {
+      "hierarchical_number": "3.2",
+      "title": "Vacuuming",
+      "level": 2,
+      "item_id": null,
+      "loc": {
+        "page": 2,
+        "line_start": 13,
+        "line_end": 13
+      },
+      "content": "3.2 Vacuuming",
+      "internal_id": "G3.2"
+    },
+    {
+      "hierarchical_number": "3.3",
+      "title": "Mopping",
+      "level": 2,
+      "item_id": null,
+      "loc": {
+        "page": 2,
+        "line_start": 20,
+        "line_end": 20
+      },
+      "content": "3.3 Mopping",
+      "internal_id": "G3.3"
+    },
+    {
+      "hierarchical_number": "3.4",
+      "title": "Docking",
+      "level": 2,
+      "item_id": null,
+      "loc": {
+        "page": 3,
+        "line_start": 5,
+        "line_end": 5
+      },
+      "content": "3.4 Docking",
+      "internal_id": "G3.4"
+    },
+    {
+      "hierarchical_number": "3.5",
+      "title": "User Interaction",
+      "level": 2,
+      "item_id": null,
+      "loc": {
+        "page": 3,
+        "line_start": 13,
+        "line_end": 13
+      },
+      "content": "3.5 User Interaction",
+      "internal_id": "G3.5"
+    },
+    {
+      "hierarchical_number": "4",
+      "title": "Safety Requirements",
+      "level": 1,
+      "item_id": null,
+      "loc": {
+        "page": 3,
+        "line_start": 20,
+        "line_end": 20
+      },
+      "content": "4. Safety Requirements",
+      "internal_id": "G4"
+    },
+    {
+      "hierarchical_number": "4.1",
+      "title": "Mechanical Safety",
+      "level": 2,
+      "item_id": null,
+      "loc": {
+        "page": 3,
+        "line_start": 21,
+        "line_end": 21
+      },
+      "content": "4.1 Mechanical Safety",
+      "internal_id": "G4.1"
+    },
+    {
+      "hierarchical_number": "4.2",
+      "title": "Electrical Safety",
+      "level": 2,
+      "item_id": null,
+      "loc": {
+        "page": 4,
+        "line_start": 5,
+        "line_end": 5
+      },
+      "content": "4.2 Electrical Safety",
+      "internal_id": "G4.2"
+    },
+    {
+      "hierarchical_number": "5",
+      "title": "Performance Requirements",
+      "level": 1,
+      "item_id": null,
+      "loc": {
+        "page": 4,
+        "line_start": 10,
+        "line_end": 10
+      },
+      "content": "5. Performance Requirements",
+      "internal_id": "G5"
+    },
+    {
+      "hierarchical_number": "6",
+      "title": "Cybersecurity Requirements",
+      "level": 1,
+      "item_id": null,
+      "loc": {
+        "page": 4,
+        "line_start": 19,
+        "line_end": 19
+      },
+      "content": "6. Cybersecurity Requirements",
+      "internal_id": "G6"
+    },
+    {
+      "hierarchical_number": "7",
+      "title": "Hardware Requirements",
+      "level": 1,
+      "item_id": null,
+      "loc": {
+        "page": 5,
+        "line_start": 5,
+        "line_end": 5
+      },
+      "content": "7. Hardware Requirements",
+      "internal_id": "G7"
+    },
+    {
+      "hierarchical_number": "7.1",
+      "title": "Sensors",
+      "level": 2,
+      "item_id": null,
+      "loc": {
+        "page": 5,
+        "line_start": 6,
+        "line_end": 6
+      },
+      "content": "7.1 Sensors",
+      "internal_id": "G7.1"
+    },
+    {
+      "hierarchical_number": "7.2",
+      "title": "Actuators",
+      "level": 2,
+      "item_id": null,
+      "loc": {
+        "page": 5,
+        "line_start": 17,
+        "line_end": 17
+      },
+      "content": "7.2 Actuators",
+      "internal_id": "G7.2"
+    },
+    {
+      "hierarchical_number": "8",
+      "title": "Software Architecture Requirements",
+      "level": 1,
+      "item_id": null,
+      "loc": {
+        "page": 6,
+        "line_start": 3,
+        "line_end": 3
+      },
+      "content": "8. Software Architecture Requirements",
+      "internal_id": "G8"
+    },
+    {
+      "hierarchical_number": "9",
+      "title": "System States",
+      "level": 1,
+      "item_id": null,
+      "loc": {
+        "page": 6,
+        "line_start": 13,
+        "line_end": 13
+      },
+      "content": "9. System States",
+      "internal_id": "G9"
+    }
+  ],
+  "spec_items": [
+    {
+      "item_id": "SYS-FUNC-001",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 2,
+        "line_start": 3,
+        "line_end": 4
+      },
+      "content": "SYS-FUNC-001\nThe system shall autonomously generate a 2D indoor map using SLAM.",
+      "internal_id": "G3.1-001"
+    },
+    {
+      "item_id": "SYS-FUNC-002",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 2,
+        "line_start": 5,
+        "line_end": 6
+      },
+      "content": "SYS-FUNC-002\nThe system shall localize itself with ±5 cm accuracy.",
+      "internal_id": "G3.1-002"
+    },
+    {
+      "item_id": "SYS-FUNC-003",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 2,
+        "line_start": 7,
+        "line_end": 8
+      },
+      "content": "SYS-FUNC-003\nThe system shall avoid static and dynamic obstacles in real-time.",
+      "internal_id": "G3.1-003"
+    },
+    {
+      "item_id": "SYS-FUNC-004",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 2,
+        "line_start": 9,
+        "line_end": 10
+      },
+      "content": "SYS-FUNC-004\nThe system shall detect cliffs or stairs and prevent falling.",
+      "internal_id": "G3.1-004"
+    },
+    {
+      "item_id": "SYS-FUNC-005",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 2,
+        "line_start": 11,
+        "line_end": 12
+      },
+      "content": "SYS-FUNC-005\nThe system shall support multi-room mapping and segmentation.",
+      "internal_id": "G3.1-005"
+    },
+    {
+      "item_id": "SYS-FUNC-010",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 2,
+        "line_start": 14,
+        "line_end": 15
+      },
+      "content": "SYS-FUNC-010\nThe system shall generate suction power >= 5000 Pa.",
+      "internal_id": "G3.2-001"
+    },
+    {
+      "item_id": "SYS-FUNC-011",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 2,
+        "line_start": 16,
+        "line_end": 17
+      },
+      "content": "SYS-FUNC-011\nThe system shall automatically adjust suction based on detected floor type.",
+      "internal_id": "G3.2-002"
+    },
+    {
+      "item_id": "SYS-FUNC-012",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 2,
+        "line_start": 18,
+        "line_end": 19
+      },
+      "content": "SYS-FUNC-012\nThe system shall detect carpet surfaces.",
+      "internal_id": "G3.2-003"
+    },
+    {
+      "item_id": "SYS-FUNC-020",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 2,
+        "line_start": 21,
+        "line_end": 22
+      },
+      "content": "SYS-FUNC-020\nThe system shall provide electronically controlled water dispensing.",
+      "internal_id": "G3.3-001"
+    },
+    {
+      "item_id": "SYS-FUNC-021",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 2,
+        "line_start": 23,
+        "line_end": 24
+      },
+      "content": "SYS-FUNC-021\nThe system shall support adjustable water flow levels (Low/Medium/High).",
+      "internal_id": "G3.3-002"
+    },
+    {
+      "item_id": "SYS-FUNC-022",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 3,
+        "line_start": 1,
+        "line_end": 2
+      },
+      "content": "SYS-FUNC-022\nThe system shall lift the mop automatically when carpet is detected.",
+      "internal_id": "G3.3-003"
+    },
+    {
+      "item_id": "SYS-FUNC-023",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 3,
+        "line_start": 3,
+        "line_end": 4
+      },
+      "content": "SYS-FUNC-023\nThe system shall detect empty water tank conditions and notify the user.",
+      "internal_id": "G3.3-004"
+    },
+    {
+      "item_id": "SYS-FUNC-030",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 3,
+        "line_start": 6,
+        "line_end": 8
+      },
+      "content": "SYS-FUNC-030\nThe system shall automatically return to the charging dock when battery <\n20%.",
+      "internal_id": "G3.4-001"
+    },
+    {
+      "item_id": "SYS-FUNC-031",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 3,
+        "line_start": 9,
+        "line_end": 10
+      },
+      "content": "SYS-FUNC-031\nThe system shall resume cleaning after recharge.",
+      "internal_id": "G3.4-002"
+    },
+    {
+      "item_id": "SYS-FUNC-032",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 3,
+        "line_start": 11,
+        "line_end": 12
+      },
+      "content": "SYS-FUNC-032\nThe system shall support automatic charging.",
+      "internal_id": "G3.4-003"
+    },
+    {
+      "item_id": "SYS-FUNC-040",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 3,
+        "line_start": 14,
+        "line_end": 15
+      },
+      "content": "SYS-FUNC-040\nThe system shall support cleaning scheduling.",
+      "internal_id": "G3.5-001"
+    },
+    {
+      "item_id": "SYS-FUNC-041",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 3,
+        "line_start": 16,
+        "line_end": 17
+      },
+      "content": "SYS-FUNC-041\nThe system shall allow room-specific cleaning selection.",
+      "internal_id": "G3.5-002"
+    },
+    {
+      "item_id": "SYS-FUNC-042",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "functional",
+      "source": "inline",
+      "loc": {
+        "page": 3,
+        "line_start": 18,
+        "line_end": 19
+      },
+      "content": "SYS-FUNC-042\nThe system shall provide cleaning reports (area, duration, battery usage).",
+      "internal_id": "G3.5-003"
+    },
+    {
+      "item_id": "SYS-SAFE-001",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "safety",
+      "source": "inline",
+      "loc": {
+        "page": 3,
+        "line_start": 22,
+        "line_end": 23
+      },
+      "content": "SYS-SAFE-001\nThe system shall stop all drive motors within 100 ms if lifted.",
+      "internal_id": "G4.1-001"
+    },
+    {
+      "item_id": "SYS-SAFE-002",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "safety",
+      "source": "inline",
+      "loc": {
+        "page": 4,
+        "line_start": 1,
+        "line_end": 2
+      },
+      "content": "SYS-SAFE-002\nThe system shall limit brush torque to prevent injury.",
+      "internal_id": "G4.1-002"
+    },
+    {
+      "item_id": "SYS-SAFE-003",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "safety",
+      "source": "inline",
+      "loc": {
+        "page": 4,
+        "line_start": 3,
+        "line_end": 4
+      },
+      "content": "SYS-SAFE-003\nThe system shall prevent operation if the dustbin is removed.",
+      "internal_id": "G4.1-003"
+    },
+    {
+      "item_id": "SYS-SAFE-010",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "safety",
+      "source": "inline",
+      "loc": {
+        "page": 4,
+        "line_start": 6,
+        "line_end": 7
+      },
+      "content": "SYS-SAFE-010\nThe system shall prevent battery overcharge and deep discharge.",
+      "internal_id": "G4.2-001"
+    },
+    {
+      "item_id": "SYS-SAFE-011",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "safety",
+      "source": "inline",
+      "loc": {
+        "page": 4,
+        "line_start": 8,
+        "line_end": 9
+      },
+      "content": "SYS-SAFE-011\nThe system shall monitor motor temperature and prevent overheating.",
+      "internal_id": "G4.2-002"
+    },
+    {
+      "item_id": "SYS-PERF-001",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "performance",
+      "source": "inline",
+      "loc": {
+        "page": 4,
+        "line_start": 11,
+        "line_end": 12
+      },
+      "content": "SYS-PERF-001\nCleaning coverage efficiency shall be >= 95%.",
+      "internal_id": "G5-001"
+    },
+    {
+      "item_id": "SYS-PERF-002",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "performance",
+      "source": "inline",
+      "loc": {
+        "page": 4,
+        "line_start": 13,
+        "line_end": 14
+      },
+      "content": "SYS-PERF-002\nMaximum noise level shall be <= 65 dB.",
+      "internal_id": "G5-002"
+    },
+    {
+      "item_id": "SYS-PERF-003",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "performance",
+      "source": "inline",
+      "loc": {
+        "page": 4,
+        "line_start": 15,
+        "line_end": 16
+      },
+      "content": "SYS-PERF-003\nOperating time shall be >= 120 minutes.",
+      "internal_id": "G5-003"
+    },
+    {
+      "item_id": "SYS-PERF-004",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "performance",
+      "source": "inline",
+      "loc": {
+        "page": 4,
+        "line_start": 17,
+        "line_end": 18
+      },
+      "content": "SYS-PERF-004\nCharging time shall be <= 4 hours.",
+      "internal_id": "G5-004"
+    },
+    {
+      "item_id": "SYS-SEC-001",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "security",
+      "source": "inline",
+      "loc": {
+        "page": 4,
+        "line_start": 20,
+        "line_end": 21
+      },
+      "content": "SYS-SEC-001\nAll external communications shall use TLS 1.2 or higher.",
+      "internal_id": "G6-001"
+    },
+    {
+      "item_id": "SYS-SEC-002",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "security",
+      "source": "inline",
+      "loc": {
+        "page": 5,
+        "line_start": 1,
+        "line_end": 2
+      },
+      "content": "SYS-SEC-002\nThe system shall support secure OTA firmware updates.",
+      "internal_id": "G6-002"
+    },
+    {
+      "item_id": "SYS-SEC-003",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "security",
+      "source": "inline",
+      "loc": {
+        "page": 5,
+        "line_start": 3,
+        "line_end": 4
+      },
+      "content": "SYS-SEC-003\nThe system shall implement secure boot with firmware signature validation.",
+      "internal_id": "G6-003"
+    },
+    {
+      "item_id": "SYS-HW-001",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "other",
+      "source": "inline",
+      "loc": {
+        "page": 5,
+        "line_start": 7,
+        "line_end": 8
+      },
+      "content": "SYS-HW-001\nThe system shall include a LIDAR or vision-based navigation sensor.",
+      "internal_id": "G7.1-001"
+    },
+    {
+      "item_id": "SYS-HW-002",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "other",
+      "source": "inline",
+      "loc": {
+        "page": 5,
+        "line_start": 9,
+        "line_end": 10
+      },
+      "content": "SYS-HW-002\nThe system shall include cliff detection sensors.",
+      "internal_id": "G7.1-002"
+    },
+    {
+      "item_id": "SYS-HW-003",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "other",
+      "source": "inline",
+      "loc": {
+        "page": 5,
+        "line_start": 11,
+        "line_end": 12
+      },
+      "content": "SYS-HW-003\nThe system shall include wheel encoders.",
+      "internal_id": "G7.1-003"
+    },
+    {
+      "item_id": "SYS-HW-004",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "other",
+      "source": "inline",
+      "loc": {
+        "page": 5,
+        "line_start": 13,
+        "line_end": 14
+      },
+      "content": "SYS-HW-004\nThe system shall include an IMU.",
+      "internal_id": "G7.1-004"
+    },
+    {
+      "item_id": "SYS-HW-005",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "other",
+      "source": "inline",
+      "loc": {
+        "page": 5,
+        "line_start": 15,
+        "line_end": 16
+      },
+      "content": "SYS-HW-005\nThe system shall include a water level sensor.",
+      "internal_id": "G7.1-005"
+    },
+    {
+      "item_id": "SYS-HW-010",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "other",
+      "source": "inline",
+      "loc": {
+        "page": 5,
+        "line_start": 18,
+        "line_end": 19
+      },
+      "content": "SYS-HW-010\nThe system shall include two independent drive motors.",
+      "internal_id": "G7.2-001"
+    },
+    {
+      "item_id": "SYS-HW-011",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "other",
+      "source": "inline",
+      "loc": {
+        "page": 5,
+        "line_start": 20,
+        "line_end": 21
+      },
+      "content": "SYS-HW-011\nThe system shall include a vacuum motor.",
+      "internal_id": "G7.2-002"
+    },
+    {
+      "item_id": "SYS-HW-012",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "other",
+      "source": "inline",
+      "loc": {
+        "page": 5,
+        "line_start": 22,
+        "line_end": 23
+      },
+      "content": "SYS-HW-012\nThe system shall include a water pump.",
+      "internal_id": "G7.2-003"
+    },
+    {
+      "item_id": "SYS-HW-013",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "other",
+      "source": "inline",
+      "loc": {
+        "page": 6,
+        "line_start": 1,
+        "line_end": 2
+      },
+      "content": "SYS-HW-013\nThe system shall include a mop lift actuator.",
+      "internal_id": "G7.2-004"
+    },
+    {
+      "item_id": "SYS-SW-001",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "other",
+      "source": "inline",
+      "loc": {
+        "page": 6,
+        "line_start": 4,
+        "line_end": 8
+      },
+      "content": "SYS-SW-001\nThe system shall implement a layered software architecture:\n• Application Layer\n• Middleware Layer\n• Hardware Abstraction Layer (HAL)",
+      "internal_id": "G8-001"
+    },
+    {
+      "item_id": "SYS-SW-002",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "other",
+      "source": "inline",
+      "loc": {
+        "page": 6,
+        "line_start": 9,
+        "line_end": 10
+      },
+      "content": "SYS-SW-002\nThe system shall support modular firmware updates.",
+      "internal_id": "G8-002"
+    },
+    {
+      "item_id": "SYS-SW-003",
+      "hierarchical_number": null,
+      "item_type": "requirement",
+      "classification": "other",
+      "source": "inline",
+      "loc": {
+        "page": 6,
+        "line_start": 11,
+        "line_end": 12
+      },
+      "content": "SYS-SW-003\nThe system shall log diagnostic events with timestamps.",
+      "internal_id": "G8-003"
+    }
+  ]
+}
