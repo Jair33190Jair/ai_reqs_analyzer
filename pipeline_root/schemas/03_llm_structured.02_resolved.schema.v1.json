@@ -72,8 +72,8 @@
           },
           "gen_uid": {
             "type": "string",
-            "description": "Content fingerprint: sha256(normalize(content))[:8 hex uppercase]. Position-independent — survives section renumbering and moves. Changes when and only when the heading text changes.",
-            "pattern": "^[0-9A-F]{8}$"
+            "description": "Content fingerprint: GU- prefix + sha256(normalize(content))[:6 hex uppercase]. Position-independent — survives section renumbering and moves. Changes when and only when the heading text changes.",
+            "pattern": "^GU-[0-9A-F]{6}$"
           }
         }
       }
@@ -123,8 +123,8 @@
           },
           "gen_uid": {
             "type": "string",
-            "description": "Content fingerprint: sha256(normalize(content))[:8 hex uppercase]. Position-independent — survives section moves and renumbering. Changes when and only when the requirement text changes. Used as stable identity when item_id is null; used for change detection when item_id is present.",
-            "pattern": "^[0-9A-F]{8}$"
+            "description": "Content fingerprint: GU- prefix + sha256(normalize(content))[:6 hex uppercase]. Position-independent — survives section moves and renumbering. Changes when and only when the requirement text changes. Used as stable identity when item_id is null; used for change detection when item_id is present.",
+            "pattern": "^GU-[0-9A-F]{6}$"
           },
           "extra_attrs": {
             "type": "object",

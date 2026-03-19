@@ -15,7 +15,7 @@
       "properties": {
         "gen_uid": {
           "type": "string",
-          "pattern": "^[0-9A-F]{8}$",
+          "pattern": "^GU-[0-9A-F]{6}$",
           "description": "Content fingerprint from stage 03. Primary join key — position-independent and change-sensitive."
         },
         "spec_item_id": {
@@ -33,38 +33,9 @@
       }
     },
 
-    "disposition": {
-      "description": "Author workflow state. The LLM never writes this block — post-processing initializes it to OPEN.",
-      "type": "object",
-      "required": ["status"],
-      "additionalProperties": false,
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["OPEN", "ACCEPTED", "REJECTED", "DEFERRED", "IN_PROGRESS", "RESOLVED", "OBSOLETE"],
-          "description": "OPEN: not yet reviewed. ACCEPTED: confirmed real issue. REJECTED: false positive / won't fix. DEFERRED: postponed. IN_PROGRESS: fix underway. RESOLVED: fixed and verified. OBSOLETE: parent requirement deleted or superseded."
-        },
-        "author_note": {
-          "type": ["string", "null"],
-          "description": "Free-text response or rationale from the author."
-        },
-        "resolved_in_version": {
-          "type": ["string", "null"],
-          "description": "Document version in which the fix was applied."
-        },
-        "reviewed_by": {
-          "type": ["string", "null"]
-        },
-        "review_date": {
-          "type": ["string", "null"],
-          "format": "date"
-        }
-      }
-    },
-
     "finding": {
       "type": "object",
-      "required": ["gen_find_id", "pass", "type", "category", "severity", "affected_items", "description", "confidence", "disposition"],
+      "required": ["gen_find_id", "pass", "type", "category", "severity", "affected_items", "description", "confidence"],
       "additionalProperties": false,
       "properties": {
         "gen_find_id": {
@@ -122,9 +93,6 @@
           "type": "number",
           "minimum": 0.0,
           "maximum": 1.0
-        },
-        "disposition": {
-          "$ref": "#/definitions/disposition"
         }
       }
     },
@@ -158,7 +126,7 @@
       "properties": {
         "gen_uid": {
           "type": "string",
-          "pattern": "^[0-9A-F]{8}$"
+          "pattern": "^GU-[0-9A-F]{6}$"
         },
         "spec_item_id": {
           "type": ["string", "null"]

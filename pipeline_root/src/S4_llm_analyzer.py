@@ -232,13 +232,6 @@ def enrich_findings(raw_findings: dict, source_ref: str, structured: dict) -> di
             "recommendation": f.get("recommendation"),
             "reference": f.get("reference"),
             "confidence": f["confidence"],
-            "disposition": {
-                "status": "OPEN",
-                "author_note": None,
-                "resolved_in_version": None,
-                "reviewed_by": None,
-                "review_date": None,
-            },
         })
 
     # Build item_review from structured input + findings + reviewed_items

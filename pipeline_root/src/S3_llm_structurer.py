@@ -173,9 +173,9 @@ def _resolve_loc(loc: dict, pages_with_lines: dict[int, list[str]]) -> str:
 
 def _gen_uid(content: str) -> str:
     """Input: verbatim content string.
-    Output: 6 hex uppercase chars — sha256 of whitespace-normalised content."""
+    Output: GU-XXXXXX (6 hex uppercase) — sha256 of whitespace-normalised content."""
     normalised = " ".join(content.split())
-    return hashlib.sha256(normalised.encode()).hexdigest()[:6].upper()
+    return "GU-" + hashlib.sha256(normalised.encode()).hexdigest()[:6].upper()
 
 
 def _section_gen_hierarchy_number(section: dict, level_counters: dict[int, int]) -> str:
