@@ -73,23 +73,23 @@ thing with different names across the spec) or undefined domain terms?
 - Severity MAJOR = will likely cause rework or ambiguous implementation.
 - Severity MINOR = improvement opportunity, wording clarification.
 - Severity INFO = use only for type OBSERVATION.
-- If a requirement has NO quality issues, do NOT include it in findings.
+- If a requirement has NO quality issues, do NOT include it in flags.
 - Be specific in your description: quote the problematic word/phrase.
 - Keep recommendations actionable and concrete.
-- confidence: your self-assessed certainty in this finding (0.0–1.0). \
+- confidence: your self-assessed certainty in this flag (0.0–1.0). \
 Below 0.6 means you are unsure — use type QUESTION instead of FINDING.
 - reference: cite the relevant normative standard where applicable \
 (e.g. "ISO 26262-8 §6.4.2.1", "ASPICE SWE.1.BP5"). Null if no specific clause applies.
 
 ## Identifying affected items
 Each requirement in the input is labeled with its gen_uid, spec_item_id, and gen_hierarchy_number.
-For each finding, populate affected_items with these identifiers and role "primary".
-If a finding involves a conflict between two items, list both: one as "primary" (the one with the issue), \
+For each flag, populate affected_items with these identifiers and role "primary".
+If a flag involves a conflict between two items, list both: one as "primary" (the one with the issue), \
 the other as "conflicting".
 
 ## Tracking reviewed items
 You MUST populate the "reviewed_items" array with the gen_uid of EVERY item you reviewed, \
-including items with no findings. This is used to detect skipped items.
+including items with no flags. This is used to detect skipped items.
 
 ## Output Format
 Return ONLY valid JSON — no markdown fences, no explanation.
@@ -99,12 +99,12 @@ Conform exactly to this schema:
 
 # --- Helpers ---
 
-def _gen_find_id(source_ref: str, primary_item: dict, category: str) -> str:
+def _gen_flag_id(source_ref: str, primary_item: dict, category: str) -> str:
     """Input: source_ref string, primary affected_item dict, category string.
-    Output: finding ID of the form GF-XXXXXX (6 hex uppercase).
+    Output: flag ID of the form GF-XXXXXX (6 hex uppercase).
     Uses spec_item_id when present (stable across content and position changes),
     falls back to gen_hierarchy_number for raw specs (stable across content changes only).
-    NOTE: collides if same item has multiple findings in the same category — accepted for V1."""
+    NOTE: collides if same item has multiple flags in the same category — accepted for V1."""
     item_key = primary_item.get("spec_item_id") or primary_item["gen_hierarchy_number"]
     raw = f"{source_ref}|{item_key}|{category}|{_PASS}"
     return "GF-" + hashlib.sha256(raw.encode()).hexdigest()[:6].upper()
@@ -195,7 +195,7 @@ def build_user_prompt(items: list[dict]) -> str:
 
 def run_analyzer(structured: dict) -> tuple[str, dict]:
     """Input: parsed 03_llm_structured JSON dict.
-    Output: (raw_response, findings dict conforming to 04_llm_analyzed.01_llm_response)."""
+    Output: (raw_response, flags dict conforming to 04_llm_analyzed.01_llm_response)."""
     system_prompt = _SYSTEM.format(
         schema=json.dumps(_LLM_RESPONSE_SCHEMA, indent=2),
     )
@@ -204,13 +204,13 @@ def run_analyzer(structured: dict) -> tuple[str, dict]:
     return _call_llm(system_prompt, user_prompt)
 
 
-def enrich_findings(raw_findings: dict, source_ref: str, structured: dict) -> dict:
-    """Input: validated raw LLM findings dict, source_ref string, S3 structured artifact.
+def enrich_flags(raw_result: dict, source_ref: str, structured: dict) -> dict:
+    """Input: validated raw LLM result dict, source_ref string, S3 structured artifact.
     Output: resolved artifact matching 04_llm_analyzed.02_resolved schema —
-    gen_find_id assigned, disposition initialized, item_review built, stats computed."""
-    findings = []
-    for f in raw_findings.get("findings", []):
-        # Find the primary affected item for gen_find_id computation
+    gen_flag_id assigned, item_review built, stats computed."""
+    flags = []
+    for f in raw_result.get("flags", []):
+        # Find the primary affected item for gen_flag_id computation
         primary = None
         for ai in f["affected_items"]:
             if ai["role"] == "primary":
@@ -219,10 +219,10 @@ def enrich_findings(raw_findings: dict, source_ref: str, structured: dict) -> di
         if primary is None:
             primary = f["affected_items"][0]
 
-        gen_find_id = _gen_find_id(source_ref, primary, f["category"])
+        gen_flag_id = _gen_flag_id(source_ref, primary, f["category"])
 
-        findings.append({
-            "gen_find_id": gen_find_id,
+        flags.append({
+            "gen_flag_id": gen_flag_id,
             "pass": _PASS,
             "type": f["type"],
             "category": f["category"],
@@ -234,20 +234,20 @@ def enrich_findings(raw_findings: dict, source_ref: str, structured: dict) -> di
             "confidence": f["confidence"],
         })
 
-    # Build item_review from structured input + findings + reviewed_items
-    reviewed_uids = set(raw_findings.get("reviewed_items", []))
+    # Build item_review from structured input + flags + reviewed_items
+    reviewed_uids = set(raw_result.get("reviewed_items", []))
     all_items = structured.get("spec_items", [])
 
-    # Map gen_uid → list of finding IDs
-    uid_to_finding_ids: dict[str, list[str]] = {}
-    for f in findings:
+    # Map gen_uid → list of flag IDs
+    uid_to_flag_ids: dict[str, list[str]] = {}
+    for f in flags:
         for ai in f["affected_items"]:
-            uid_to_finding_ids.setdefault(ai["gen_uid"], []).append(f["gen_find_id"])
+            uid_to_flag_ids.setdefault(ai["gen_uid"], []).append(f["gen_flag_id"])
 
     item_review = []
     for item in all_items:
         uid = item["gen_uid"]
-        fids = uid_to_finding_ids.get(uid, [])
+        fids = uid_to_flag_ids.get(uid, [])
         if uid in reviewed_uids:
             status = "FLAGGED" if fids else "PASSED"
         else:
@@ -256,7 +256,7 @@ def enrich_findings(raw_findings: dict, source_ref: str, structured: dict) -> di
             "gen_uid": uid,
             "spec_item_id": item.get("spec_item_id"),
             "status": status,
-            "finding_ids": fids,
+            "flag_ids": fids,
         })
 
     skipped_count = sum(1 for r in item_review if r["status"] == "SKIPPED")
@@ -272,17 +272,17 @@ def enrich_findings(raw_findings: dict, source_ref: str, structured: dict) -> di
         "skipped": skipped_count,
         "flagged": flagged,
         "passed": passed,
-        "total_findings": len(findings),
+        "total_flags": len(flags),
         "by_severity": {
-            "CRITICAL": sum(1 for f in findings if f["severity"] == "CRITICAL"),
-            "MAJOR": sum(1 for f in findings if f["severity"] == "MAJOR"),
-            "MINOR": sum(1 for f in findings if f["severity"] == "MINOR"),
-            "INFO": sum(1 for f in findings if f["severity"] == "INFO"),
+            "CRITICAL": sum(1 for f in flags if f["severity"] == "CRITICAL"),
+            "MAJOR": sum(1 for f in flags if f["severity"] == "MAJOR"),
+            "MINOR": sum(1 for f in flags if f["severity"] == "MINOR"),
+            "INFO": sum(1 for f in flags if f["severity"] == "INFO"),
         },
         "by_type": {
-            "FINDING": sum(1 for f in findings if f["type"] == "FINDING"),
-            "QUESTION": sum(1 for f in findings if f["type"] == "QUESTION"),
-            "OBSERVATION": sum(1 for f in findings if f["type"] == "OBSERVATION"),
+            "FINDING": sum(1 for f in flags if f["type"] == "FINDING"),
+            "QUESTION": sum(1 for f in flags if f["type"] == "QUESTION"),
+            "OBSERVATION": sum(1 for f in flags if f["type"] == "OBSERVATION"),
         },
     }
 
@@ -295,7 +295,7 @@ def enrich_findings(raw_findings: dict, source_ref: str, structured: dict) -> di
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "doc_version": None,
         },
-        "findings": findings,
+        "flags": flags,
         "item_review": item_review,
         "stats": stats,
     }
@@ -322,9 +322,9 @@ def save_result(input_path: Path) -> Path:
     raw_response, result = run_analyzer(structured)
     raw_path.write_text(raw_response, encoding="utf-8")
 
-    # Wrap in {"findings": [...]} if LLM returned a bare array
+    # Wrap in {"flags": [...]} if LLM returned a bare array
     if isinstance(result, list):
-        result = {"findings": result}
+        result = {"flags": result}
 
     try:
         jsonschema.validate(result, _LLM_RESPONSE_SCHEMA)
@@ -334,7 +334,7 @@ def save_result(input_path: Path) -> Path:
             f"Raw LLM response saved to: {raw_path}"
         ) from exc
 
-    enriched = enrich_findings(result, source_ref, structured)
+    enriched = enrich_flags(result, source_ref, structured)
 
     try:
         jsonschema.validate(enriched, _ARTIFACT_SCHEMA)
@@ -369,7 +369,7 @@ def main() -> None:
             f"{s['flagged']} flagged, {s['passed']} passed"
         )
         logging.info(
-            f"Findings: {s['total_findings']} — "
+            f"Flags: {s['total_flags']} — "
             f"CRITICAL={s['by_severity']['CRITICAL']}, "
             f"MAJOR={s['by_severity']['MAJOR']}, "
             f"MINOR={s['by_severity']['MINOR']}"
