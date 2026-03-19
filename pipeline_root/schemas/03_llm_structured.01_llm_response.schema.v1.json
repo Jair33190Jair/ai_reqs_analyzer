@@ -59,7 +59,7 @@
           },
           "loc": {
             "$ref": "#/definitions/loc",
-            "description": "Location of the heading line(s). Use line_end > line_start only if the heading wraps across lines."
+            "description": "Location of the full section header block: heading line(s) plus any preamble/description text before the first spec_item or next section. line_end is the last line of the preamble, not just the heading."
           }
         }
       }

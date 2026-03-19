@@ -53,10 +53,16 @@ OUTPUT SCHEMA (conform to this exactly — field descriptions are behavioral ins
 def _heading_instruction(heading_pattern: str | None) -> str:
     """Input: heading regex from S1 normalization, or None for raw specs.
     Output: instruction string injected into the LLM system prompt."""
+    preamble_rule = (
+        "\nSection loc must cover the heading line(s) AND any preamble/description text "
+        "that follows before the first spec_item or next heading. "
+        "Set line_end to the last line of the preamble, not just the heading."
+    )
     if heading_pattern:
         return (
             f"A heading line matches this regex: {heading_pattern}\n"
             "Emit a section entry for each line that matches. Do not emit sections for non-matching lines."
+            + preamble_rule
         )
     return (
         "No heading pattern was detected in this document. Identify headings semantically:\n"
@@ -64,6 +70,7 @@ def _heading_instruction(heading_pattern: str | None) -> str:
         "- Title case, sentence case, or ALL CAPS\n"
         "When uncertain, prefer not emitting a section over emitting a false one."
         ###TODO(V2): Once we include font extraction in the extractor we can add the font differentition here
+        + preamble_rule
     )
 
 
