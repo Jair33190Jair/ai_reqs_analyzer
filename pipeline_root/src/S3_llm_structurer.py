@@ -81,7 +81,7 @@ def _item_instruction(item_id_pattern: str | None) -> str:
         "- A system capability or behavior (look for 'shall', 'must', 'will', 'should')\n"
         "- A constraint, assumption, or interface definition\n"
         "Each item must be a single logical statement. Do not split a sentence across items. "
-        "Do not merge statements that address different topics. Set item_id to null for all items."
+        "Do not merge statements that address different topics. Set spec_item_id to null for all items."
     )
 
 
@@ -166,9 +166,9 @@ def _resolve_loc(loc: dict, pages_with_lines: dict[int, list[str]]) -> str:
 
 def _gen_uid(content: str) -> str:
     """Input: verbatim content string.
-    Output: 8 hex uppercase chars — sha256 of whitespace-normalised content."""
+    Output: 6 hex uppercase chars — sha256 of whitespace-normalised content."""
     normalised = " ".join(content.split())
-    return hashlib.sha256(normalised.encode()).hexdigest()[:8].upper()
+    return hashlib.sha256(normalised.encode()).hexdigest()[:6].upper()
 
 
 def _section_gen_hierarchy_number(section: dict, level_counters: dict[int, int]) -> str:
@@ -243,7 +243,7 @@ def validate_resolved(enriched: dict, pages_with_lines: dict[int, list[str]]) ->
       1. content non-empty for every section and spec_item
       2. loc.line_start ≤ loc.line_end for every loc (items, sections, extra_attrs)
       3. loc line numbers within actual page length
-      4. item_id present in content (when not null)
+      4. spec_item_id present in content (when not null)
       5. extra_attrs locs fall within the parent item's loc range"""
 
     def _check_loc_bounds(loc: dict, ref: str) -> None:
@@ -280,10 +280,10 @@ def validate_resolved(enriched: dict, pages_with_lines: dict[int, list[str]]) ->
             raise ValueError(f"{ref}: content is empty after loc resolution")
         _check_loc_bounds(item["loc"], ref)
 
-        item_id = item.get("item_id")
-        if item_id and item_id not in item["content"]:
+        spec_item_id = item.get("spec_item_id")
+        if spec_item_id and spec_item_id not in item["content"]:
             raise ValueError(
-                f"{ref}: item_id '{item_id}' not found in resolved content — "
+                f"{ref}: spec_item_id '{spec_item_id}' not found in resolved content — "
                 "loc boundary may be wrong"
             )
 

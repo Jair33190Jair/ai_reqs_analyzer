@@ -82,10 +82,14 @@ Below 0.6 means you are unsure — use type QUESTION instead of FINDING.
 (e.g. "ISO 26262-8 §6.4.2.1", "ASPICE SWE.1.BP5"). Null if no specific clause applies.
 
 ## Identifying affected items
-Each requirement in the input is labeled with its gen_uid, item_id, and gen_hierarchy_number.
+Each requirement in the input is labeled with its gen_uid, spec_item_id, and gen_hierarchy_number.
 For each finding, populate affected_items with these identifiers and role "primary".
 If a finding involves a conflict between two items, list both: one as "primary" (the one with the issue), \
 the other as "conflicting".
+
+## Tracking reviewed items
+You MUST populate the "reviewed_items" array with the gen_uid of EVERY item you reviewed, \
+including items with no findings. This is used to detect skipped items.
 
 ## Output Format
 Return ONLY valid JSON — no markdown fences, no explanation.
@@ -98,10 +102,10 @@ Conform exactly to this schema:
 def _gen_find_id(source_ref: str, primary_item: dict, category: str) -> str:
     """Input: source_ref string, primary affected_item dict, category string.
     Output: finding ID of the form GF-XXXXXX (6 hex uppercase).
-    Uses item_id when present, gen_uid otherwise.
-    gen_hierarchy_number is intentionally excluded — position-only changes must not
-    invalidate a finding's identity."""
-    item_key = primary_item.get("item_id") or primary_item["gen_uid"]
+    Uses spec_item_id when present (stable across content and position changes),
+    falls back to gen_hierarchy_number for raw specs (stable across content changes only).
+    NOTE: collides if same item has multiple findings in the same category — accepted for V1."""
+    item_key = primary_item.get("spec_item_id") or primary_item["gen_hierarchy_number"]
     raw = f"{source_ref}|{item_key}|{category}|{_PASS}"
     return "GF-" + hashlib.sha256(raw.encode()).hexdigest()[:6].upper()
 
@@ -151,14 +155,14 @@ def preprocess_for_llm(structured: dict) -> list[dict]:
         parent_key = item["gen_hierarchy_number"].rsplit("-", 1)[0] if "-" in item["gen_hierarchy_number"] else None
         section_ctx = section_lookup.get(parent_key, {})
 
-        # Strip the item_id prefix line from content (it's redundant with the label)
+        # Strip the spec_item_id prefix line from content (it's redundant with the label)
         content = item["content"]
-        if item.get("item_id"):
-            content = content.replace(item["item_id"] + "\n", "").strip()
+        if item.get("spec_item_id"):
+            content = content.replace(item["spec_item_id"] + "\n", "").strip()
 
         items.append({
             "gen_uid": item["gen_uid"],
-            "item_id": item.get("item_id"),
+            "spec_item_id": item.get("spec_item_id"),
             "gen_hierarchy_number": item["gen_hierarchy_number"],
             "classification": item.get("classification"),
             "item_type": item.get("item_type"),
@@ -177,7 +181,7 @@ def build_user_prompt(items: list[dict]) -> str:
         "---",
     ]
     for item in items:
-        label = item["item_id"] or item["gen_hierarchy_number"]
+        label = item["spec_item_id"] or item["gen_hierarchy_number"]
         parts.append(
             f"[{label}] (gen_uid={item['gen_uid']}, gen_hierarchy_number={item['gen_hierarchy_number']}, "
             f"Section {item['section_number']} {item['section_title']}, "
@@ -200,10 +204,10 @@ def run_analyzer(structured: dict) -> tuple[str, dict]:
     return _call_llm(system_prompt, user_prompt)
 
 
-def enrich_findings(raw_findings: dict, source_ref: str) -> dict:
-    """Input: validated raw LLM findings dict, source_ref string.
+def enrich_findings(raw_findings: dict, source_ref: str, structured: dict) -> dict:
+    """Input: validated raw LLM findings dict, source_ref string, S3 structured artifact.
     Output: resolved artifact matching 04_llm_analyzed.02_resolved schema —
-    gen_find_id assigned, disposition initialized, stats computed."""
+    gen_find_id assigned, disposition initialized, item_review built, stats computed."""
     findings = []
     for f in raw_findings.get("findings", []):
         # Find the primary affected item for gen_find_id computation
@@ -237,8 +241,45 @@ def enrich_findings(raw_findings: dict, source_ref: str) -> dict:
             },
         })
 
+    # Build item_review from structured input + findings + reviewed_items
+    reviewed_uids = set(raw_findings.get("reviewed_items", []))
+    all_items = structured.get("spec_items", [])
+
+    # Map gen_uid → list of finding IDs
+    uid_to_finding_ids: dict[str, list[str]] = {}
+    for f in findings:
+        for ai in f["affected_items"]:
+            uid_to_finding_ids.setdefault(ai["gen_uid"], []).append(f["gen_find_id"])
+
+    item_review = []
+    for item in all_items:
+        uid = item["gen_uid"]
+        fids = uid_to_finding_ids.get(uid, [])
+        if uid in reviewed_uids:
+            status = "FLAGGED" if fids else "PASSED"
+        else:
+            status = "SKIPPED"
+        item_review.append({
+            "gen_uid": uid,
+            "spec_item_id": item.get("spec_item_id"),
+            "status": status,
+            "finding_ids": fids,
+        })
+
+    skipped_count = sum(1 for r in item_review if r["status"] == "SKIPPED")
+    if skipped_count > 0:
+        logging.warning(f"[S4] {skipped_count} item(s) were not reviewed by the LLM")
+
+    flagged = sum(1 for r in item_review if r["status"] == "FLAGGED")
+    passed = sum(1 for r in item_review if r["status"] == "PASSED")
+
     stats = {
-        "total": len(findings),
+        "total_items": len(all_items),
+        "reviewed": len(reviewed_uids),
+        "skipped": skipped_count,
+        "flagged": flagged,
+        "passed": passed,
+        "total_findings": len(findings),
         "by_severity": {
             "CRITICAL": sum(1 for f in findings if f["severity"] == "CRITICAL"),
             "MAJOR": sum(1 for f in findings if f["severity"] == "MAJOR"),
@@ -262,6 +303,7 @@ def enrich_findings(raw_findings: dict, source_ref: str) -> dict:
             "doc_version": None,
         },
         "findings": findings,
+        "item_review": item_review,
         "stats": stats,
     }
 
@@ -299,7 +341,7 @@ def save_result(input_path: Path) -> Path:
             f"Raw LLM response saved to: {raw_path}"
         ) from exc
 
-    enriched = enrich_findings(result, source_ref)
+    enriched = enrich_findings(result, source_ref, structured)
 
     try:
         jsonschema.validate(enriched, _ARTIFACT_SCHEMA)
@@ -327,11 +369,17 @@ def main() -> None:
         with open(out, encoding="utf-8") as f:
             data = json.load(f)
         logging.info(f"Saved to {out}")
+        s = data["stats"]
         logging.info(
-            f"Analyzed: {data['stats']['total']} findings — "
-            f"CRITICAL={data['stats']['by_severity']['CRITICAL']}, "
-            f"MAJOR={data['stats']['by_severity']['MAJOR']}, "
-            f"MINOR={data['stats']['by_severity']['MINOR']}"
+            f"Analyzed: {s['total_items']} items — "
+            f"{s['reviewed']} reviewed, {s['skipped']} skipped, "
+            f"{s['flagged']} flagged, {s['passed']} passed"
+        )
+        logging.info(
+            f"Findings: {s['total_findings']} — "
+            f"CRITICAL={s['by_severity']['CRITICAL']}, "
+            f"MAJOR={s['by_severity']['MAJOR']}, "
+            f"MINOR={s['by_severity']['MINOR']}"
         )
     except (FileNotFoundError, ValueError) as e:
         logging.error(e)

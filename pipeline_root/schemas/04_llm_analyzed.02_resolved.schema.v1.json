@@ -3,7 +3,7 @@
   "schema_version": "1.0",
   "description": "Stage 04 resolved artifact — LLM raw findings enriched by post-processing: stable IDs assigned, dispositions initialized, aggregate stats computed.",
   "type": "object",
-  "required": ["source_ref", "analysis_meta", "findings", "stats"],
+  "required": ["source_ref", "analysis_meta", "findings", "item_review", "stats"],
   "additionalProperties": false,
 
   "definitions": {
@@ -18,7 +18,7 @@
           "pattern": "^[0-9A-F]{8}$",
           "description": "Content fingerprint from stage 03. Primary join key — position-independent and change-sensitive."
         },
-        "item_id": {
+        "spec_item_id": {
           "type": ["string", "null"],
           "description": "Human-readable ID (e.g. SWRS-1234) if the requirement carries one. Null for raw specs."
         },
@@ -70,7 +70,7 @@
         "gen_find_id": {
           "type": "string",
           "pattern": "^GF-[0-9A-F]{6}$",
-          "description": "Stable finding ID assigned by post-processing. sha256(source_ref + primary_item_id_or_gen_uid + category + pass)[:6 hex uppercase]. item_id is used when present, gen_uid otherwise. gen_hierarchy_number is intentionally excluded — a position-only change must not invalidate a finding's identity."
+          "description": "Finding ID assigned by post-processing. sha256(source_ref + spec_item_id_or_gen_hierarchy_number + category + pass)[:6 hex uppercase]. Uses spec_item_id when present, gen_hierarchy_number as fallback for raw specs."
         },
         "pass": {
           "type": "string",
@@ -148,6 +148,34 @@
         "QUESTION":    { "type": "integer", "minimum": 0 },
         "OBSERVATION": { "type": "integer", "minimum": 0 }
       }
+    },
+
+    "item_review_entry": {
+      "description": "Per-item review status computed by post-processing from findings + reviewed_items.",
+      "type": "object",
+      "required": ["gen_uid", "spec_item_id", "status", "finding_ids"],
+      "additionalProperties": false,
+      "properties": {
+        "gen_uid": {
+          "type": "string",
+          "pattern": "^[0-9A-F]{8}$"
+        },
+        "spec_item_id": {
+          "type": ["string", "null"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["FLAGGED", "PASSED", "SKIPPED"],
+          "description": "FLAGGED: reviewed, has findings. PASSED: reviewed, no findings. SKIPPED: not in reviewed_items."
+        },
+        "finding_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^GF-[0-9A-F]{6}$"
+          }
+        }
+      }
     }
 
   },
@@ -192,15 +220,26 @@
       "items": { "$ref": "#/definitions/finding" }
     },
 
+    "item_review": {
+      "type": "array",
+      "description": "Per-item review status. One entry per spec_item from stage 03, computed by post-processing.",
+      "items": { "$ref": "#/definitions/item_review_entry" }
+    },
+
     "stats": {
       "type": "object",
-      "required": ["total", "by_severity", "by_type"],
+      "required": ["total_items", "reviewed", "skipped", "flagged", "passed", "total_findings", "by_severity", "by_type"],
       "additionalProperties": false,
-      "description": "Aggregate counts over all findings. Computed by post-processing, not the LLM.",
+      "description": "Aggregate counts. Computed by post-processing, not the LLM.",
       "properties": {
-        "total":       { "type": "integer", "minimum": 0 },
-        "by_severity": { "$ref": "#/definitions/severity_counts" },
-        "by_type":     { "$ref": "#/definitions/type_counts" }
+        "total_items":    { "type": "integer", "minimum": 0, "description": "Total spec_items in stage 03 input." },
+        "reviewed":       { "type": "integer", "minimum": 0, "description": "Items in reviewed_items list." },
+        "skipped":        { "type": "integer", "minimum": 0, "description": "total_items - reviewed." },
+        "flagged":        { "type": "integer", "minimum": 0, "description": "Reviewed items with at least one finding." },
+        "passed":         { "type": "integer", "minimum": 0, "description": "Reviewed items with zero findings." },
+        "total_findings": { "type": "integer", "minimum": 0, "description": "Total number of findings." },
+        "by_severity":    { "$ref": "#/definitions/severity_counts" },
+        "by_type":        { "$ref": "#/definitions/type_counts" }
       }
     }
   }

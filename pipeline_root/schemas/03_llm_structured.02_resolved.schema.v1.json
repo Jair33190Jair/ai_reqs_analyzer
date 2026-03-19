@@ -49,7 +49,7 @@
             "type": ["integer", "null"],
             "description": "Depth in the heading hierarchy (1 = top-level)."
           },
-          "item_id": {
+          "spec_item_id": {
             "type": ["string", "null"],
             "description": "Spec item ID if the heading line itself carries one. Null otherwise."
           },
@@ -84,10 +84,10 @@
       "description": "One entry per item or requirement-like statement, each with verbatim content resolved from loc.",
       "items": {
         "type": "object",
-        "required": ["item_id", "spec_hierarchy_number", "item_type", "classification", "loc", "source", "content", "gen_hierarchy_number", "gen_uid"],
+        "required": ["spec_item_id", "spec_hierarchy_number", "item_type", "classification", "loc", "source", "content", "gen_hierarchy_number", "gen_uid"],
         "additionalProperties": false,
         "properties": {
-          "item_id": {
+          "spec_item_id": {
             "type": ["string", "null"],
             "description": "Requirement ID verbatim (e.g. 'SYS-FUNC-001'). Null for raw specs without formal IDs."
           },
