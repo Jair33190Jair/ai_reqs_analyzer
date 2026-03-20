@@ -36,7 +36,7 @@ end note
     2. LLM Identify item id and heading patterns
   O: 01_normalized.json;
 
-if ((S2) Preflight\n I: 01_normalized.json\n  1.Computes: ID count, duplicate count, extraction-quality score \n O: pass/fail status) then (fail\nscore < 0.80 or < 5 reqs\n emit user guidance)
+if ((S2) Preflight\n I: 01_normalized.json\n  1.Computes: ID count, duplicate count, \n unparseable-line ratio and extraction-quality score \n O: pass/fail status) then (fail\n unparseable-line ratio < 0.50 \n extraction-quality score < 0.80)
   stop
 endif
 !ifdef show_constraints
@@ -77,7 +77,7 @@ end note
 : (S5) Renderer
   I: 04_llm_analyzed.json
     1. Generates single-page HTML dashboard
-  O: 05_flag_report.html;
+  O: 05_flag_dashboard.html;
 !ifdef show_constraints
 note right
   Constraint:

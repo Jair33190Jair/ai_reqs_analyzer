@@ -11,7 +11,7 @@
 
 This document defines the complete **V1 production-ready pipeline specification** for:
 
-PDF/DOCX → Text Extraction → Normalization → Preflight → LLM Structuring → LLM Analysis → Human-Readable Report
+PDF → Text Extraction → Normalization → Preflight → LLM Structuring → LLM Analysis → Human-Readable Report
 
 The design prioritizes:
 
@@ -20,9 +20,7 @@ The design prioritizes:
 * ✅ Stable JSON contracts
 * ✅ LLM usage only where necessary
 * ✅ Sellable output (HTML report)
-* ✅ Clear schema versioning
-
-This is designed as an **engineering-grade pipeline**, not a prompt experiment.
+* ✅ Clear schema versioning.
 
 ---
 
@@ -31,10 +29,12 @@ This is designed as an **engineering-grade pipeline**, not a prompt experiment.
 ![Pipeline Overview](pipeline_overview.svg)
 
 > Source: [`pipeline_overview_v1.puml`](pipeline_overview_v1.puml)
+>
+> The diagram is authoritative for pipeline flow, stage naming, and artifact filenames. This document extends with schemas, rules, and acceptance criteria.
 
 ### Design Philosophy
 
-* Layers 1–3 must be deterministic.
+* Layers 0 and 2 are fully deterministic; Layer 1 uses LLM but with constrained output (regex of identified patterns).
 * LLM is never used to compensate for broken extraction.
 * All intermediate artifacts are stored for traceability.
 * Each stage has a strict interface contract.
@@ -46,15 +46,14 @@ This is designed as an **engineering-grade pipeline**, not a prompt experiment.
 ```
 pipeline_run/
   input/
-    spec.pdf | spec.docx
+    spec.pdf
   artifacts/
     00_raw_extract.json
     01_normalized.json
-    02_after_preflight.json
+    02_after_preflight.json  (logging/traceability only, not consumed downstream)
     03_llm_structured.json
     04_llm_analyzed.json
-    05_report.html
-    05_report.pdf          (optional)
+    05_flag_dashboard.html
   logs/
     pipeline.log
 ```
@@ -73,15 +72,14 @@ Extract raw per-page text from PDF
 
 * Born-digital PDF
 
-## Output → `00_raw_extract_<input_file_stem>.json`
+## Output → `00_raw_extract.json`
 
 @import "../pipeline_root/schemas/00_raw_extract.schema.v1.json"
-
 
 ## Acceptance Criteria
 
 * Page order preserved
-* No catastrophic column mixing
+* No interleaved text from adjacent columns within a single extracted line
 * Text non-empty for born-digital PDFs
 * No requirement ID corruption
 
@@ -95,9 +93,9 @@ Reduce token waste and stabilize downstream parsing.
 
 ## Input
 
-`00_raw_extract_<input_file_stem>.json`
+`00_raw_extract.json`
 
-## Output → `01_normalized_<input_file_stem>.json`
+## Output → `01_normalized.json`
 
 @import "../pipeline_root/schemas/01_normalized.schema.v1.json"
 
@@ -121,6 +119,11 @@ Replace:
 * ﬃ → ffi
 * ﬄ → ffl
 
+### 3. LLM: Identify item ID and heading patterns
+
+* LLM identifies the regex patterns for requirement IDs and section headings present in the document
+* These patterns are used downstream by S2 (Preflight) for counting and validation. And later by S3 (Structurer) for identifying the document structure.
+
 ---
 
 # 6️⃣ Stage (2) Preflight — Cost Protection Layer
@@ -129,9 +132,9 @@ Replace:
 
 Avoid wasting money on broken input.
 
-## Input → `01_normalized_text_<input_file_stem>.json`
+## Input → `01_normalized.json`
 
-## Output → `02_after_preflight_<input_file_stem>.json`
+## Output → `02_after_preflight.json`
 
 @import "../pipeline_root/schemas/02_after_preflight.schema.v1.json"
 
@@ -146,9 +149,8 @@ Avoid wasting money on broken input.
 
 LLM is called only if:
 
-* ≥ 5 requirements detected
-* No unexplained duplicates
-* Score ≥ 0.80
+* Unparseable-line ratio ≥ 0.50
+* Extraction-quality score ≥ 0.80 (Considers duplicate ratios, and unparseable line ratio)
 
 Otherwise:
 
@@ -157,15 +159,15 @@ Otherwise:
 
 ---
 
-# 7️⃣ Stage (3) LLM Chunker
+# 7️⃣ Stage (3) LLM Structurer
 
 ## Purpose
 
 Convert normalized text into structured specification JSON.
 
-## Input → `02_after_preflight_<input_file_stem>.json`
+## Input → `01_normalized.json`
 
-## Output → `03_llm_structured_<input_file_stem>.json`
+## Output → `03_llm_structured.json`
 
 Schema: `spec.schema.v1`
 
@@ -181,11 +183,16 @@ Schema: `spec.schema.v1`
 
 ---
 
-# 8️⃣ Stage (5) LLM Analyzer
+# 8️⃣ Stage (4) LLM Analyzer
 
 ## Purpose
 
 Assess quality, completeness, safety, and sellable insights.
+
+## Input
+
+* `03_llm_structured.json`
+* `01_normalized.json` (full text for location resolution)
 
 ## Output → `04_llm_analyzed.json`
 
@@ -254,8 +261,7 @@ Transform JSON into human-consumable report.
 
 ## Output
 
-* `05_report.html` (mandatory)
-* `05_report.pdf` (optional)
+* `05_flag_dashboard.html`
 
 ## Report Sections
 
@@ -269,7 +275,6 @@ Transform JSON into human-consumable report.
 
 * Use deterministic templating (e.g., Jinja2)
 * No AI calls during rendering
-* HTML first, PDF optional
 
 ---
 

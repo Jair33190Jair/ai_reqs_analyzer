@@ -4,3 +4,4 @@ __pycache__/
 architecture/notes
 pipeline_root/logs/
 pipeline_root/src/trash/
+reviews/*.json 
