@@ -118,7 +118,7 @@ def run_preflight(normalized: dict, source_ref: str) -> dict:
     # A document without requirement IDs is valid — the LLM will structure it from scratch.
     # The only hard blocker is a layout too chaotic for the LLM to interpret.
     has_item_ids = item_id_pattern is not None and unique_id_count > 0
-    passed = unparseable_line_ratio < UNPARSEABLE_LINE_THRESHOLD and score >= MIN_SCORE
+    passed = unparseable_line_ratio > UNPARSEABLE_LINE_THRESHOLD and score >= MIN_SCORE
 
     return {
         "doc_id": Path(source_ref).stem,

@@ -33,18 +33,18 @@ end note
 : (S1) Normalizer
   I: 00_raw_extract.json
     1. ligature replacement and dehyphenation 
-    2. LLM Identify item id and heading patterns
+    2. LLM Identify item id and heading patterns as regex
   O: 01_normalized.json;
 
-if ((S2) Preflight\n I: 01_normalized.json\n  1.Computes: ID count, duplicate count, \n unparseable-line ratio and extraction-quality score \n O: pass/fail status) then (fail\n unparseable-line ratio < 0.50 \n extraction-quality score < 0.80)
+if ((S2) Preflight (Gate-only)\n I: 01_normalized.json\n  1.Computes: ID count, duplicate count, \n unparseable-line ratio and extraction-quality score \n O: 02_preflight.json (Diagnostics artifact) \n O: pass/fail status) then (fail\n unparseable-line ratio > 0.50 \n extraction-quality score < 0.80)
   stop
 endif
-!ifdef show_constraints
+!ifdef show_notes
 note right
   Constraint:
-    - Gate: score ≥ 0.80 AND req_count ≥ 5 
-        (i) Computed based on percentage of duplicates (sections and items) and
-            percentage of messy content (tables, graphs that got weirdly extracted)
+      (i) Computed based on percentage of duplicates (sections and items) and
+          unparseable-line ratio (tables, graphs that got weirdly extracted).
+          Score formula: see S2_preflight.py
 end note
 !endif
 
@@ -52,9 +52,8 @@ end note
   I: 01_normalized.json
     1. Asks LLM to identify and provide item locations
         (e.g. id: REQ-123 loc: [page: 1, lines: 3-6])
-    2. Python resolves the locations, and validates the content
-    3. Python computes items' hierarchy number 
-    4. Python computes unique ids for change tracking
+    2. Python computes items' hierarchy number 
+    3. Python computes unique ids for change tracking
   O: 03_llm_structured.json;
 !ifdef show_notes
 note right
@@ -68,9 +67,9 @@ end note
 : (S4) LLM Analyzer
   I: 03_llm_structured.json
   I: 01_normalized.json (full text for location resolution)
-    1. Python resolves items' locations
-    2. Python prepares relevant items and attributes for Pass 3
-    3. LLM: Pass 3 - Requirements quality review
+    1. Python extracts verbatim content at LLM-reported locations
+    2. Python prepares relevant items and attributes for the review
+    3. LLM: Requirements quality review
     4. Python: Collects flags, metadata and provides report
   O: 04_llm_analyzed.json;
 
