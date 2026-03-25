@@ -27,37 +27,12 @@ LIGATURE_MAP = {
 
 _LLM_MODEL = "claude-haiku-4-5-20251001"
 _LLM_MAX_TOKENS = 500
+_PROMPT_VERSION = "1"
 
+_PROMPTS_DIR = Path(__file__).parent / "prompts"
 _DETECT_PATTERNS_SYSTEM = (
-    "You are a regex expert analysing requirements documents. "
-    "Given a sample of lines, identify two patterns and two metadata fields:\n"
-    "1. item_id: standalone item ID lines (e.g. REQ-001, SYS-FUNC-001, A-001, INFO-1243). "
-    "The regex must match when the ENTIRE line is the ID (include ^ and $ anchors).\n"
-    "2. heading: section or chapter heading lines (e.g. '1. Introduction', '3.2.1 Scope', "
-    "'CHAPTER 1 - Overview'). The regex must match when the ENTIRE line is the heading "
-    "(include ^ and $ anchors).\n"
-    "3. doc_version: the document version or revision "
-    "string (e.g. '1.2', 'Rev C', 'Draft 3'). "
-    "Look for labels like 'Version', 'Rev', 'Revision', "
-    "'Issue' on title/cover pages.\n"
-    "4. doc_last_modified: the most recent date "
-    "associated with the document (e.g. '2025-03-15'). "
-    "Look for labels like 'Date', 'Last modified', "
-    "'Issued', 'Approved'. Return in YYYY-MM-DD format "
-    "when possible.\n"
-    "Reply with ONLY a JSON object with keys "
-    "'item_id', 'heading', 'doc_version', "
-    "'doc_last_modified', "
-    "each a string value, "
-    'or "NONE" if the value cannot be identified.\n'
-    "For item_id and heading the value must be a valid "
-    "regex JSON-encoded string (escape backslashes as "
-    "\\\\).\n"
-    'Example: {"item_id": "^[A-Z]+-[0-9]+$", '
-    '"heading": "^[0-9]+([.][0-9]+)*[.]?[ ]+[^ ].*$", '
-    '"doc_version": "1.2", '
-    '"doc_last_modified": "2025-03-15"}'
-)
+    _PROMPTS_DIR / f"S1_detect_patterns.v{_PROMPT_VERSION}.txt"
+).read_text(encoding="utf-8")
 
 def _clean_text(text: str) -> str:
     """Remove soft line-break hyphens: word-\nword → wordword."""

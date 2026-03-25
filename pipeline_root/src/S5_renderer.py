@@ -12,152 +12,16 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+from report_config import (
+    CSS,
+    SEVERITY_COLOR,
+    SEVERITY_ORDER,
+    TYPE_COLOR,
+)
 
-_SEVERITY_ORDER = ["CRITICAL", "MAJOR", "MINOR", "INFO"]
-
-_SEVERITY_COLOR = {
-    "CRITICAL": "#dc2626",
-    "MAJOR":    "#d97706",
-    "MINOR":    "#ca8a04",
-    "INFO":     "#2563eb",
-}
-
-_TYPE_COLOR = {
-    "FINDING":     "#374151",
-    "QUESTION":    "#7c3aed",
-    "OBSERVATION": "#6b7280",
-}
-
-_CSS = """
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
-  color: #1f2937;
-  background: #f9fafb;
-  padding: 2rem;
-  max-width: 960px;
-  margin: 0 auto;
-}
-h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
-h2 {
-  font-size: 1.1rem;
-  margin: 1.5rem 0 0.75rem;
-  color: #374151;
-}
-
-/* meta */
-header { margin-bottom: 2rem; }
-.meta-grid {
-  display: grid;
-  grid-template-columns: 9rem 1fr;
-  gap: 0.2rem 0.75rem;
-}
-.meta-grid dt { font-weight: 600; color: #6b7280; }
-
-/* dashboard */
-#dashboard {
-  background: #fff;
-  border-radius: 8px;
-  padding: 1.25rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-  color: #1f2937;
-}
-.total-count {
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 0.75rem;
-}
-.stat-row {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  margin-bottom: 0.5rem;
-}
-.stat-cell {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  background: #f3f4f6;
-  min-width: 80px;
-}
-.stat-cell .count {
-  font-size: 1.5rem;
-  font-weight: 700;
-  line-height: 1;
-}
-.stat-cell .label {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #6b7280;
-  margin-top: 2px;
-}
-.sev-critical { background: #fef2f2; color: #dc2626; }
-.sev-major    { background: #fffbeb; color: #d97706; }
-.sev-minor    { background: #fefce8; color: #ca8a04; }
-.sev-info     { background: #eff6ff; color: #2563eb; }
-
-/* findings */
-.finding-card {
-  background: #fff;
-  border-left: 4px solid #e5e7eb;
-  border-radius: 0 6px 6px 0;
-  padding: 1rem 1.25rem;
-  margin-bottom: 0.75rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-}
-.finding-card.sev-critical { border-left-color: #dc2626; }
-.finding-card.sev-major    { border-left-color: #d97706; }
-.finding-card.sev-minor    { border-left-color: #ca8a04; }
-.finding-card.sev-info     { border-left-color: #2563eb; }
-
-.finding-header {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-  margin-bottom: 0.5rem;
-  flex-wrap: wrap;
-}
-.finding-id {
-  font-family: monospace;
-  font-size: 0.8rem;
-  color: #6b7280;
-}
-.badge {
-  font-size: 0.7rem;
-  font-weight: 600;
-  padding: 2px 6px;
-  border-radius: 4px;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-.sev-badge { color: #fff; }
-.type-badge, .cat-badge { background: #f3f4f6; }
-.confidence {
-  font-size: 0.75rem;
-  color: #9ca3af;
-  margin-left: auto;
-}
-.affected-items {
-  font-size: 0.85rem;
-  margin-bottom: 0.4rem;
-}
-.description { margin-bottom: 0.5rem; }
-.recommendation {
-  font-size: 0.9rem;
-  background: #f0fdf4;
-  border-left: 3px solid #22c55e;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0 4px 4px 0;
-  margin-bottom: 0.4rem;
-}
-.reference { font-size: 0.8rem; color: #6b7280; }
-"""
+ROOT_DIR      = Path(__file__).parent.parent
+ARTIFACTS_DIR = ROOT_DIR / "artifacts"
+OUTPUT_DIR    = ROOT_DIR / "output"
 
 
 # --- Helpers ---
@@ -215,7 +79,7 @@ def _render_dashboard(stats: dict) -> str:
         f'<span class="count">{sev.get(s, 0)}</span>'
         f'<span class="label">{s}</span>'
         f'</div>'
-        for s in _SEVERITY_ORDER
+        for s in SEVERITY_ORDER
     )
     type_cells = "".join(
         f'<div class="stat-cell">'
@@ -233,7 +97,7 @@ def _render_dashboard(stats: dict) -> str:
 </section>"""
 
 
-def _render_finding(f: dict) -> str:
+def _render_flag(f: dict) -> str:
     fid = _esc(f.get("gen_flag_id", ""))
     ftype = f.get("type", "")
     category = _esc(f.get("category", ""))
@@ -255,8 +119,8 @@ def _render_finding(f: dict) -> str:
         items_parts.append(label)
     items_label = ", ".join(items_parts)
 
-    sev_color = _SEVERITY_COLOR.get(severity, "#374151")
-    type_color = _TYPE_COLOR.get(ftype, "#374151")
+    sev_color = SEVERITY_COLOR.get(severity, "#374151")
+    type_color = TYPE_COLOR.get(ftype, "#374151")
 
     rec_html = (
         f'<p class="recommendation">'
@@ -274,9 +138,9 @@ def _render_finding(f: dict) -> str:
     )
 
     return (
-        f'<div class="finding-card sev-{severity.lower()}">'
-        f'<div class="finding-header">'
-        f'<span class="finding-id">{fid}</span>'
+        f'<div class="flag-card sev-{severity.lower()}">'
+        f'<div class="flag-header">'
+        f'<span class="flag-id">{fid}</span>'
         f'<span class="badge sev-badge" style="background:{sev_color}">'
         f'{_esc(severity)}</span>'
         f'<span class="badge type-badge" style="color:{type_color}">'
@@ -292,24 +156,24 @@ def _render_finding(f: dict) -> str:
     )
 
 
-def _render_findings(findings: list) -> str:
-    if not findings:
+def _render_flags(flags: list) -> str:
+    if not flags:
         return (
-            '<section id="findings">'
-            '<h2>Findings</h2>'
-            '<p>No findings.</p>'
+            '<section id="flags">'
+            '<h2>Flags</h2>'
+            '<p>No flags.</p>'
             '</section>'
         )
-    sev_rank = {s: i for i, s in enumerate(_SEVERITY_ORDER)}
-    sorted_findings = sorted(
-        findings,
+    sev_rank = {s: i for i, s in enumerate(SEVERITY_ORDER)}
+    sorted_flags = sorted(
+        flags,
         key=lambda f: (
             sev_rank.get(f.get("severity", "INFO"), 99),
             f.get("gen_flag_id", ""),
         ),
     )
-    cards = "".join(_render_finding(f) for f in sorted_findings)
-    return f'<section id="findings"><h2>Findings</h2>{cards}</section>'
+    cards = "".join(_render_flag(f) for f in sorted_flags)
+    return f'<section id="flags"><h2>Flags</h2>{cards}</section>'
 
 
 # --- Top-level ---
@@ -329,12 +193,12 @@ def render(data: dict) -> str:
         f'  <meta name="viewport" '
         f'content="width=device-width, initial-scale=1">\n'
         f"  <title>{_esc(title)}</title>\n"
-        f"  <style>{_CSS}</style>\n"
+        f"  <style>{CSS}</style>\n"
         f"</head>\n"
         f"<body>\n"
         f"{_render_meta(data)}\n"
         f"{_render_dashboard(stats)}\n"
-        f"{_render_findings(data.get('flags', []))}\n"
+        f"{_render_flags(data.get('flags', []))}\n"
         f"</body>\n"
         f"</html>"
     )
@@ -357,7 +221,10 @@ def save_result(input_path: Path) -> Path:
             "<path_to_04_llm_analyzed.json>"
         )
     html = render(data)
-    output_path = input_path.parent / "05_report.html"
+    rel = input_path.relative_to(ARTIFACTS_DIR).parent
+    output_dir = OUTPUT_DIR / rel
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_path = output_dir / "05_report.html"
     output_path.write_text(html, encoding="utf-8")
     return output_path
 

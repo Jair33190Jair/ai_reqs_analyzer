@@ -31,20 +31,12 @@ _ARTIFACT_SCHEMA = json.loads((_SCHEMAS_DIR / "03_llm_structured.02_resolved.sch
 
 _LLM_MODEL = "claude-haiku-4-5-20251001"
 _LLM_MAX_TOKENS = 8000
+_PROMPT_VERSION = "1"
 
-_SYSTEM = """\
-You are an expert requirements document parser.
-
-Your task: given a numbered requirements specification document, identify its structure and output ONLY valid JSON — no markdown fences, no explanation.
-
-HEADING DETECTION:
-{heading_instruction}
-
-SPEC ITEM DETECTION:
-{item_instruction}
-
-OUTPUT SCHEMA (conform to this exactly — field descriptions are behavioral instructions, not documentation):
-{schema}"""
+_PROMPTS_DIR = Path(__file__).parent / "prompts"
+_SYSTEM_TEMPLATE = (
+    _PROMPTS_DIR / f"S3_structurer.v{_PROMPT_VERSION}.txt"
+).read_text(encoding="utf-8")
 ###TODO(V2): Skip pagges shall have line precision
 
 
@@ -140,7 +132,7 @@ def run_structurer(normalized: dict) -> tuple[str, dict]:
     normalization = normalized.get("normalization", {})
     source_meta = normalized["source_meta"]
 
-    system_prompt = _SYSTEM.format(
+    system_prompt = _SYSTEM_TEMPLATE.format(
         heading_instruction=_heading_instruction(normalization.get("heading_pattern")),
         item_instruction=_item_instruction(normalization.get("item_id_pattern")),
         schema=json.dumps(_LLM_RESPONSE_SCHEMA, indent=2),
@@ -322,7 +314,7 @@ def save_result(input_path: Path) -> Path:
     if "pages" not in normalized or "normalization" not in normalized:
         raise ValueError(
             f"Expected a 01_normalized.json file (S1 output), got: {input_path.name}\n"
-            "Usage: python S3_llm_chunker.py <path_to_01_normalized.json>"
+            "Usage: python S3_llm_structurer.py <path_to_01_normalized.json>"
         )
     raw_path = input_path.parent / f"03_llm_response.txt"
 
@@ -366,7 +358,7 @@ def save_result(input_path: Path) -> Path:
 def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     if len(sys.argv) < 2:
-        logging.error("Usage: python S3_llm_chunker.py <path_to_normalized.json>")
+        logging.error("Usage: python S3_llm_structurer.py <path_to_normalized.json>")
         sys.exit(1)
     try:
         out = save_result(Path(sys.argv[1]))
