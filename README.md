@@ -37,7 +37,7 @@ Artifacts land in `pipeline_root/artifacts/<project>/<spec>/`.
 ## Requirements
 
 - Python 3.11+
-- An [Anthropic API key](https://console.anthropic.com)
+- An LLM API key, for example [Anthropic's](https://console.anthropic.com)
 
 ---
 
@@ -66,11 +66,72 @@ make s0   # through s4, or:
 make pipeline
 
 # Custom input:
-SPEC_NAME=myfile.pdf INPUT_TO_SPEC_PARENT=mydir/ make s0
+INPUT_PDF=pipeline_root/input/my_project/my_spec/my_spec.pdf make analyze
 ```
 
 See [CLAUDE.md](CLAUDE.md) for the full run command
 reference and stage details.
+
+To analyze your own specification:
+
+1. Add your PDF under `pipeline_root/input/<project>/<spec>/<your_file>.pdf`
+2. Run the pipeline with `INPUT_PDF=...`
+3. Find the generated HTML analysis under `pipeline_root/output/<project>/<spec>/`
+
+Example:
+
+```bash
+source venv/bin/activate
+
+INPUT_PDF=pipeline_root/input/my_project/my_spec/my_spec.pdf make analyze
+```
+
+LLM-backed stages (`S1`, `S3`, `S4`) require explicit approval on
+every run before they call the Anthropic API. In an interactive shell,
+the script will prompt you to type `yes`. For non-interactive usage,
+set `ALLOW_LLM_EXECUTION=1` on that command invocation only.
+
+The guard configuration is read from `~/.reqs_analyzer/llm_guard.json`,
+outside this repository. If that file is missing, the guard stays
+enabled by default. To disable the guard intentionally, create:
+
+```json
+{"enabled": false}
+```
+
+Because this file lives outside the repo, an in-repo code change cannot
+silently disable the guard.
+
+Repository policy: direct `anthropic.Anthropic(...)` calls are only
+allowed in `pipeline_root/src/llm_guard.py`. All LLM-backed stages must
+go through the shared guard.
+
+---
+
+## Demo Run
+
+Use the bundled ARVMS sample specification at
+`pipeline_root/input/arvms_specs/arvms_spec/arvms_spec.pdf`
+to run the full pipeline end to end:
+
+```bash
+source venv/bin/activate
+
+make analyze
+```
+
+This runs the stages against the default demo input configured in
+the `Makefile`.
+
+After the run, you can inspect:
+
+- The generated HTML report in
+  `pipeline_root/output/arvms_specs/arvms_spec/arvms_spec_llm_analysis.html`
+- The generated pipeline artifacts in
+  `pipeline_root/artifacts/arvms_specs/arvms_spec/`
+
+If you want to open the HTML report locally in a browser, use the file
+under `pipeline_root/output/...`.
 
 ---
 

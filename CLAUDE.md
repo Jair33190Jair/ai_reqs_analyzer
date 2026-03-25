@@ -33,8 +33,9 @@ make s3
 make s4
 
 make pipeline
+make analyze
 
-SPEC_NAME=myfile.pdf INPUT_TO_SPEC_PARENT=mydir/ make s0
+INPUT_PDF=pipeline_root/input/my_project/my_spec/my_spec.pdf make analyze
 ```
 
 Artifacts land in:

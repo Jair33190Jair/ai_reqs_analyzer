@@ -7,10 +7,10 @@ import time
 from collections import Counter
 from pathlib import Path
 
-import anthropic
 import jsonschema
 from dotenv import load_dotenv
 from llm_pricing import get_cost
+from llm_guard import get_anthropic_client
 
 _SCHEMA_PATH = Path(__file__).parent.parent / "schemas" / "01_normalized.schema.v1.json"
 
@@ -28,6 +28,7 @@ LIGATURE_MAP = {
 _LLM_MODEL = "claude-haiku-4-5-20251001"
 _LLM_MAX_TOKENS = 500
 _PROMPT_VERSION = "1"
+USES_LLM = True
 
 _PROMPTS_DIR = Path(__file__).parent / "prompts"
 _DETECT_PATTERNS_SYSTEM = (
@@ -77,7 +78,7 @@ def _detect_patterns(pages: list[dict]) -> tuple[
 
     raw_response = ""
     try:
-        client = anthropic.Anthropic()
+        client = get_anthropic_client("S1_normalizer", _LLM_MODEL)
         t0 = time.monotonic()
         message = client.messages.create(
             model=_LLM_MODEL,
@@ -143,6 +144,8 @@ def _detect_patterns(pages: list[dict]) -> tuple[
         raise ValueError(f"LLM returned unparseable response: {raw_response}")
     except re.error as exc:
         raise ValueError(f"LLM returned invalid regex: {exc}")
+    except PermissionError as exc:
+        raise ValueError(str(exc)) from exc
     except ValueError:
         raise
     except Exception as e:

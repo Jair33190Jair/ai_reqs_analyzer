@@ -2,7 +2,7 @@
 """
 Stage 6 — Renderer
 Input:  04_llm_analyzed.json  (S4 output)
-Output: 05_report.html
+Output: <source_stem>_llm_analysis.html
 """
 # See: ../../architecture/architecture_v1.md
 
@@ -21,6 +21,7 @@ from report_config import (
 
 ROOT_DIR      = Path(__file__).parent.parent
 ARTIFACTS_DIR = ROOT_DIR / "artifacts"
+OUTPUT_DIR    = ROOT_DIR / "output"
 
 
 # --- Helpers ---
@@ -203,9 +204,17 @@ def render(data: dict) -> str:
     )
 
 
+def _report_filename(data: dict) -> str:
+    """Return the output HTML filename derived from the source PDF stem."""
+    source_meta = data.get("source_meta", {})
+    source_name = source_meta.get("filename") or "report.pdf"
+    source_stem = Path(source_name).stem or "report"
+    return f"{source_stem}_llm_analysis.html"
+
+
 def save_result(input_path: Path) -> Path:
     """Input: path to 04_llm_analyzed.json.
-    Output: path to the written 05_report.html.
+    Output: path to the written <source_stem>_llm_analysis.html in output/.
     Raises FileNotFoundError or ValueError on any failure."""
     input_path = input_path.resolve()
     if not input_path.exists():
@@ -220,7 +229,10 @@ def save_result(input_path: Path) -> Path:
             "<path_to_04_llm_analyzed.json>"
         )
     html = render(data)
-    output_path = input_path.parent / "05_report.html"
+    rel = input_path.relative_to(ARTIFACTS_DIR).parent
+    output_dir = OUTPUT_DIR / rel
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_path = output_dir / _report_filename(data)
     output_path.write_text(html, encoding="utf-8")
     return output_path
 

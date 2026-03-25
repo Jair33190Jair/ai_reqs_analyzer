@@ -18,9 +18,9 @@ import sys
 import time
 from pathlib import Path
 
-import anthropic
 import jsonschema
 from dotenv import load_dotenv
+from llm_guard import get_anthropic_client
 from llm_pricing import get_cost
 
 load_dotenv()
@@ -32,6 +32,7 @@ _ARTIFACT_SCHEMA = json.loads((_SCHEMAS_DIR / "03_llm_structured.02_resolved.sch
 _LLM_MODEL = "claude-haiku-4-5-20251001"
 _LLM_MAX_TOKENS = 8000
 _PROMPT_VERSION = "1"
+USES_LLM = True
 
 _PROMPTS_DIR = Path(__file__).parent / "prompts"
 _SYSTEM_TEMPLATE = (
@@ -105,23 +106,25 @@ def _call_llm(system_prompt: str, user_message: str) -> tuple[str, dict]:
     """Input: fully rendered system and user prompt strings.
     Output: (raw_response, parsed JSON dict).
     Raises ValueError on unparseable response."""
-    client = anthropic.Anthropic()
-    t0 = time.monotonic()
-    message = client.messages.create(
-        model=_LLM_MODEL,
-        max_tokens=_LLM_MAX_TOKENS,
-        system=system_prompt,
-        messages=[{"role": "user", "content": user_message}],
-    )
-    _log_usage(
-        message.usage.input_tokens,
-        message.usage.output_tokens,
-        time.monotonic() - t0,
-    )
-    raw_response = message.content[0].text.strip()
-    cleaned = re.sub(r"```json\s*([\s\S]*?)\s*```", r"\1", raw_response).strip()
     try:
+        client = get_anthropic_client("S3_llm_structurer", _LLM_MODEL)
+        t0 = time.monotonic()
+        message = client.messages.create(
+            model=_LLM_MODEL,
+            max_tokens=_LLM_MAX_TOKENS,
+            system=system_prompt,
+            messages=[{"role": "user", "content": user_message}],
+        )
+        _log_usage(
+            message.usage.input_tokens,
+            message.usage.output_tokens,
+            time.monotonic() - t0,
+        )
+        raw_response = message.content[0].text.strip()
+        cleaned = re.sub(r"```json\s*([\s\S]*?)\s*```", r"\1", raw_response).strip()
         return raw_response, json.loads(cleaned)
+    except PermissionError as exc:
+        raise ValueError(str(exc)) from exc
     except json.JSONDecodeError as exc:
         raise ValueError(
             f"LLM returned unparseable JSON: {exc}\n"
