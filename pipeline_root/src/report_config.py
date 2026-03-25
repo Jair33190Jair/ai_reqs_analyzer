@@ -4,9 +4,7 @@ Colors, severity ordering, and CSS live here
 so S5_renderer.py stays focused on structure.
 """
 
-SEVERITY_ORDER = [
-    "CRITICAL", "MAJOR", "MINOR", "INFO",
-]
+SEVERITY_ORDER = ["CRITICAL", "MAJOR", "MINOR", "INFO"]
 
 SEVERITY_COLOR = {
     "CRITICAL": "#dc2626",

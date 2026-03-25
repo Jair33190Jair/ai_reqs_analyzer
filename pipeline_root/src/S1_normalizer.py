@@ -1,7 +1,7 @@
 # See: ../../architecture/architecture_v1.md
 import json
-import re
 import logging
+import re
 import sys
 import time
 from collections import Counter
@@ -34,13 +34,13 @@ _DETECT_PATTERNS_SYSTEM = (
     _PROMPTS_DIR / f"S1_detect_patterns.v{_PROMPT_VERSION}.txt"
 ).read_text(encoding="utf-8")
 
+
 def _clean_text(text: str) -> str:
     """Remove soft line-break hyphens: word-\nword → wordword."""
-    text = re.sub(r'(\w)-\n(\w)', r'\1\2', text)
+    text = re.sub(r"(\w)-\n(\w)", r"\1\2", text)
     for lig, rep in LIGATURE_MAP.items():
         text = text.replace(lig, rep)
     return text
-
 
 
 def _detect_patterns(pages: list[dict]) -> tuple[
@@ -59,7 +59,7 @@ def _detect_patterns(pages: list[dict]) -> tuple[
     # Early pages for metadata (version, date)
     early_lines = []
     for page in pages[:2]:
-        for ln in page["text"].split('\n'):
+        for ln in page["text"].split("\n"):
             s = ln.strip()
             if s:
                 early_lines.append(s)
@@ -68,12 +68,12 @@ def _detect_patterns(pages: list[dict]) -> tuple[
     mid = len(pages) // 2
     mid_lines = []
     for page in pages[mid - 5: mid + 5]:
-        for ln in page["text"].split('\n'):
+        for ln in page["text"].split("\n"):
             s = ln.strip()
             if s:
                 mid_lines.append(s)
 
-    sample = '\n'.join(early_lines[:40] + mid_lines[:80])
+    sample = "\n".join(early_lines[:40] + mid_lines[:80])
 
     raw_response = ""
     try:
@@ -88,12 +88,19 @@ def _detect_patterns(pages: list[dict]) -> tuple[
         usage = message.usage
         elapsed = time.monotonic() - t0
         try:
-            cost = f"${get_cost(_LLM_MODEL, usage.input_tokens, usage.output_tokens):.6f}"
+            cost = (
+                f"${get_cost(_LLM_MODEL, usage.input_tokens, usage.output_tokens):.6f}"
+            )
         except Exception:
             cost = "cost unknown"
-        logging.info(f"[S1 LLM] {usage.input_tokens} in / {usage.output_tokens} out — {cost} — {elapsed:.1f}s")
+        logging.info(
+            f"[S1 LLM] {usage.input_tokens} in / {usage.output_tokens} out — "
+            f"{cost} — {elapsed:.1f}s"
+        )
         raw_response = message.content[0].text.strip()
-        cleaned_response = re.sub(r"```json\s*([\s\S]*?)\s*```", r"\1", raw_response).strip()
+        cleaned_response = re.sub(
+            r"```json\s*([\s\S]*?)\s*```", r"\1", raw_response
+        ).strip()
         response_data = json.loads(cleaned_response)
 
         item_id_str = response_data.get("item_id", "Empty")
@@ -113,18 +120,26 @@ def _detect_patterns(pages: list[dict]) -> tuple[
             heading_pattern = re.compile(heading_str, re.IGNORECASE)
             logging.info(f"LLM detected heading pattern: {heading_str}")
         else:
-            logging.info("LLM could not identify a heading pattern; headings will not be detected.")
+            logging.info(
+                "LLM could not identify a heading pattern; headings will not be detected."
+            )
 
         doc_version_raw = response_data.get("doc_version")
         doc_version = None if doc_version_raw in (None, "NONE") else doc_version_raw
         doc_last_modified_raw = response_data.get("doc_last_modified")
-        doc_last_modified = None if doc_last_modified_raw in (None, "NONE") else doc_last_modified_raw
-        logging.info(f"LLM detected doc_version={doc_version}, doc_last_modified={doc_last_modified}")
+        doc_last_modified = (
+            None
+            if doc_last_modified_raw in (None, "NONE")
+            else doc_last_modified_raw
+        )
+        logging.info(
+            f"LLM detected doc_version={doc_version}, "
+            f"doc_last_modified={doc_last_modified}"
+        )
 
         return item_id_pattern, heading_pattern, doc_version, doc_last_modified
 
-
-    except (json.JSONDecodeError):
+    except json.JSONDecodeError:
         raise ValueError(f"LLM returned unparseable response: {raw_response}")
     except re.error as exc:
         raise ValueError(f"LLM returned invalid regex: {exc}")
@@ -132,13 +147,12 @@ def _detect_patterns(pages: list[dict]) -> tuple[
         raise
     except Exception as e:
         raise ValueError(f"LLM call failed: {e}")
-    
+
 
 def _find_repeated_lines(pages: list[dict], threshold: int = 3) -> set[str]:
     """Return stripped lines that appear on `threshold` or more distinct pages."""
-    """s_ln = stripped line"""
     pages_line_list = [
-        {s_ln for ln in p["text"].split('\n') if (s_ln:=ln.strip())} 
+        {stripped_line for ln in p["text"].split("\n") if (stripped_line := ln.strip())}
         for p in pages
     ]
     counter: Counter = Counter()
@@ -157,20 +171,28 @@ def _strip_headers_footers(pages: list[dict]) -> list[dict]:
     result = []
     for page in pages:
         cleaned = []
-        for ln in page["text"].split('\n'):
+        for ln in page["text"].split("\n"):
             s = ln.strip()
             if s and s in repeated:
                 continue
             cleaned.append(ln)
-        result.append({"page": page["page"], "text": '\n'.join(cleaned)})
+        result.append({"page": page["page"], "text": "\n".join(cleaned)})
     return result
 
 
 def _normalize(raw: dict) -> dict:
     filename = raw["source_meta"]["filename"]
-    cleaned_pages = [{"page": p["page"], "text": _clean_text(p["text"])} for p in raw["pages"]]
+    cleaned_pages = [
+        {"page": p["page"], "text": _clean_text(p["text"])}
+        for p in raw["pages"]
+    ]
     stripped_pages = _strip_headers_footers(cleaned_pages)
-    item_id_pattern, heading_pattern, doc_version, doc_last_modified = _detect_patterns(stripped_pages)
+    (
+        item_id_pattern,
+        heading_pattern,
+        doc_version,
+        doc_last_modified,
+    ) = _detect_patterns(stripped_pages)
     return {
         "source_meta": {
             "filename": filename,
@@ -200,8 +222,10 @@ def save_result(input_path: Path) -> Path:
     try:
         jsonschema.validate(normalized, schema)
     except jsonschema.ValidationError as exc:
-        raise ValueError(f"Normalized output failed schema validation: {exc.message}") from exc
-    output_path = input_path.parent / f"01_normalized.json"
+        raise ValueError(
+            f"Normalized output failed schema validation: {exc.message}"
+        ) from exc
+    output_path = input_path.parent / "01_normalized.json"
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(normalized, f, indent=2, ensure_ascii=False)
     return output_path

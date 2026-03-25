@@ -21,7 +21,6 @@ from report_config import (
 
 ROOT_DIR      = Path(__file__).parent.parent
 ARTIFACTS_DIR = ROOT_DIR / "artifacts"
-OUTPUT_DIR    = ROOT_DIR / "output"
 
 
 # --- Helpers ---
@@ -98,8 +97,8 @@ def _render_dashboard(stats: dict) -> str:
 
 
 def _render_flag(f: dict) -> str:
-    fid = _esc(f.get("gen_flag_id", ""))
-    ftype = f.get("type", "")
+    flag_id = _esc(f.get("gen_flag_id", ""))
+    flag_type = f.get("type", "")
     category = _esc(f.get("category", ""))
     severity = f.get("severity", "INFO")
     description = _esc(f.get("description", ""))
@@ -120,7 +119,7 @@ def _render_flag(f: dict) -> str:
     items_label = ", ".join(items_parts)
 
     sev_color = SEVERITY_COLOR.get(severity, "#374151")
-    type_color = TYPE_COLOR.get(ftype, "#374151")
+    type_color = TYPE_COLOR.get(flag_type, "#374151")
 
     rec_html = (
         f'<p class="recommendation">'
@@ -140,11 +139,11 @@ def _render_flag(f: dict) -> str:
     return (
         f'<div class="flag-card sev-{severity.lower()}">'
         f'<div class="flag-header">'
-        f'<span class="flag-id">{fid}</span>'
+        f'<span class="flag-id">{flag_id}</span>'
         f'<span class="badge sev-badge" style="background:{sev_color}">'
         f'{_esc(severity)}</span>'
         f'<span class="badge type-badge" style="color:{type_color}">'
-        f'{_esc(ftype)}</span>'
+        f'{_esc(flag_type)}</span>'
         f'<span class="badge cat-badge">{category}</span>'
         f'{conf_html}'
         f'</div>'
@@ -221,10 +220,7 @@ def save_result(input_path: Path) -> Path:
             "<path_to_04_llm_analyzed.json>"
         )
     html = render(data)
-    rel = input_path.relative_to(ARTIFACTS_DIR).parent
-    output_dir = OUTPUT_DIR / rel
-    output_dir.mkdir(parents=True, exist_ok=True)
-    output_path = output_dir / "05_report.html"
+    output_path = input_path.parent / "05_report.html"
     output_path.write_text(html, encoding="utf-8")
     return output_path
 

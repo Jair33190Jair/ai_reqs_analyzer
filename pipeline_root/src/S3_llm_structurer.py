@@ -37,7 +37,6 @@ _PROMPTS_DIR = Path(__file__).parent / "prompts"
 _SYSTEM_TEMPLATE = (
     _PROMPTS_DIR / f"S3_structurer.v{_PROMPT_VERSION}.txt"
 ).read_text(encoding="utf-8")
-###TODO(V2): Skip pagges shall have line precision
 
 
 # --- Helpers ---
@@ -61,7 +60,6 @@ def _heading_instruction(heading_pattern: str | None) -> str:
         "- Short line (typically ≤ 60 characters)\n"
         "- Title case, sentence case, or ALL CAPS\n"
         "When uncertain, prefer not emitting a section over emitting a false one."
-        ###TODO(V2): Once we include font extraction in the extractor we can add the font differentition here
         + preamble_rule
     )
 
@@ -115,13 +113,20 @@ def _call_llm(system_prompt: str, user_message: str) -> tuple[str, dict]:
         system=system_prompt,
         messages=[{"role": "user", "content": user_message}],
     )
-    _log_usage(message.usage.input_tokens, message.usage.output_tokens, time.monotonic() - t0)
+    _log_usage(
+        message.usage.input_tokens,
+        message.usage.output_tokens,
+        time.monotonic() - t0,
+    )
     raw_response = message.content[0].text.strip()
     cleaned = re.sub(r"```json\s*([\s\S]*?)\s*```", r"\1", raw_response).strip()
     try:
         return raw_response, json.loads(cleaned)
     except json.JSONDecodeError as exc:
-        raise ValueError(f"LLM returned unparseable JSON: {exc}\nRaw response: {raw_response[:500]}") from exc
+        raise ValueError(
+            f"LLM returned unparseable JSON: {exc}\n"
+            f"Raw response: {raw_response[:500]}"
+        ) from exc
 
 
 # --- Mid-level ---
@@ -137,7 +142,11 @@ def run_structurer(normalized: dict) -> tuple[str, dict]:
         item_instruction=_item_instruction(normalization.get("item_id_pattern")),
         schema=json.dumps(_LLM_RESPONSE_SCHEMA, indent=2),
     )
-    raw_response, result = _call_llm(system_prompt, f"source_file: {source_meta['filename']}\n\n{_format_pages(normalized['pages'])}")
+    user_message = (
+        f"source_file: {source_meta['filename']}\n\n"
+        f"{_format_pages(normalized['pages'])}"
+    )
+    raw_response, result = _call_llm(system_prompt, user_message)
     result.pop("source_file", None)  # LLM may echo this back
     result["source_meta"] = source_meta  # enforce regardless of what the LLM produced
     return raw_response, result
@@ -175,9 +184,9 @@ def _section_gen_hierarchy_number(section: dict, level_counters: dict[int, int])
     """Input: a section dict and the running level-counter state (mutated in place).
     Output: gen_hierarchy_number string of the form 'G{n1}.{n2}...' derived from
     spec_hierarchy_number if present, otherwise computed from level and position."""
-    hier = section.get("spec_hierarchy_number")
-    if hier:
-        return f"G{hier}"
+    spec_hierarchy_number = section.get("spec_hierarchy_number")
+    if spec_hierarchy_number:
+        return f"G{spec_hierarchy_number}"
     level = section.get("level") or 1
     level_counters[level] = level_counters.get(level, 0) + 1
     for l in list(level_counters):
@@ -195,7 +204,13 @@ def generate_gen_ids(enriched: dict) -> dict:
     sections_with_ids = []
     for s in enriched.get("sections", []):
         gen_hierarchy_number = _section_gen_hierarchy_number(s, level_counters)
-        sections_with_ids.append({**s, "gen_hierarchy_number": gen_hierarchy_number, "gen_uid": _gen_uid(s["content"])})
+        sections_with_ids.append(
+            {
+                **s,
+                "gen_hierarchy_number": gen_hierarchy_number,
+                "gen_uid": _gen_uid(s["content"]),
+            }
+        )
 
     # Build sorted (page, line_start, gen_hierarchy_number) for parent lookup — use start page
     section_positions = sorted(
@@ -214,7 +229,13 @@ def generate_gen_ids(enriched: dict) -> dict:
                 parent_id = s_id
         item_counters[parent_id] = item_counters.get(parent_id, 0) + 1
         gen_hierarchy_number = f"{parent_id}-{item_counters[parent_id]:03d}"
-        spec_items_with_ids.append({**item, "gen_hierarchy_number": gen_hierarchy_number, "gen_uid": _gen_uid(item["content"])})
+        spec_items_with_ids.append(
+            {
+                **item,
+                "gen_hierarchy_number": gen_hierarchy_number,
+                "gen_uid": _gen_uid(item["content"]),
+            }
+        )
 
     return {**enriched, "sections": sections_with_ids, "spec_items": spec_items_with_ids}
 
@@ -256,17 +277,22 @@ def validate_resolved(enriched: dict, pages_with_lines: dict[int, list[str]]) ->
             raise ValueError(f"{ref}: page {page_s} not found in normalized source")
         if loc["line_start"] > len(start_page_lines):
             raise ValueError(
-                f"{ref}: line_start ({loc['line_start']}) exceeds page {page_s} length ({len(start_page_lines)})"
+                f"{ref}: line_start ({loc['line_start']}) exceeds page "
+                f"{page_s} length ({len(start_page_lines)})"
             )
         end_page_lines = pages_with_lines.get(page_e)
         if end_page_lines is None:
             raise ValueError(f"{ref}: page_end {page_e} not found in normalized source")
         if loc["line_end"] > len(end_page_lines):
             raise ValueError(
-                f"{ref}: line_end ({loc['line_end']}) exceeds page {page_e} length ({len(end_page_lines)})"
+                f"{ref}: line_end ({loc['line_end']}) exceeds page "
+                f"{page_e} length ({len(end_page_lines)})"
             )
         if page_s == page_e and loc["line_start"] > loc["line_end"]:
-            raise ValueError(f"{ref}: line_start ({loc['line_start']}) > line_end ({loc['line_end']}) on same page")
+            raise ValueError(
+                f"{ref}: line_start ({loc['line_start']}) > "
+                f"line_end ({loc['line_end']}) on same page"
+            )
 
     for s in enriched.get("sections", []):
         ref = s.get("gen_hierarchy_number", "section?")
@@ -297,7 +323,8 @@ def validate_resolved(enriched: dict, pages_with_lines: dict[int, list[str]]) ->
             attr_page_e = attr_loc.get("page_end", attr_page_s)
             if attr_page_s < item_page_s or attr_page_e > item_page_e:
                 raise ValueError(
-                    f"{attr_ref}: pages {attr_page_s}–{attr_page_e} outside item page range {item_page_s}–{item_page_e}"
+                    f"{attr_ref}: pages {attr_page_s}–{attr_page_e} "
+                    f"outside item page range {item_page_s}–{item_page_e}"
                 )
 
 
@@ -316,7 +343,7 @@ def save_result(input_path: Path) -> Path:
             f"Expected a 01_normalized.json file (S1 output), got: {input_path.name}\n"
             "Usage: python S3_llm_structurer.py <path_to_01_normalized.json>"
         )
-    raw_path = input_path.parent / f"03_llm_response.txt"
+    raw_path = input_path.parent / "03_llm_response.txt"
 
     raw_response, result = run_structurer(normalized)
     raw_path.write_text(raw_response, encoding="utf-8")
@@ -337,7 +364,10 @@ def save_result(input_path: Path) -> Path:
     try:
         validate_resolved(enriched, pages_with_lines)
     except ValueError as exc:
-        raise ValueError(f"Resolved artifact failed semantic validation: {exc}\nRaw LLM response saved to: {raw_path}") from exc
+        raise ValueError(
+            f"Resolved artifact failed semantic validation: {exc}\n"
+            f"Raw LLM response saved to: {raw_path}"
+        ) from exc
 
     try:
         jsonschema.validate(enriched, _ARTIFACT_SCHEMA)
@@ -347,7 +377,7 @@ def save_result(input_path: Path) -> Path:
             f"Raw LLM response saved to: {raw_path}"
         ) from exc
 
-    output_path = input_path.parent / f"03_llm_structured.json"
+    output_path = input_path.parent / "03_llm_structured.json"
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(enriched, f, indent=2, ensure_ascii=False)
     return output_path
