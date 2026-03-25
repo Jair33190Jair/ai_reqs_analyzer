@@ -52,7 +52,7 @@ Requires:
 | `S2` | `pipeline_root/src/S2_preflight.py` | Deterministic gate | `01_normalized.json` -> `02_after_preflight.json` |
 | `S3` | `pipeline_root/src/S3_llm_structurer.py` | LLM (Haiku) | `01_normalized.json` -> `03_llm_structured.json` |
 | `S4` | `pipeline_root/src/S4_llm_analyzer.py` | LLM (Sonnet) | `03_llm_structured.json` + `01_normalized.json` -> `04_llm_analyzed.json` |
-| Planned renderer | `pipeline_root/src/S6_renderer.py` | Deterministic placeholder | `04_llm_analyzed.json` -> report output |
+| Planned renderer | `pipeline_root/src/S5_renderer.py` | Deterministic placeholder | `04_llm_analyzed.json` -> report output |
 
 ## Working rules
 
@@ -77,7 +77,7 @@ Requires:
   explicitly changing that contract.
 - `S0` page and character limits: see `MAX_PAGES` and
   `MAX_CHARS` in `pipeline_root/src/S0_extractor.py`.
-- `S6_renderer.py` exists only as a placeholder. It is not
+- `S5_renderer.py` exists only as a placeholder. It is not
   implemented, and the stage numbering around the renderer
   is not fully consistent across repo docs yet.
 

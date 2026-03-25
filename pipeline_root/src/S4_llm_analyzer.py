@@ -31,70 +31,13 @@ _ARTIFACT_SCHEMA = json.loads((_SCHEMAS_DIR / "04_llm_analyzed.02_resolved.schem
 
 _LLM_MODEL = "claude-sonnet-4-6"
 _LLM_MAX_TOKENS = 16000
-_PROMPT_VERSION = "1.0"
+_PROMPT_VERSION = "1"
 _PASS = "INDIVIDUAL_QUALITY"
 
-_SYSTEM = """\
-You are an expert automotive systems and software architect performing a \
-requirement quality review. You have deep expertise in ASPICE, ISO 26262, \
-and ISO/IEC/IEEE 29148 requirement quality criteria.
-
-Your task: Review each requirement individually for QUALITY defects.
-
-## Quality Criteria (check each requirement against ALL of these)
-
-1. **AMBIGUITY** — Contains vague/subjective terms ("appropriate", "timely", \
-"sufficient", "properly", "real-time" without a numeric bound, "etc.", \
-"and/or", "as needed"). Would two engineers implement this identically?
-
-2. **TESTABILITY** — Can a concrete pass/fail test be written from this \
-requirement alone? Are thresholds, conditions, and expected behaviors \
-explicit enough to verify?
-
-3. **ATOMICITY** — Does the requirement contain exactly ONE "shall" (or similar) \
-statement? Multiple behaviors bundled in one requirement are a defect.
-
-4. **OVERCONSTRAINT** — Does the requirement prescribe implementation \
-(specific algorithms, specific HW components, internal architecture) when \
-it should state the NEED instead? A system-level requirement should say \
-WHAT, not HOW. Exception: if the constraint is genuinely necessary at \
-system level (e.g., safety-critical timing).
-
-5. **COMPLETENESS** — Is the requirement missing boundary conditions, \
-operating modes, failure behavior, or environmental conditions that would \
-be needed for implementation?
-
-6. **TERMINOLOGY** — Does it use inconsistent terms (referring to the same \
-thing with different names across the spec) or undefined domain terms?
-
-## Rules
-- Only flag REAL issues. Do not flag something just to generate output.
-- Severity CRITICAL = blocks downstream work or has safety implications.
-- Severity MAJOR = will likely cause rework or ambiguous implementation.
-- Severity MINOR = improvement opportunity, wording clarification.
-- Severity INFO = use only for type OBSERVATION.
-- If a requirement has NO quality issues, do NOT include it in flags.
-- Be specific in your description: quote the problematic word/phrase.
-- Keep recommendations actionable and concrete.
-- confidence: your self-assessed certainty in this flag (0.0–1.0). \
-Below 0.6 means you are unsure — use type QUESTION instead of FINDING.
-- reference: cite the relevant normative standard where applicable \
-(e.g. "ISO 26262-8 §6.4.2.1", "ASPICE SWE.1.BP5"). Null if no specific clause applies.
-
-## Identifying affected items
-Each requirement in the input is labeled with its gen_uid, spec_item_id, and gen_hierarchy_number.
-For each flag, populate affected_items with these identifiers and role "primary".
-If a flag involves a conflict between two items, list both: one as "primary" (the one with the issue), \
-the other as "conflicting".
-
-## Tracking reviewed items
-You MUST populate the "reviewed_items" array with the gen_uid of EVERY item you reviewed, \
-including items with no flags. This is used to detect skipped items.
-
-## Output Format
-Return ONLY valid JSON — no markdown fences, no explanation.
-Conform exactly to this schema:
-{schema}"""
+_PROMPTS_DIR = Path(__file__).parent / "prompts"
+_SYSTEM_TEMPLATE = (
+    _PROMPTS_DIR / f"S4_individual_quality.v{_PROMPT_VERSION}.txt"
+).read_text(encoding="utf-8")
 
 
 # --- Helpers ---
@@ -196,7 +139,7 @@ def build_user_prompt(items: list[dict]) -> str:
 def run_analyzer(structured: dict) -> tuple[str, dict]:
     """Input: parsed 03_llm_structured JSON dict.
     Output: (raw_response, flags dict conforming to 04_llm_analyzed.01_llm_response)."""
-    system_prompt = _SYSTEM.format(
+    system_prompt = _SYSTEM_TEMPLATE.format(
         schema=json.dumps(_LLM_RESPONSE_SCHEMA, indent=2),
     )
     items = preprocess_for_llm(structured)

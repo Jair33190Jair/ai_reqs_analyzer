@@ -7,237 +7,237 @@
       "spec_hierarchy_number": "1",
       "title": "Introduction",
       "level": 1,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 1,
         "line_start": 7,
-        "line_end": 7
+        "line_end": 13
       }
     },
     {
       "spec_hierarchy_number": "1.1",
       "title": "Purpose",
       "level": 2,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 1,
         "line_start": 8,
-        "line_end": 8
+        "line_end": 13
       }
     },
     {
       "spec_hierarchy_number": "2",
       "title": "System Overview",
       "level": 1,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 1,
         "line_start": 14,
-        "line_end": 14
+        "line_end": 24
       }
     },
     {
       "spec_hierarchy_number": "2.1",
       "title": "Product Description",
       "level": 2,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 1,
         "line_start": 15,
-        "line_end": 15
+        "line_end": 20
       }
     },
     {
       "spec_hierarchy_number": "2.2",
       "title": "Operating Environment",
       "level": 2,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 1,
         "line_start": 21,
-        "line_end": 21
+        "line_end": 24
       }
     },
     {
       "spec_hierarchy_number": "3",
       "title": "Functional Requirements",
       "level": 1,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 2,
         "line_start": 1,
-        "line_end": 1
+        "line_end": 2
       }
     },
     {
       "spec_hierarchy_number": "3.1",
       "title": "Navigation",
       "level": 2,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 2,
         "line_start": 2,
-        "line_end": 2
+        "line_end": 12
       }
     },
     {
       "spec_hierarchy_number": "3.2",
       "title": "Vacuuming",
       "level": 2,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 2,
         "line_start": 13,
-        "line_end": 13
+        "line_end": 19
       }
     },
     {
       "spec_hierarchy_number": "3.3",
       "title": "Mopping",
       "level": 2,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 2,
         "line_start": 20,
-        "line_end": 20
+        "line_end": 25
       }
     },
     {
       "spec_hierarchy_number": "3.4",
       "title": "Docking",
       "level": 2,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 3,
         "line_start": 5,
-        "line_end": 5
+        "line_end": 12
       }
     },
     {
       "spec_hierarchy_number": "3.5",
       "title": "User Interaction",
       "level": 2,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 3,
         "line_start": 13,
-        "line_end": 13
+        "line_end": 19
       }
     },
     {
       "spec_hierarchy_number": "4",
       "title": "Safety Requirements",
       "level": 1,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 3,
         "line_start": 20,
-        "line_end": 20
+        "line_end": 21
       }
     },
     {
       "spec_hierarchy_number": "4.1",
       "title": "Mechanical Safety",
       "level": 2,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 3,
         "line_start": 21,
-        "line_end": 21
+        "line_end": 23
       }
     },
     {
       "spec_hierarchy_number": "4.2",
       "title": "Electrical Safety",
       "level": 2,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 4,
         "line_start": 5,
-        "line_end": 5
+        "line_end": 9
       }
     },
     {
       "spec_hierarchy_number": "5",
       "title": "Performance Requirements",
       "level": 1,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 4,
         "line_start": 10,
-        "line_end": 10
+        "line_end": 18
       }
     },
     {
       "spec_hierarchy_number": "6",
       "title": "Cybersecurity Requirements",
       "level": 1,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 4,
         "line_start": 19,
-        "line_end": 19
+        "line_end": 21
       }
     },
     {
       "spec_hierarchy_number": "7",
       "title": "Hardware Requirements",
       "level": 1,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 5,
         "line_start": 5,
-        "line_end": 5
+        "line_end": 6
       }
     },
     {
       "spec_hierarchy_number": "7.1",
       "title": "Sensors",
       "level": 2,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 5,
         "line_start": 6,
-        "line_end": 6
+        "line_end": 16
       }
     },
     {
       "spec_hierarchy_number": "7.2",
       "title": "Actuators",
       "level": 2,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 5,
         "line_start": 17,
-        "line_end": 17
+        "line_end": 23
       }
     },
     {
       "spec_hierarchy_number": "8",
       "title": "Software Architecture Requirements",
       "level": 1,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 6,
         "line_start": 3,
-        "line_end": 3
+        "line_end": 12
       }
     },
     {
       "spec_hierarchy_number": "9",
       "title": "System States",
       "level": 1,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 6,
         "line_start": 13,
-        "line_end": 13
+        "line_end": 18
       }
     }
   ],
   "spec_items": [
     {
-      "item_id": "SYS-FUNC-001",
+      "spec_item_id": "SYS-FUNC-001",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -249,7 +249,7 @@
       }
     },
     {
-      "item_id": "SYS-FUNC-002",
+      "spec_item_id": "SYS-FUNC-002",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -261,7 +261,7 @@
       }
     },
     {
-      "item_id": "SYS-FUNC-003",
+      "spec_item_id": "SYS-FUNC-003",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -273,7 +273,7 @@
       }
     },
     {
-      "item_id": "SYS-FUNC-004",
+      "spec_item_id": "SYS-FUNC-004",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -285,7 +285,7 @@
       }
     },
     {
-      "item_id": "SYS-FUNC-005",
+      "spec_item_id": "SYS-FUNC-005",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -297,7 +297,7 @@
       }
     },
     {
-      "item_id": "SYS-FUNC-010",
+      "spec_item_id": "SYS-FUNC-010",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -309,7 +309,7 @@
       }
     },
     {
-      "item_id": "SYS-FUNC-011",
+      "spec_item_id": "SYS-FUNC-011",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -321,7 +321,7 @@
       }
     },
     {
-      "item_id": "SYS-FUNC-012",
+      "spec_item_id": "SYS-FUNC-012",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -333,7 +333,7 @@
       }
     },
     {
-      "item_id": "SYS-FUNC-020",
+      "spec_item_id": "SYS-FUNC-020",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -345,7 +345,7 @@
       }
     },
     {
-      "item_id": "SYS-FUNC-021",
+      "spec_item_id": "SYS-FUNC-021",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -357,7 +357,7 @@
       }
     },
     {
-      "item_id": "SYS-FUNC-022",
+      "spec_item_id": "SYS-FUNC-022",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -369,7 +369,7 @@
       }
     },
     {
-      "item_id": "SYS-FUNC-023",
+      "spec_item_id": "SYS-FUNC-023",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -381,7 +381,7 @@
       }
     },
     {
-      "item_id": "SYS-FUNC-030",
+      "spec_item_id": "SYS-FUNC-030",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -393,7 +393,7 @@
       }
     },
     {
-      "item_id": "SYS-FUNC-031",
+      "spec_item_id": "SYS-FUNC-031",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -405,7 +405,7 @@
       }
     },
     {
-      "item_id": "SYS-FUNC-032",
+      "spec_item_id": "SYS-FUNC-032",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -417,7 +417,7 @@
       }
     },
     {
-      "item_id": "SYS-FUNC-040",
+      "spec_item_id": "SYS-FUNC-040",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -429,7 +429,7 @@
       }
     },
     {
-      "item_id": "SYS-FUNC-041",
+      "spec_item_id": "SYS-FUNC-041",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -441,7 +441,7 @@
       }
     },
     {
-      "item_id": "SYS-FUNC-042",
+      "spec_item_id": "SYS-FUNC-042",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -453,7 +453,7 @@
       }
     },
     {
-      "item_id": "SYS-SAFE-001",
+      "spec_item_id": "SYS-SAFE-001",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "safety",
@@ -465,7 +465,7 @@
       }
     },
     {
-      "item_id": "SYS-SAFE-002",
+      "spec_item_id": "SYS-SAFE-002",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "safety",
@@ -477,7 +477,7 @@
       }
     },
     {
-      "item_id": "SYS-SAFE-003",
+      "spec_item_id": "SYS-SAFE-003",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "safety",
@@ -489,7 +489,7 @@
       }
     },
     {
-      "item_id": "SYS-SAFE-010",
+      "spec_item_id": "SYS-SAFE-010",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "safety",
@@ -501,7 +501,7 @@
       }
     },
     {
-      "item_id": "SYS-SAFE-011",
+      "spec_item_id": "SYS-SAFE-011",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "safety",
@@ -513,7 +513,7 @@
       }
     },
     {
-      "item_id": "SYS-PERF-001",
+      "spec_item_id": "SYS-PERF-001",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "performance",
@@ -525,7 +525,7 @@
       }
     },
     {
-      "item_id": "SYS-PERF-002",
+      "spec_item_id": "SYS-PERF-002",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "performance",
@@ -537,7 +537,7 @@
       }
     },
     {
-      "item_id": "SYS-PERF-003",
+      "spec_item_id": "SYS-PERF-003",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "performance",
@@ -549,7 +549,7 @@
       }
     },
     {
-      "item_id": "SYS-PERF-004",
+      "spec_item_id": "SYS-PERF-004",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "performance",
@@ -561,7 +561,7 @@
       }
     },
     {
-      "item_id": "SYS-SEC-001",
+      "spec_item_id": "SYS-SEC-001",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "security",
@@ -573,7 +573,7 @@
       }
     },
     {
-      "item_id": "SYS-SEC-002",
+      "spec_item_id": "SYS-SEC-002",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "security",
@@ -585,7 +585,7 @@
       }
     },
     {
-      "item_id": "SYS-SEC-003",
+      "spec_item_id": "SYS-SEC-003",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "security",
@@ -597,7 +597,7 @@
       }
     },
     {
-      "item_id": "SYS-HW-001",
+      "spec_item_id": "SYS-HW-001",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "other",
@@ -609,7 +609,7 @@
       }
     },
     {
-      "item_id": "SYS-HW-002",
+      "spec_item_id": "SYS-HW-002",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "other",
@@ -621,7 +621,7 @@
       }
     },
     {
-      "item_id": "SYS-HW-003",
+      "spec_item_id": "SYS-HW-003",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "other",
@@ -633,7 +633,7 @@
       }
     },
     {
-      "item_id": "SYS-HW-004",
+      "spec_item_id": "SYS-HW-004",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "other",
@@ -645,7 +645,7 @@
       }
     },
     {
-      "item_id": "SYS-HW-005",
+      "spec_item_id": "SYS-HW-005",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "other",
@@ -657,7 +657,7 @@
       }
     },
     {
-      "item_id": "SYS-HW-010",
+      "spec_item_id": "SYS-HW-010",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "other",
@@ -669,7 +669,7 @@
       }
     },
     {
-      "item_id": "SYS-HW-011",
+      "spec_item_id": "SYS-HW-011",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "other",
@@ -681,7 +681,7 @@
       }
     },
     {
-      "item_id": "SYS-HW-012",
+      "spec_item_id": "SYS-HW-012",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "other",
@@ -693,7 +693,7 @@
       }
     },
     {
-      "item_id": "SYS-HW-013",
+      "spec_item_id": "SYS-HW-013",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "other",
@@ -705,7 +705,7 @@
       }
     },
     {
-      "item_id": "SYS-SW-001",
+      "spec_item_id": "SYS-SW-001",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "other",
@@ -717,7 +717,7 @@
       }
     },
     {
-      "item_id": "SYS-SW-002",
+      "spec_item_id": "SYS-SW-002",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "other",
@@ -729,7 +729,7 @@
       }
     },
     {
-      "item_id": "SYS-SW-003",
+      "spec_item_id": "SYS-SW-003",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "other",

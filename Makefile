@@ -18,9 +18,12 @@ s3:
 s4:
 	python3 $(SRC)/S4_llm_analyzer.py $(ARTIFACTS)/03_llm_structured.json
 
-pipeline: s0 s1 s2 s3 s4
+s5:
+	python3 $(SRC)/S5_renderer.py $(ARTIFACTS)/04_llm_analyzed.json
+
+pipeline: s0 s1 s2 s3 s4 s5
 
 render-arch:
 	plantuml -tsvg architecture/pipeline_overview_v1.puml
 
-.PHONY: s0 s1 s2 s3 s4 pipeline render-arch
+.PHONY: s0 s1 s2 s3 s4 s5 pipeline render-arch

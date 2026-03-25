@@ -78,7 +78,7 @@ The fastest path to value is end-to-end validation, not stage-by-stage perfectio
 **LLM stages (S3, S5) — don't unit test with real LLM calls:**
 - [ ] **4.4** Test with a fixture (saved real LLM response) to validate parsing/schema logic only
 
-**Renderer (S6) — one test:**
+**Renderer (S5) — one test:**
 - [ ] **4.5** Known analysis JSON → HTML contains all req IDs and issue counts
 
 **Golden end-to-end criteria (per run):**

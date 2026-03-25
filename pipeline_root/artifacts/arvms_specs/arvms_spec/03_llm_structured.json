@@ -6,300 +6,300 @@
       "spec_hierarchy_number": "1",
       "title": "Introduction",
       "level": 1,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 1,
         "line_start": 7,
-        "line_end": 7
+        "line_end": 13
       },
-      "content": "1. Introduction",
+      "content": "1. Introduction\n1.1 Purpose\nThis document specifies the system-level requirements for the Autonomous Robot\nVacuum & Mop System (ARVMS).\nThe system shall autonomously clean indoor residential environments by: -\nVacuuming dry debris - Mopping hard floors - Navigating safely and efficiently -\nDocking automatically for charging",
       "gen_hierarchy_number": "G1",
-      "gen_uid": "6E62EE82"
+      "gen_uid": "GU-05EDB3"
     },
     {
       "spec_hierarchy_number": "1.1",
       "title": "Purpose",
       "level": 2,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 1,
         "line_start": 8,
-        "line_end": 8
+        "line_end": 13
       },
-      "content": "1.1 Purpose",
+      "content": "1.1 Purpose\nThis document specifies the system-level requirements for the Autonomous Robot\nVacuum & Mop System (ARVMS).\nThe system shall autonomously clean indoor residential environments by: -\nVacuuming dry debris - Mopping hard floors - Navigating safely and efficiently -\nDocking automatically for charging",
       "gen_hierarchy_number": "G1.1",
-      "gen_uid": "AD25A81E"
+      "gen_uid": "GU-E6FA34"
     },
     {
       "spec_hierarchy_number": "2",
       "title": "System Overview",
       "level": 1,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 1,
         "line_start": 14,
-        "line_end": 14
+        "line_end": 24
       },
-      "content": "2. System Overview",
+      "content": "2. System Overview\n2.1 Product Description\nARVMS is a mobile embedded system consisting of:\n• Mobile cleaning robot\n• Charging & maintenance dock\n• Mobile application\n• Optional cloud backend\n2.2 Operating Environment\nThe system shall operate in: - Indoor residential homes - Hard floors (tile,\nlaminate, wood) - Low/medium pile carpets - Ambient temperature: 5°C – 40°C\n- Humidity: 10% – 80%",
       "gen_hierarchy_number": "G2",
-      "gen_uid": "E3D77E94"
+      "gen_uid": "GU-F16E05"
     },
     {
       "spec_hierarchy_number": "2.1",
       "title": "Product Description",
       "level": 2,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 1,
         "line_start": 15,
-        "line_end": 15
+        "line_end": 20
       },
-      "content": "2.1 Product Description",
+      "content": "2.1 Product Description\nARVMS is a mobile embedded system consisting of:\n• Mobile cleaning robot\n• Charging & maintenance dock\n• Mobile application\n• Optional cloud backend",
       "gen_hierarchy_number": "G2.1",
-      "gen_uid": "9A6ABEDF"
+      "gen_uid": "GU-07FE59"
     },
     {
       "spec_hierarchy_number": "2.2",
       "title": "Operating Environment",
       "level": 2,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 1,
         "line_start": 21,
-        "line_end": 21
+        "line_end": 24
       },
-      "content": "2.2 Operating Environment",
+      "content": "2.2 Operating Environment\nThe system shall operate in: - Indoor residential homes - Hard floors (tile,\nlaminate, wood) - Low/medium pile carpets - Ambient temperature: 5°C – 40°C\n- Humidity: 10% – 80%",
       "gen_hierarchy_number": "G2.2",
-      "gen_uid": "833BA170"
+      "gen_uid": "GU-76B82E"
     },
     {
       "spec_hierarchy_number": "3",
       "title": "Functional Requirements",
       "level": 1,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 2,
         "line_start": 1,
-        "line_end": 1
+        "line_end": 2
       },
-      "content": "3. Functional Requirements",
+      "content": "3. Functional Requirements\n3.1 Navigation",
       "gen_hierarchy_number": "G3",
-      "gen_uid": "05ABEEBB"
+      "gen_uid": "GU-DEA2DC"
     },
     {
       "spec_hierarchy_number": "3.1",
       "title": "Navigation",
       "level": 2,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 2,
         "line_start": 2,
-        "line_end": 2
+        "line_end": 12
       },
-      "content": "3.1 Navigation",
+      "content": "3.1 Navigation\nSYS-FUNC-001\nThe system shall autonomously generate a 2D indoor map using SLAM.\nSYS-FUNC-002\nThe system shall localize itself with ±5 cm accuracy.\nSYS-FUNC-003\nThe system shall avoid static and dynamic obstacles in real-time.\nSYS-FUNC-004\nThe system shall detect cliffs or stairs and prevent falling.\nSYS-FUNC-005\nThe system shall support multi-room mapping and segmentation.",
       "gen_hierarchy_number": "G3.1",
-      "gen_uid": "5A265138"
+      "gen_uid": "GU-5AC4F3"
     },
     {
       "spec_hierarchy_number": "3.2",
       "title": "Vacuuming",
       "level": 2,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 2,
         "line_start": 13,
-        "line_end": 13
+        "line_end": 19
       },
-      "content": "3.2 Vacuuming",
+      "content": "3.2 Vacuuming\nSYS-FUNC-010\nThe system shall generate suction power >= 5000 Pa.\nSYS-FUNC-011\nThe system shall automatically adjust suction based on detected floor type.\nSYS-FUNC-012\nThe system shall detect carpet surfaces.",
       "gen_hierarchy_number": "G3.2",
-      "gen_uid": "003E696E"
+      "gen_uid": "GU-EA7A22"
     },
     {
       "spec_hierarchy_number": "3.3",
       "title": "Mopping",
       "level": 2,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 2,
         "line_start": 20,
-        "line_end": 20
+        "line_end": 25
       },
-      "content": "3.3 Mopping",
+      "content": "3.3 Mopping\nSYS-FUNC-020\nThe system shall provide electronically controlled water dispensing.\nSYS-FUNC-021\nThe system shall support adjustable water flow levels (Low/Medium/High).\n2",
       "gen_hierarchy_number": "G3.3",
-      "gen_uid": "790CF19B"
+      "gen_uid": "GU-54F280"
     },
     {
       "spec_hierarchy_number": "3.4",
       "title": "Docking",
       "level": 2,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 3,
         "line_start": 5,
-        "line_end": 5
+        "line_end": 12
       },
-      "content": "3.4 Docking",
+      "content": "3.4 Docking\nSYS-FUNC-030\nThe system shall automatically return to the charging dock when battery <\n20%.\nSYS-FUNC-031\nThe system shall resume cleaning after recharge.\nSYS-FUNC-032\nThe system shall support automatic charging.",
       "gen_hierarchy_number": "G3.4",
-      "gen_uid": "47368774"
+      "gen_uid": "GU-B5F185"
     },
     {
       "spec_hierarchy_number": "3.5",
       "title": "User Interaction",
       "level": 2,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 3,
         "line_start": 13,
-        "line_end": 13
+        "line_end": 19
       },
-      "content": "3.5 User Interaction",
+      "content": "3.5 User Interaction\nSYS-FUNC-040\nThe system shall support cleaning scheduling.\nSYS-FUNC-041\nThe system shall allow room-specific cleaning selection.\nSYS-FUNC-042\nThe system shall provide cleaning reports (area, duration, battery usage).",
       "gen_hierarchy_number": "G3.5",
-      "gen_uid": "01743409"
+      "gen_uid": "GU-38A9D5"
     },
     {
       "spec_hierarchy_number": "4",
       "title": "Safety Requirements",
       "level": 1,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 3,
         "line_start": 20,
-        "line_end": 20
+        "line_end": 21
       },
-      "content": "4. Safety Requirements",
+      "content": "4. Safety Requirements\n4.1 Mechanical Safety",
       "gen_hierarchy_number": "G4",
-      "gen_uid": "5365D380"
+      "gen_uid": "GU-7696D5"
     },
     {
       "spec_hierarchy_number": "4.1",
       "title": "Mechanical Safety",
       "level": 2,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 3,
         "line_start": 21,
-        "line_end": 21
+        "line_end": 23
       },
-      "content": "4.1 Mechanical Safety",
+      "content": "4.1 Mechanical Safety\nSYS-SAFE-001\nThe system shall stop all drive motors within 100 ms if lifted.",
       "gen_hierarchy_number": "G4.1",
-      "gen_uid": "87777A4C"
+      "gen_uid": "GU-39D125"
     },
     {
       "spec_hierarchy_number": "4.2",
       "title": "Electrical Safety",
       "level": 2,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 4,
         "line_start": 5,
-        "line_end": 5
+        "line_end": 9
       },
-      "content": "4.2 Electrical Safety",
+      "content": "4.2 Electrical Safety\nSYS-SAFE-010\nThe system shall prevent battery overcharge and deep discharge.\nSYS-SAFE-011\nThe system shall monitor motor temperature and prevent overheating.",
       "gen_hierarchy_number": "G4.2",
-      "gen_uid": "9026B453"
+      "gen_uid": "GU-F50348"
     },
     {
       "spec_hierarchy_number": "5",
       "title": "Performance Requirements",
       "level": 1,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 4,
         "line_start": 10,
-        "line_end": 10
+        "line_end": 18
       },
-      "content": "5. Performance Requirements",
+      "content": "5. Performance Requirements\nSYS-PERF-001\nCleaning coverage efficiency shall be >= 95%.\nSYS-PERF-002\nMaximum noise level shall be <= 65 dB.\nSYS-PERF-003\nOperating time shall be >= 120 minutes.\nSYS-PERF-004\nCharging time shall be <= 4 hours.",
       "gen_hierarchy_number": "G5",
-      "gen_uid": "50F55BAB"
+      "gen_uid": "GU-C88C33"
     },
     {
       "spec_hierarchy_number": "6",
       "title": "Cybersecurity Requirements",
       "level": 1,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 4,
         "line_start": 19,
-        "line_end": 19
+        "line_end": 21
       },
-      "content": "6. Cybersecurity Requirements",
+      "content": "6. Cybersecurity Requirements\nSYS-SEC-001\nAll external communications shall use TLS 1.2 or higher.",
       "gen_hierarchy_number": "G6",
-      "gen_uid": "CCA54D3B"
+      "gen_uid": "GU-096A25"
     },
     {
       "spec_hierarchy_number": "7",
       "title": "Hardware Requirements",
       "level": 1,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 5,
         "line_start": 5,
-        "line_end": 5
+        "line_end": 6
       },
-      "content": "7. Hardware Requirements",
+      "content": "7. Hardware Requirements\n7.1 Sensors",
       "gen_hierarchy_number": "G7",
-      "gen_uid": "C45F7A52"
+      "gen_uid": "GU-FA3403"
     },
     {
       "spec_hierarchy_number": "7.1",
       "title": "Sensors",
       "level": 2,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 5,
         "line_start": 6,
-        "line_end": 6
+        "line_end": 16
       },
-      "content": "7.1 Sensors",
+      "content": "7.1 Sensors\nSYS-HW-001\nThe system shall include a LIDAR or vision-based navigation sensor.\nSYS-HW-002\nThe system shall include cliff detection sensors.\nSYS-HW-003\nThe system shall include wheel encoders.\nSYS-HW-004\nThe system shall include an IMU.\nSYS-HW-005\nThe system shall include a water level sensor.",
       "gen_hierarchy_number": "G7.1",
-      "gen_uid": "14464129"
+      "gen_uid": "GU-F54CC8"
     },
     {
       "spec_hierarchy_number": "7.2",
       "title": "Actuators",
       "level": 2,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 5,
         "line_start": 17,
-        "line_end": 17
+        "line_end": 23
       },
-      "content": "7.2 Actuators",
+      "content": "7.2 Actuators\nSYS-HW-010\nThe system shall include two independent drive motors.\nSYS-HW-011\nThe system shall include a vacuum motor.\nSYS-HW-012\nThe system shall include a water pump.",
       "gen_hierarchy_number": "G7.2",
-      "gen_uid": "E89D7B49"
+      "gen_uid": "GU-7E0AFD"
     },
     {
       "spec_hierarchy_number": "8",
       "title": "Software Architecture Requirements",
       "level": 1,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 6,
         "line_start": 3,
-        "line_end": 3
+        "line_end": 12
       },
-      "content": "8. Software Architecture Requirements",
+      "content": "8. Software Architecture Requirements\nSYS-SW-001\nThe system shall implement a layered software architecture:\n• Application Layer\n• Middleware Layer\n• Hardware Abstraction Layer (HAL)\nSYS-SW-002\nThe system shall support modular firmware updates.\nSYS-SW-003\nThe system shall log diagnostic events with timestamps.",
       "gen_hierarchy_number": "G8",
-      "gen_uid": "CBF01CC7"
+      "gen_uid": "GU-25A38B"
     },
     {
       "spec_hierarchy_number": "9",
       "title": "System States",
       "level": 1,
-      "item_id": null,
+      "spec_item_id": null,
       "loc": {
         "page": 6,
         "line_start": 13,
-        "line_end": 13
+        "line_end": 18
       },
-      "content": "9. System States",
+      "content": "9. System States\nThe system shall implement the following high-level states:\n• Idle\n• Mapping\n• Cleaning\n• Dockin",
       "gen_hierarchy_number": "G9",
-      "gen_uid": "5BC78797"
+      "gen_uid": "GU-717AFA"
     }
   ],
   "spec_items": [
     {
-      "item_id": "SYS-FUNC-001",
+      "spec_item_id": "SYS-FUNC-001",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -311,10 +311,10 @@
       },
       "content": "SYS-FUNC-001\nThe system shall autonomously generate a 2D indoor map using SLAM.",
       "gen_hierarchy_number": "G3.1-001",
-      "gen_uid": "196CB2AF"
+      "gen_uid": "GU-196CB2"
     },
     {
-      "item_id": "SYS-FUNC-002",
+      "spec_item_id": "SYS-FUNC-002",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -326,10 +326,10 @@
       },
       "content": "SYS-FUNC-002\nThe system shall localize itself with ±5 cm accuracy.",
       "gen_hierarchy_number": "G3.1-002",
-      "gen_uid": "7353E5BA"
+      "gen_uid": "GU-7353E5"
     },
     {
-      "item_id": "SYS-FUNC-003",
+      "spec_item_id": "SYS-FUNC-003",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -341,10 +341,10 @@
       },
       "content": "SYS-FUNC-003\nThe system shall avoid static and dynamic obstacles in real-time.",
       "gen_hierarchy_number": "G3.1-003",
-      "gen_uid": "C3FF6F31"
+      "gen_uid": "GU-C3FF6F"
     },
     {
-      "item_id": "SYS-FUNC-004",
+      "spec_item_id": "SYS-FUNC-004",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -356,10 +356,10 @@
       },
       "content": "SYS-FUNC-004\nThe system shall detect cliffs or stairs and prevent falling.",
       "gen_hierarchy_number": "G3.1-004",
-      "gen_uid": "DEAEC210"
+      "gen_uid": "GU-DEAEC2"
     },
     {
-      "item_id": "SYS-FUNC-005",
+      "spec_item_id": "SYS-FUNC-005",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -371,10 +371,10 @@
       },
       "content": "SYS-FUNC-005\nThe system shall support multi-room mapping and segmentation.",
       "gen_hierarchy_number": "G3.1-005",
-      "gen_uid": "81140D44"
+      "gen_uid": "GU-81140D"
     },
     {
-      "item_id": "SYS-FUNC-010",
+      "spec_item_id": "SYS-FUNC-010",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -386,10 +386,10 @@
       },
       "content": "SYS-FUNC-010\nThe system shall generate suction power >= 5000 Pa.",
       "gen_hierarchy_number": "G3.2-001",
-      "gen_uid": "77B346EB"
+      "gen_uid": "GU-77B346"
     },
     {
-      "item_id": "SYS-FUNC-011",
+      "spec_item_id": "SYS-FUNC-011",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -401,10 +401,10 @@
       },
       "content": "SYS-FUNC-011\nThe system shall automatically adjust suction based on detected floor type.",
       "gen_hierarchy_number": "G3.2-002",
-      "gen_uid": "A72EFD58"
+      "gen_uid": "GU-A72EFD"
     },
     {
-      "item_id": "SYS-FUNC-012",
+      "spec_item_id": "SYS-FUNC-012",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -416,10 +416,10 @@
       },
       "content": "SYS-FUNC-012\nThe system shall detect carpet surfaces.",
       "gen_hierarchy_number": "G3.2-003",
-      "gen_uid": "D0584FF6"
+      "gen_uid": "GU-D0584F"
     },
     {
-      "item_id": "SYS-FUNC-020",
+      "spec_item_id": "SYS-FUNC-020",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -431,10 +431,10 @@
       },
       "content": "SYS-FUNC-020\nThe system shall provide electronically controlled water dispensing.",
       "gen_hierarchy_number": "G3.3-001",
-      "gen_uid": "81D6E11F"
+      "gen_uid": "GU-81D6E1"
     },
     {
-      "item_id": "SYS-FUNC-021",
+      "spec_item_id": "SYS-FUNC-021",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -446,10 +446,10 @@
       },
       "content": "SYS-FUNC-021\nThe system shall support adjustable water flow levels (Low/Medium/High).",
       "gen_hierarchy_number": "G3.3-002",
-      "gen_uid": "E8E4A53E"
+      "gen_uid": "GU-E8E4A5"
     },
     {
-      "item_id": "SYS-FUNC-022",
+      "spec_item_id": "SYS-FUNC-022",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -461,10 +461,10 @@
       },
       "content": "SYS-FUNC-022\nThe system shall lift the mop automatically when carpet is detected.",
       "gen_hierarchy_number": "G3.3-003",
-      "gen_uid": "D666C8CF"
+      "gen_uid": "GU-D666C8"
     },
     {
-      "item_id": "SYS-FUNC-023",
+      "spec_item_id": "SYS-FUNC-023",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -476,10 +476,10 @@
       },
       "content": "SYS-FUNC-023\nThe system shall detect empty water tank conditions and notify the user.",
       "gen_hierarchy_number": "G3.3-004",
-      "gen_uid": "B0A7AF6A"
+      "gen_uid": "GU-B0A7AF"
     },
     {
-      "item_id": "SYS-FUNC-030",
+      "spec_item_id": "SYS-FUNC-030",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -491,10 +491,10 @@
       },
       "content": "SYS-FUNC-030\nThe system shall automatically return to the charging dock when battery <\n20%.",
       "gen_hierarchy_number": "G3.4-001",
-      "gen_uid": "169CD199"
+      "gen_uid": "GU-169CD1"
     },
     {
-      "item_id": "SYS-FUNC-031",
+      "spec_item_id": "SYS-FUNC-031",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -506,10 +506,10 @@
       },
       "content": "SYS-FUNC-031\nThe system shall resume cleaning after recharge.",
       "gen_hierarchy_number": "G3.4-002",
-      "gen_uid": "18C74053"
+      "gen_uid": "GU-18C740"
     },
     {
-      "item_id": "SYS-FUNC-032",
+      "spec_item_id": "SYS-FUNC-032",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -521,10 +521,10 @@
       },
       "content": "SYS-FUNC-032\nThe system shall support automatic charging.",
       "gen_hierarchy_number": "G3.4-003",
-      "gen_uid": "AB832650"
+      "gen_uid": "GU-AB8326"
     },
     {
-      "item_id": "SYS-FUNC-040",
+      "spec_item_id": "SYS-FUNC-040",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -536,10 +536,10 @@
       },
       "content": "SYS-FUNC-040\nThe system shall support cleaning scheduling.",
       "gen_hierarchy_number": "G3.5-001",
-      "gen_uid": "515CF0C2"
+      "gen_uid": "GU-515CF0"
     },
     {
-      "item_id": "SYS-FUNC-041",
+      "spec_item_id": "SYS-FUNC-041",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -551,10 +551,10 @@
       },
       "content": "SYS-FUNC-041\nThe system shall allow room-specific cleaning selection.",
       "gen_hierarchy_number": "G3.5-002",
-      "gen_uid": "9119EFB9"
+      "gen_uid": "GU-9119EF"
     },
     {
-      "item_id": "SYS-FUNC-042",
+      "spec_item_id": "SYS-FUNC-042",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "functional",
@@ -566,10 +566,10 @@
       },
       "content": "SYS-FUNC-042\nThe system shall provide cleaning reports (area, duration, battery usage).",
       "gen_hierarchy_number": "G3.5-003",
-      "gen_uid": "F6A704E5"
+      "gen_uid": "GU-F6A704"
     },
     {
-      "item_id": "SYS-SAFE-001",
+      "spec_item_id": "SYS-SAFE-001",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "safety",
@@ -581,10 +581,10 @@
       },
       "content": "SYS-SAFE-001\nThe system shall stop all drive motors within 100 ms if lifted.",
       "gen_hierarchy_number": "G4.1-001",
-      "gen_uid": "41AAAE31"
+      "gen_uid": "GU-41AAAE"
     },
     {
-      "item_id": "SYS-SAFE-002",
+      "spec_item_id": "SYS-SAFE-002",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "safety",
@@ -596,10 +596,10 @@
       },
       "content": "SYS-SAFE-002\nThe system shall limit brush torque to prevent injury.",
       "gen_hierarchy_number": "G4.1-002",
-      "gen_uid": "BC4B2CF7"
+      "gen_uid": "GU-BC4B2C"
     },
     {
-      "item_id": "SYS-SAFE-003",
+      "spec_item_id": "SYS-SAFE-003",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "safety",
@@ -611,10 +611,10 @@
       },
       "content": "SYS-SAFE-003\nThe system shall prevent operation if the dustbin is removed.",
       "gen_hierarchy_number": "G4.1-003",
-      "gen_uid": "E0D1BD49"
+      "gen_uid": "GU-E0D1BD"
     },
     {
-      "item_id": "SYS-SAFE-010",
+      "spec_item_id": "SYS-SAFE-010",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "safety",
@@ -626,10 +626,10 @@
       },
       "content": "SYS-SAFE-010\nThe system shall prevent battery overcharge and deep discharge.",
       "gen_hierarchy_number": "G4.2-001",
-      "gen_uid": "74A2263C"
+      "gen_uid": "GU-74A226"
     },
     {
-      "item_id": "SYS-SAFE-011",
+      "spec_item_id": "SYS-SAFE-011",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "safety",
@@ -641,10 +641,10 @@
       },
       "content": "SYS-SAFE-011\nThe system shall monitor motor temperature and prevent overheating.",
       "gen_hierarchy_number": "G4.2-002",
-      "gen_uid": "F4001E98"
+      "gen_uid": "GU-F4001E"
     },
     {
-      "item_id": "SYS-PERF-001",
+      "spec_item_id": "SYS-PERF-001",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "performance",
@@ -656,10 +656,10 @@
       },
       "content": "SYS-PERF-001\nCleaning coverage efficiency shall be >= 95%.",
       "gen_hierarchy_number": "G5-001",
-      "gen_uid": "3380FA14"
+      "gen_uid": "GU-3380FA"
     },
     {
-      "item_id": "SYS-PERF-002",
+      "spec_item_id": "SYS-PERF-002",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "performance",
@@ -671,10 +671,10 @@
       },
       "content": "SYS-PERF-002\nMaximum noise level shall be <= 65 dB.",
       "gen_hierarchy_number": "G5-002",
-      "gen_uid": "DF1CA7B8"
+      "gen_uid": "GU-DF1CA7"
     },
     {
-      "item_id": "SYS-PERF-003",
+      "spec_item_id": "SYS-PERF-003",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "performance",
@@ -686,10 +686,10 @@
       },
       "content": "SYS-PERF-003\nOperating time shall be >= 120 minutes.",
       "gen_hierarchy_number": "G5-003",
-      "gen_uid": "5DE6BB8A"
+      "gen_uid": "GU-5DE6BB"
     },
     {
-      "item_id": "SYS-PERF-004",
+      "spec_item_id": "SYS-PERF-004",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "performance",
@@ -701,10 +701,10 @@
       },
       "content": "SYS-PERF-004\nCharging time shall be <= 4 hours.",
       "gen_hierarchy_number": "G5-004",
-      "gen_uid": "6438D1A2"
+      "gen_uid": "GU-6438D1"
     },
     {
-      "item_id": "SYS-SEC-001",
+      "spec_item_id": "SYS-SEC-001",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "security",
@@ -716,10 +716,10 @@
       },
       "content": "SYS-SEC-001\nAll external communications shall use TLS 1.2 or higher.",
       "gen_hierarchy_number": "G6-001",
-      "gen_uid": "DC42B530"
+      "gen_uid": "GU-DC42B5"
     },
     {
-      "item_id": "SYS-SEC-002",
+      "spec_item_id": "SYS-SEC-002",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "security",
@@ -731,10 +731,10 @@
       },
       "content": "SYS-SEC-002\nThe system shall support secure OTA firmware updates.",
       "gen_hierarchy_number": "G6-002",
-      "gen_uid": "6F01C095"
+      "gen_uid": "GU-6F01C0"
     },
     {
-      "item_id": "SYS-SEC-003",
+      "spec_item_id": "SYS-SEC-003",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "security",
@@ -746,10 +746,10 @@
       },
       "content": "SYS-SEC-003\nThe system shall implement secure boot with firmware signature validation.",
       "gen_hierarchy_number": "G6-003",
-      "gen_uid": "4CB3F3E2"
+      "gen_uid": "GU-4CB3F3"
     },
     {
-      "item_id": "SYS-HW-001",
+      "spec_item_id": "SYS-HW-001",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "other",
@@ -761,10 +761,10 @@
       },
       "content": "SYS-HW-001\nThe system shall include a LIDAR or vision-based navigation sensor.",
       "gen_hierarchy_number": "G7.1-001",
-      "gen_uid": "703B650E"
+      "gen_uid": "GU-703B65"
     },
     {
-      "item_id": "SYS-HW-002",
+      "spec_item_id": "SYS-HW-002",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "other",
@@ -776,10 +776,10 @@
       },
       "content": "SYS-HW-002\nThe system shall include cliff detection sensors.",
       "gen_hierarchy_number": "G7.1-002",
-      "gen_uid": "2E44D15F"
+      "gen_uid": "GU-2E44D1"
     },
     {
-      "item_id": "SYS-HW-003",
+      "spec_item_id": "SYS-HW-003",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "other",
@@ -791,10 +791,10 @@
       },
       "content": "SYS-HW-003\nThe system shall include wheel encoders.",
       "gen_hierarchy_number": "G7.1-003",
-      "gen_uid": "0996ACE8"
+      "gen_uid": "GU-0996AC"
     },
     {
-      "item_id": "SYS-HW-004",
+      "spec_item_id": "SYS-HW-004",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "other",
@@ -806,10 +806,10 @@
       },
       "content": "SYS-HW-004\nThe system shall include an IMU.",
       "gen_hierarchy_number": "G7.1-004",
-      "gen_uid": "2BEB3FAA"
+      "gen_uid": "GU-2BEB3F"
     },
     {
-      "item_id": "SYS-HW-005",
+      "spec_item_id": "SYS-HW-005",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "other",
@@ -821,10 +821,10 @@
       },
       "content": "SYS-HW-005\nThe system shall include a water level sensor.",
       "gen_hierarchy_number": "G7.1-005",
-      "gen_uid": "9A0E426B"
+      "gen_uid": "GU-9A0E42"
     },
     {
-      "item_id": "SYS-HW-010",
+      "spec_item_id": "SYS-HW-010",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "other",
@@ -836,10 +836,10 @@
       },
       "content": "SYS-HW-010\nThe system shall include two independent drive motors.",
       "gen_hierarchy_number": "G7.2-001",
-      "gen_uid": "5CBFA0D4"
+      "gen_uid": "GU-5CBFA0"
     },
     {
-      "item_id": "SYS-HW-011",
+      "spec_item_id": "SYS-HW-011",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "other",
@@ -851,10 +851,10 @@
       },
       "content": "SYS-HW-011\nThe system shall include a vacuum motor.",
       "gen_hierarchy_number": "G7.2-002",
-      "gen_uid": "BA18CAFF"
+      "gen_uid": "GU-BA18CA"
     },
     {
-      "item_id": "SYS-HW-012",
+      "spec_item_id": "SYS-HW-012",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "other",
@@ -866,10 +866,10 @@
       },
       "content": "SYS-HW-012\nThe system shall include a water pump.",
       "gen_hierarchy_number": "G7.2-003",
-      "gen_uid": "687A85BD"
+      "gen_uid": "GU-687A85"
     },
     {
-      "item_id": "SYS-HW-013",
+      "spec_item_id": "SYS-HW-013",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "other",
@@ -881,10 +881,10 @@
       },
       "content": "SYS-HW-013\nThe system shall include a mop lift actuator.",
       "gen_hierarchy_number": "G7.2-004",
-      "gen_uid": "C0B3A74A"
+      "gen_uid": "GU-C0B3A7"
     },
     {
-      "item_id": "SYS-SW-001",
+      "spec_item_id": "SYS-SW-001",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "other",
@@ -896,10 +896,10 @@
       },
       "content": "SYS-SW-001\nThe system shall implement a layered software architecture:\n• Application Layer\n• Middleware Layer\n• Hardware Abstraction Layer (HAL)",
       "gen_hierarchy_number": "G8-001",
-      "gen_uid": "42173BAE"
+      "gen_uid": "GU-42173B"
     },
     {
-      "item_id": "SYS-SW-002",
+      "spec_item_id": "SYS-SW-002",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "other",
@@ -911,10 +911,10 @@
       },
       "content": "SYS-SW-002\nThe system shall support modular firmware updates.",
       "gen_hierarchy_number": "G8-002",
-      "gen_uid": "81FEBD8A"
+      "gen_uid": "GU-81FEBD"
     },
     {
-      "item_id": "SYS-SW-003",
+      "spec_item_id": "SYS-SW-003",
       "spec_hierarchy_number": null,
       "item_type": "requirement",
       "classification": "other",
@@ -926,7 +926,7 @@
       },
       "content": "SYS-SW-003\nThe system shall log diagnostic events with timestamps.",
       "gen_hierarchy_number": "G8-003",
-      "gen_uid": "8D1D5B6A"
+      "gen_uid": "GU-8D1D5B"
     }
   ]
 }

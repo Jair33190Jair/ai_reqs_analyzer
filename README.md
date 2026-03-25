@@ -86,7 +86,7 @@ reqs_analyzer/
       S2_preflight.py     Stage 2 — Preflight gate
       S3_llm_structurer.py  Stage 3 — LLM structuring + content resolution
       S5_llm_analyzer.py  Stage 5 — LLM analysis (planned)
-      S6_renderer.py      Stage 6 — Report rendering (planned)
+      S5_renderer.py      Stage 6 — Report rendering (planned)
       prompts/            LLM prompt definitions
     artifacts/            Intermediate JSON outputs (gitignored in production)
     input/                Input PDF specs — see input/arvms_specs/ for examples
