@@ -1,4 +1,4 @@
-# CLAUDE.md
+# llm_context.md
 
 This file is the front door for working in this repository.
 Keep it practical. Keep it current. Prefer repo truths over

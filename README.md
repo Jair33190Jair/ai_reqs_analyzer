@@ -25,7 +25,7 @@ Accepts a born-digital PDF specification, runs it through a deterministic prepro
 
 ## Pipeline Stages & Artifacts
 
-See the [stage map in CLAUDE.md](CLAUDE.md) for the
+See the [stage map in llm_context.md](llm_context.md) for the
 authoritative stage-to-artifact mapping, and
 [`architecture/pipeline_overview_v1.puml`](architecture/pipeline_overview_v1.puml)
 for the visual flow.
@@ -69,7 +69,7 @@ make pipeline
 INPUT_PDF=pipeline_root/input/my_project/my_spec/my_spec.pdf make analyze
 ```
 
-See [CLAUDE.md](CLAUDE.md) for the full run command
+See [llm_context.md](llm_context.md) for the full run command
 reference and stage details.
 
 To analyze your own specification:
