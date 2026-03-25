@@ -111,6 +111,12 @@ Use the review system when asked to run any of these:
 - `/review <path>`
 - `/review all`
 
+When an AI agent writes a new review file, add an agent suffix
+before `.json` so review outputs stay distinguishable.
+Examples:
+- Codex: `reviews/{ddmmyy}_{type}_codex.json`
+- Claude: `reviews/{ddmmyy}_{type}_claude.json`
+
 Detailed review workflow, output contract, lifecycle rules,
 and per-review instructions live in:
 `review_instructions/README.md`
