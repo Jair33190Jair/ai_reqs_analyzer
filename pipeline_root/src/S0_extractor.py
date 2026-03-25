@@ -65,7 +65,7 @@ def extract_pdf_to_json(pdf_path: str | Path) -> dict:
     warnings = detect_warnings(combined_text)
 
     return {
-        "source": {
+        "source_meta": {
             "filename": pdf_path.name,
             "type": "pdf",
             "sha256": compute_sha256(pdf_path),

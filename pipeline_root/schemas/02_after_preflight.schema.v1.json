@@ -1,10 +1,21 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
-  "required": ["doc_id", "source_ref", "checks", "score", "pass"],
+  "required": ["source_meta", "checks", "score", "pass"],
   "properties": {
-    "doc_id":     { "type": "string" },
-    "source_ref": { "type": "string" },
+    "source_meta": {
+      "type": "object",
+      "required": ["filename"],
+      "properties": {
+        "filename": { "type": "string" },
+        "doc_version": {
+          "type": ["string", "null"]
+        },
+        "doc_last_modified": {
+          "type": ["string", "null"]
+        }
+      }
+    },
     "checks": {
       "type": "object",
       "required": [

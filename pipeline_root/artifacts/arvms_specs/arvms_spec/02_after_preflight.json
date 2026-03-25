@@ -1,6 +1,9 @@
 {
-  "doc_id": "01_normalized",
-  "source_ref": "01_normalized.json",
+  "source_meta": {
+    "filename": "arvms_spec.pdf",
+    "doc_version": "1.0",
+    "doc_last_modified": "2026-02-19"
+  },
   "checks": {
     "has_item_ids": true,
     "item_id_count": 42,

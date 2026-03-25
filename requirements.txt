@@ -1,4 +1,4 @@
 anthropic
-python-dotenv
+jsonschema
 pymupdf
-pydantic
+python-dotenv

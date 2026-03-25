@@ -32,7 +32,7 @@ _ARTIFACT_SCHEMA = json.loads((_SCHEMAS_DIR / "04_llm_analyzed.02_resolved.schem
 _LLM_MODEL = "claude-sonnet-4-6"
 _LLM_MAX_TOKENS = 16000
 _PROMPT_VERSION = "1"
-_PASS = "INDIVIDUAL_QUALITY"
+_PASS = "INDIVIDUAL_ITEM_QUALITY"
 
 _PROMPTS_DIR = Path(__file__).parent / "prompts"
 _SYSTEM_TEMPLATE = (
@@ -42,14 +42,14 @@ _SYSTEM_TEMPLATE = (
 
 # --- Helpers ---
 
-def _gen_flag_id(source_ref: str, primary_item: dict, category: str) -> str:
-    """Input: source_ref string, primary affected_item dict, category string.
+def _gen_flag_id(source_file: str, primary_item: dict, category: str) -> str:
+    """Input: source_file string, primary affected_item dict, category string.
     Output: flag ID of the form GF-XXXXXX (6 hex uppercase).
     Uses spec_item_id when present (stable across content and position changes),
     falls back to gen_hierarchy_number for raw specs (stable across content changes only).
     NOTE: collides if same item has multiple flags in the same category — accepted for V1."""
     item_key = primary_item.get("spec_item_id") or primary_item["gen_hierarchy_number"]
-    raw = f"{source_ref}|{item_key}|{category}|{_PASS}"
+    raw = f"{source_file}|{item_key}|{category}|{_PASS}"
     return "GF-" + hashlib.sha256(raw.encode()).hexdigest()[:6].upper()
 
 
@@ -147,10 +147,11 @@ def run_analyzer(structured: dict) -> tuple[str, dict]:
     return _call_llm(system_prompt, user_prompt)
 
 
-def enrich_flags(raw_result: dict, source_ref: str, structured: dict) -> dict:
-    """Input: validated raw LLM result dict, source_ref string, S3 structured artifact.
+def enrich_flags(raw_result: dict, source_meta: dict, structured: dict) -> dict:
+    """Input: validated raw LLM result dict, source_meta dict, S3 structured artifact.
     Output: resolved artifact matching 04_llm_analyzed.02_resolved schema —
     gen_flag_id assigned, item_review built, stats computed."""
+    filename = source_meta["filename"]
     flags = []
     for f in raw_result.get("flags", []):
         # Find the primary affected item for gen_flag_id computation
@@ -162,7 +163,7 @@ def enrich_flags(raw_result: dict, source_ref: str, structured: dict) -> dict:
         if primary is None:
             primary = f["affected_items"][0]
 
-        gen_flag_id = _gen_flag_id(source_ref, primary, f["category"])
+        gen_flag_id = _gen_flag_id(filename, primary, f["category"])
 
         flags.append({
             "gen_flag_id": gen_flag_id,
@@ -230,13 +231,13 @@ def enrich_flags(raw_result: dict, source_ref: str, structured: dict) -> dict:
     }
 
     return {
-        "source_ref": source_ref,
+        "source_meta": source_meta,
         "analysis_meta": {
             "pass": _PASS,
             "model": _LLM_MODEL,
             "prompt_version": _PROMPT_VERSION,
             "timestamp": datetime.now(timezone.utc).isoformat(),
-            "doc_version": None,
+            "doc_version": source_meta.get("doc_version"),
         },
         "flags": flags,
         "item_review": item_review,
@@ -259,7 +260,7 @@ def save_result(input_path: Path) -> Path:
             f"Expected a 03_llm_structured.json file (S3 output), got: {input_path.name}\n"
             "Usage: python S4_llm_analyzer.py <path_to_03_llm_structured.json>"
         )
-    source_ref = structured.get("source_ref", input_path.name)
+    source_meta = structured.get("source_meta", {"filename": input_path.name})
     raw_path = input_path.parent / "04_llm_response.txt"
 
     raw_response, result = run_analyzer(structured)
@@ -277,7 +278,7 @@ def save_result(input_path: Path) -> Path:
             f"Raw LLM response saved to: {raw_path}"
         ) from exc
 
-    enriched = enrich_flags(result, source_ref, structured)
+    enriched = enrich_flags(result, source_meta, structured)
 
     try:
         jsonschema.validate(enriched, _ARTIFACT_SCHEMA)

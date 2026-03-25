@@ -1,5 +1,4 @@
 {
-  "source_ref": "00_raw_extract.json",
   "skip_pages": [],
   "sections": [
     {
@@ -122,11 +121,11 @@
       "loc": {
         "page": 2,
         "line_start": 20,
-        "line_end": 25
+        "line_end": 24
       },
-      "content": "3.3 Mopping\nSYS-FUNC-020\nThe system shall provide electronically controlled water dispensing.\nSYS-FUNC-021\nThe system shall support adjustable water flow levels (Low/Medium/High).\n2",
+      "content": "3.3 Mopping\nSYS-FUNC-020\nThe system shall provide electronically controlled water dispensing.\nSYS-FUNC-021\nThe system shall support adjustable water flow levels (Low/Medium/High).",
       "gen_hierarchy_number": "G3.3",
-      "gen_uid": "GU-54F280"
+      "gen_uid": "GU-19EE92"
     },
     {
       "spec_hierarchy_number": "3.4",
@@ -928,5 +927,10 @@
       "gen_hierarchy_number": "G8-003",
       "gen_uid": "GU-8D1D5B"
     }
-  ]
+  ],
+  "source_meta": {
+    "filename": "arvms_spec.pdf",
+    "doc_version": "1.0",
+    "doc_last_modified": "2026-02-19"
+  }
 }

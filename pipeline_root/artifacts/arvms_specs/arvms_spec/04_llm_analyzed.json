@@ -1,16 +1,20 @@
 {
-  "source_ref": "00_raw_extract.json",
+  "source_meta": {
+    "filename": "arvms_spec.pdf",
+    "doc_version": "1.0",
+    "doc_last_modified": "2026-02-19"
+  },
   "analysis_meta": {
-    "pass": "INDIVIDUAL_QUALITY",
+    "pass": "INDIVIDUAL_ITEM_QUALITY",
     "model": "claude-sonnet-4-6",
     "prompt_version": "1",
-    "timestamp": "2026-03-25T09:55:48.808268+00:00",
-    "doc_version": null
+    "timestamp": "2026-03-25T10:40:42.048048+00:00",
+    "doc_version": "1.0"
   },
   "flags": [
     {
-      "gen_flag_id": "GF-0A54B5",
-      "pass": "INDIVIDUAL_QUALITY",
+      "gen_flag_id": "GF-2E64AC",
+      "pass": "INDIVIDUAL_ITEM_QUALITY",
       "type": "FINDING",
       "category": "OVERCONSTRAINT",
       "severity": "MAJOR",
@@ -22,14 +26,14 @@
           "role": "primary"
         }
       ],
-      "description": "The requirement mandates use of 'SLAM' — a specific algorithmic approach — rather than stating the need (autonomous 2D indoor map generation). SLAM is an implementation choice that should be left to design. The requirement should specify WHAT capability is needed, not HOW to achieve it.",
-      "recommendation": "Rewrite as: 'The system shall autonomously generate and maintain a 2D indoor map of the operating environment.' Leave SLAM as a design decision in the architecture documentation.",
-      "reference": "ISO/IEC/IEEE 29148:2018 §5.2.8 (implementation-free requirements)",
-      "confidence": 0.9
+      "description": "The requirement prescribes the implementation technology 'SLAM' (Simultaneous Localization and Mapping) rather than stating the system need. At system level, the need is to autonomously generate a 2D indoor map; the algorithm used to achieve that is an implementation decision. Mandating SLAM forecloses alternative mapping approaches without safety or functional justification.",
+      "recommendation": "Rewrite to state the need: 'The system shall autonomously generate a 2D indoor map of the operational environment without prior environment knowledge.' If SLAM is genuinely constrained by system-level architecture decisions, document the rationale explicitly.",
+      "reference": "ISO/IEC/IEEE 29148:2018 §6.3.1 (requirements should state what, not how)",
+      "confidence": 0.85
     },
     {
-      "gen_flag_id": "GF-748C20",
-      "pass": "INDIVIDUAL_QUALITY",
+      "gen_flag_id": "GF-6505B2",
+      "pass": "INDIVIDUAL_ITEM_QUALITY",
       "type": "FINDING",
       "category": "COMPLETENESS",
       "severity": "MAJOR",
@@ -41,14 +45,14 @@
           "role": "primary"
         }
       ],
-      "description": "Localization accuracy of ±5 cm is specified without defining the reference frame, environmental conditions (e.g., room size, feature density), or operating mode under which this accuracy must be achieved. Additionally, it is unclear whether this is a static or dynamic (moving) accuracy requirement.",
-      "recommendation": "Add conditions: e.g., 'The system shall localize itself with ±5 cm accuracy (95th percentile) relative to a previously built map, in a room of at least 10 m², under normal indoor lighting conditions, while navigating at operational speed.'",
-      "reference": "ISO/IEC/IEEE 29148:2018 §5.2.5",
-      "confidence": 0.85
+      "description": "The localization accuracy of ±5 cm is stated without specifying: (a) the reference coordinate frame or ground-truth method for verification, (b) the operating conditions (speed, floor type, lighting), (c) the statistical confidence level (e.g., 95th percentile, RMS, or worst-case), and (d) whether this applies during initial mapping, re-localization, or both. Two engineers would implement and test this very differently.",
+      "recommendation": "Add conditions and statistical qualifier, e.g.: 'The system shall localize itself within ±5 cm (95th percentile) of its true position, measured against a calibrated ground-truth grid, during normal indoor navigation on flat hard-floor surfaces at speeds up to [X] m/s.'",
+      "reference": "ISO/IEC/IEEE 29148:2018 §6.3.1 (verifiable, unambiguous)",
+      "confidence": 0.9
     },
     {
-      "gen_flag_id": "GF-1F604C",
-      "pass": "INDIVIDUAL_QUALITY",
+      "gen_flag_id": "GF-F84604",
+      "pass": "INDIVIDUAL_ITEM_QUALITY",
       "type": "FINDING",
       "category": "AMBIGUITY",
       "severity": "MAJOR",
@@ -60,14 +64,14 @@
           "role": "primary"
         }
       ],
-      "description": "The term 'real-time' is used without a numeric bound. 'Real-time' is ambiguous — two engineers may implement 10 ms or 500 ms response cycles and both claim compliance. Additionally, 'avoid' does not specify minimum clearance distance or the conditions under which avoidance must succeed.",
-      "recommendation": "Replace 'in real-time' with an explicit latency bound, e.g., 'The system shall detect and initiate an avoidance maneuver for static and dynamic obstacles within [X] ms of detection, maintaining a minimum clearance of [Y] cm.'",
-      "reference": "ISO/IEC/IEEE 29148:2018 §5.2.2",
+      "description": "The term 'real-time' is used without a numeric bound. 'Real-time' is ambiguous in the absence of a defined maximum response latency. Additionally, the requirement does not distinguish between detection and avoidance response, nor does it define minimum obstacle size, detection range, or robot speed context.",
+      "recommendation": "Replace 'in real-time' with an explicit timing constraint, e.g.: 'The system shall detect and initiate an avoidance maneuver for static and dynamic obstacles within [X] ms of first detection, for obstacles with a minimum dimension of [Y] cm at speeds up to [Z] m/s.'",
+      "reference": "ISO/IEC/IEEE 29148:2018 §6.3.1; ASPICE SYS.2.BP3",
       "confidence": 0.95
     },
     {
-      "gen_flag_id": "GF-0AD516",
-      "pass": "INDIVIDUAL_QUALITY",
+      "gen_flag_id": "GF-E1493A",
+      "pass": "INDIVIDUAL_ITEM_QUALITY",
       "type": "FINDING",
       "category": "COMPLETENESS",
       "severity": "MAJOR",
@@ -79,16 +83,16 @@
           "role": "primary"
         }
       ],
-      "description": "The requirement combines two behaviors: (1) detect cliffs/stairs and (2) prevent falling. The threshold for cliff detection (e.g., drop depth ≥ X cm) is not specified, and 'prevent falling' does not define the stopping distance or reaction time. This is also an atomicity concern as it bundles detection and prevention.",
-      "recommendation": "Split into two atomic requirements: (1) 'The system shall detect a floor drop of ≥ [X] cm within [Y] cm of the edge.' (2) 'The system shall stop all drive motors within [Z] ms of detecting a cliff condition.' Specify the detection threshold.",
-      "reference": "ISO/IEC/IEEE 29148:2018 §5.2.3; ASPICE SWE.1.BP5",
-      "confidence": 0.9
+      "description": "The requirement states the system shall 'detect cliffs or stairs and prevent falling' but does not define: (a) the detection threshold (e.g., drop height >= X mm constitutes a cliff), (b) the stopping distance or reaction time after detection, (c) what 'prevent falling' means in operational terms (e.g., stop within Y cm of the edge). Without these, the requirement is not testable.",
+      "recommendation": "Specify detection threshold, reaction distance, and response: e.g., 'The system shall detect a vertical drop exceeding [X] mm and halt all drive motors within [Y] ms, stopping the robot no closer than [Z] cm from the edge.'",
+      "reference": "ISO/IEC/IEEE 29148:2018 §6.3.1; ISO 26262-8 §6.4.2.1",
+      "confidence": 0.92
     },
     {
-      "gen_flag_id": "GF-3FCAEC",
-      "pass": "INDIVIDUAL_QUALITY",
+      "gen_flag_id": "GF-98423B",
+      "pass": "INDIVIDUAL_ITEM_QUALITY",
       "type": "FINDING",
-      "category": "COMPLETENESS",
+      "category": "AMBIGUITY",
       "severity": "MINOR",
       "affected_items": [
         {
@@ -98,17 +102,17 @@
           "role": "primary"
         }
       ],
-      "description": "'Multi-room mapping and segmentation' does not specify the maximum number of rooms supported, the criteria for room boundary detection, or how segmentation is presented to the user. Without these, the requirement cannot be tested.",
-      "recommendation": "Add a minimum room count (e.g., 'at least [N] rooms'), define segmentation criteria (e.g., doorways, user-defined boundaries), and specify how segmented rooms are identified (e.g., labeled on the map).",
-      "reference": "ISO/IEC/IEEE 29148:2018 §5.2.6",
+      "description": "'Multi-room mapping and segmentation' is vague: the minimum number of rooms supported, the method of room boundary definition (automatic, manual, or both), and what 'segmentation' means in verifiable terms (e.g., rooms are identifiable as discrete named zones) are all undefined.",
+      "recommendation": "Specify minimum room count and segmentation criteria, e.g.: 'The system shall map and identify at least [N] discrete rooms, automatically segmenting them based on detected doorways or user-defined virtual boundaries.'",
+      "reference": "ISO/IEC/IEEE 29148:2018 §6.3.1",
       "confidence": 0.85
     },
     {
-      "gen_flag_id": "GF-2D9F2E",
-      "pass": "INDIVIDUAL_QUALITY",
+      "gen_flag_id": "GF-335984",
+      "pass": "INDIVIDUAL_ITEM_QUALITY",
       "type": "FINDING",
       "category": "COMPLETENESS",
-      "severity": "MAJOR",
+      "severity": "MINOR",
       "affected_items": [
         {
           "gen_uid": "GU-77B346",
@@ -117,16 +121,16 @@
           "role": "primary"
         }
       ],
-      "description": "The suction power requirement (>= 5000 Pa) lacks measurement conditions. Suction pressure depends on nozzle geometry, measurement method, and test setup. Without a defined test standard or condition (e.g., sealed suction, at nozzle inlet, per IEC 62885-2), the value is not reproducibly testable.",
-      "recommendation": "Specify measurement conditions and reference a test standard: e.g., 'The system shall generate a sealed suction pressure of ≥ 5000 Pa, measured at the nozzle inlet per [test method/standard].'",
-      "reference": "ISO/IEC/IEEE 29148:2018 §5.2.6",
-      "confidence": 0.88
+      "description": "The suction power threshold (>= 5000 Pa) is missing the measurement conditions: measurement point (at nozzle inlet? in free air?), floor gap/seal condition, and whether this is a minimum across all power modes or only the maximum mode. Without this, the requirement cannot be uniformly tested.",
+      "recommendation": "Add measurement conditions: e.g., 'The system shall generate a maximum suction power of >= 5000 Pa, measured at the main brush inlet with a standardized seal per [applicable test standard], in maximum suction mode.'",
+      "reference": "ISO/IEC/IEEE 29148:2018 §6.3.1",
+      "confidence": 0.82
     },
     {
-      "gen_flag_id": "GF-A31689",
-      "pass": "INDIVIDUAL_QUALITY",
+      "gen_flag_id": "GF-6989CB",
+      "pass": "INDIVIDUAL_ITEM_QUALITY",
       "type": "FINDING",
-      "category": "COMPLETENESS",
+      "category": "AMBIGUITY",
       "severity": "MAJOR",
       "affected_items": [
         {
@@ -136,14 +140,14 @@
           "role": "primary"
         }
       ],
-      "description": "'Automatically adjust suction based on detected floor type' does not specify: (a) which floor types trigger which suction levels, (b) what the suction levels are for each floor type, or (c) the response time for the adjustment. The requirement is not testable as written.",
-      "recommendation": "Add a mapping table: e.g., 'The system shall set suction power to [X] Pa on hard floors and [Y] Pa on carpet surfaces within [Z] ms of floor type detection.' Define all supported floor types.",
-      "reference": "ISO/IEC/IEEE 29148:2018 §5.2.5",
-      "confidence": 0.92
+      "description": "'Automatically adjust suction based on detected floor type' does not define: (a) which floor types are recognised, (b) what the adjustment is for each type (target suction level), or (c) the detection mechanism. Without these, there is no verifiable pass/fail criterion.",
+      "recommendation": "Enumerate floor types and corresponding suction settings, e.g.: 'The system shall automatically increase suction power to [X] Pa when carpet is detected and reduce suction power to [Y] Pa on hard floors, within [Z] seconds of floor type change detection.'",
+      "reference": "ISO/IEC/IEEE 29148:2018 §6.3.1",
+      "confidence": 0.9
     },
     {
-      "gen_flag_id": "GF-170722",
-      "pass": "INDIVIDUAL_QUALITY",
+      "gen_flag_id": "GF-968CD6",
+      "pass": "INDIVIDUAL_ITEM_QUALITY",
       "type": "FINDING",
       "category": "ATOMICITY",
       "severity": "MAJOR",
@@ -155,14 +159,33 @@
           "role": "primary"
         }
       ],
-      "description": "The requirement bundles two distinct behaviors: (1) detecting an empty water tank, and (2) notifying the user. These are separate functions and should be traceable, tested, and implemented independently.",
-      "recommendation": "Split into: (1) 'The system shall detect when the water tank is empty.' (2) 'The system shall notify the user within [X] seconds of detecting an empty water tank condition.'",
-      "reference": "ISO/IEC/IEEE 29148:2018 §5.2.3; ASPICE SWE.1.BP5",
-      "confidence": 0.9
+      "description": "SYS-FUNC-023 combines two distinct behaviors in one requirement: (1) detecting an empty water tank condition, and (2) notifying the user. These are separable functions that may have independent failure modes and test cases.",
+      "recommendation": "Split into two requirements: 'The system shall detect when the water tank is empty.' and 'The system shall notify the user when an empty water tank condition is detected, within [X] seconds.'",
+      "reference": "ISO/IEC/IEEE 29148:2018 §6.3.2 (each requirement should express one idea)",
+      "confidence": 0.88
     },
     {
-      "gen_flag_id": "GF-AFAB5B",
-      "pass": "INDIVIDUAL_QUALITY",
+      "gen_flag_id": "GF-6D25EF",
+      "pass": "INDIVIDUAL_ITEM_QUALITY",
+      "type": "FINDING",
+      "category": "COMPLETENESS",
+      "severity": "MINOR",
+      "affected_items": [
+        {
+          "gen_uid": "GU-169CD1",
+          "spec_item_id": "SYS-FUNC-030",
+          "gen_hierarchy_number": "G3.4-001",
+          "role": "primary"
+        }
+      ],
+      "description": "The requirement specifies automatic return to dock at battery < 20% but does not address: (a) what happens if battery reaches a critically low level (e.g., < 5%) before reaching the dock, (b) whether cleaning is paused or aborted, (c) dock-finding behaviour if the dock is obstructed.",
+      "recommendation": "Add failure/boundary conditions: e.g., specify behaviour if battery drops to a critical threshold before docking is achieved, and whether the cleaning task is saved for resumption.",
+      "reference": "ISO/IEC/IEEE 29148:2018 §6.3.1",
+      "confidence": 0.8
+    },
+    {
+      "gen_flag_id": "GF-B62E93",
+      "pass": "INDIVIDUAL_ITEM_QUALITY",
       "type": "FINDING",
       "category": "COMPLETENESS",
       "severity": "MAJOR",
@@ -174,14 +197,14 @@
           "role": "primary"
         }
       ],
-      "description": "'Resume cleaning after recharge' does not specify: (a) the battery level at which resumption occurs, (b) whether it resumes from the interrupted position or restarts, (c) whether resumption is automatic or requires user confirmation, or (d) the maximum time before resumption.",
-      "recommendation": "Specify: 'The system shall automatically resume the interrupted cleaning task from the last recorded position when battery charge reaches ≥ [X]% after returning to dock, without user intervention.'",
-      "reference": "ISO/IEC/IEEE 29148:2018 §5.2.5",
-      "confidence": 0.92
+      "description": "'Resume cleaning after recharge' is underspecified: (a) no charge level threshold is given at which resumption occurs (e.g., resume at 80%?), (b) it is not stated whether the system resumes from the last position or restarts, (c) no timeout or maximum wait duration is defined.",
+      "recommendation": "Specify resumption conditions: e.g., 'The system shall resume cleaning from the last recorded position when battery charge reaches >= [X]%, continuing the uncleaned portion of the scheduled area.'",
+      "reference": "ISO/IEC/IEEE 29148:2018 §6.3.1",
+      "confidence": 0.88
     },
     {
-      "gen_flag_id": "GF-224611",
-      "pass": "INDIVIDUAL_QUALITY",
+      "gen_flag_id": "GF-67306A",
+      "pass": "INDIVIDUAL_ITEM_QUALITY",
       "type": "FINDING",
       "category": "REDUNDANCY",
       "severity": "MAJOR",
@@ -199,16 +222,16 @@
           "role": "conflicting"
         }
       ],
-      "description": "SYS-FUNC-032 ('support automatic charging') is largely subsumed by SYS-FUNC-030 (auto-return to dock when battery < 20%) and SYS-FUNC-031 (resume after recharge). If 'automatic charging' means something beyond auto-return and docking, it is not differentiated. If it is the same behavior, it is redundant and creates maintenance risk.",
-      "recommendation": "Clarify what 'automatic charging' means beyond SYS-FUNC-030. If it refers to the act of initiating charging upon docking, make that explicit and distinct. Otherwise, consider removing this requirement.",
-      "reference": "ASPICE SWE.1.BP5",
-      "confidence": 0.82
+      "description": "SYS-FUNC-032 ('support automatic charging') is largely redundant with SYS-FUNC-030 ('automatically return to the charging dock when battery < 20%'), which already implies automatic charging. SYS-FUNC-032 adds no uniquely verifiable behaviour beyond what is covered.",
+      "recommendation": "Either remove SYS-FUNC-032 or rewrite it to cover a specific aspect not already addressed, such as the charging process itself (e.g., contact alignment, charge current management).",
+      "reference": "ISO/IEC/IEEE 29148:2018 §6.3.2",
+      "confidence": 0.78
     },
     {
-      "gen_flag_id": "GF-3BCC50",
-      "pass": "INDIVIDUAL_QUALITY",
+      "gen_flag_id": "GF-A82531",
+      "pass": "INDIVIDUAL_ITEM_QUALITY",
       "type": "FINDING",
-      "category": "COMPLETENESS",
+      "category": "AMBIGUITY",
       "severity": "MAJOR",
       "affected_items": [
         {
@@ -218,14 +241,14 @@
           "role": "primary"
         }
       ],
-      "description": "'Support cleaning scheduling' is underspecified. It does not define: granularity (daily, weekly, one-time), maximum number of schedules, persistence across power cycles, or how conflicts are handled.",
-      "recommendation": "Add details: e.g., 'The system shall allow the user to configure up to [N] recurring cleaning schedules (specifying day of week and start time), which shall persist across power cycles.'",
-      "reference": "ISO/IEC/IEEE 29148:2018 §5.2.5",
+      "description": "'Support cleaning scheduling' is insufficiently specified. It does not define: (a) scheduling granularity (daily, weekly, one-time), (b) number of concurrent schedules supported, (c) the interface through which schedules are set (app, onboard button), (d) behaviour if the robot is unavailable at scheduled time.",
+      "recommendation": "Add specifics: e.g., 'The system shall allow the user to schedule recurring cleaning sessions at a defined day and time, supporting up to [N] concurrent schedules, configurable via the companion mobile application.'",
+      "reference": "ISO/IEC/IEEE 29148:2018 §6.3.1",
       "confidence": 0.88
     },
     {
-      "gen_flag_id": "GF-59AAC5",
-      "pass": "INDIVIDUAL_QUALITY",
+      "gen_flag_id": "GF-C7D61B",
+      "pass": "INDIVIDUAL_ITEM_QUALITY",
       "type": "FINDING",
       "category": "COMPLETENESS",
       "severity": "MINOR",
@@ -237,14 +260,14 @@
           "role": "primary"
         }
       ],
-      "description": "'Provide cleaning reports (area, duration, battery usage)' does not specify how reports are delivered (app, local display, stored log), the retention period, or the format/units of each data element.",
-      "recommendation": "Specify delivery mechanism, retention period, and units: e.g., 'The system shall generate a cleaning report for each completed session, accessible via the mobile application, containing: cleaned area (m²), session duration (minutes), and battery consumption (%), retained for at least [N] sessions.'",
-      "reference": "ISO/IEC/IEEE 29148:2018 §5.2.5",
-      "confidence": 0.85
+      "description": "'Cleaning reports (area, duration, battery usage)' lacks: (a) report format or delivery mechanism (app notification, onboard display), (b) retention period for historical reports, (c) units and precision of each metric.",
+      "recommendation": "Specify delivery mechanism and data format: e.g., 'The system shall provide a cleaning summary report via the companion application within [X] minutes of session completion, including cleaned area in m², session duration in minutes, and battery consumed as a percentage.'",
+      "reference": "ISO/IEC/IEEE 29148:2018 §6.3.1",
+      "confidence": 0.82
     },
     {
-      "gen_flag_id": "GF-1D0395",
-      "pass": "INDIVIDUAL_QUALITY",
+      "gen_flag_id": "GF-C78E4E",
+      "pass": "INDIVIDUAL_ITEM_QUALITY",
       "type": "FINDING",
       "category": "COMPLETENESS",
       "severity": "CRITICAL",
@@ -256,14 +279,14 @@
           "role": "primary"
         }
       ],
-      "description": "'Limit brush torque to prevent injury' does not specify the maximum allowable torque value or the conditions under which the limit applies. Without a quantitative threshold, this safety requirement cannot be tested or verified, which is a critical gap under ISO 26262.",
-      "recommendation": "Specify the maximum brush torque value in N·m (or equivalent) and the detection/response mechanism: e.g., 'The system shall limit brush motor torque to ≤ [X] N·m under all operating conditions. If applied torque exceeds [X] N·m, the brush motor shall stop within [Y] ms.'",
-      "reference": "ISO 26262-8 §6.4.2.1; ISO/IEC/IEEE 29148:2018 §5.2.6",
+      "description": "'Limit brush torque to prevent injury' provides no quantitative torque limit and no definition of the injury scenario (e.g., finger entrapment). This is a safety requirement that is entirely untestable as written. 'Injury' is also an undefined threshold in engineering terms.",
+      "recommendation": "Define a specific torque limit with technical justification (e.g., derived from a hazard analysis): e.g., 'The system shall limit main brush motor output torque to <= [X] Ncm under stall conditions, consistent with [applicable safety standard/HARA result].'",
+      "reference": "ISO 26262-3 §7 (HARA); ISO 26262-6 Table 2; ISO/IEC/IEEE 29148:2018 §6.3.1",
       "confidence": 0.95
     },
     {
-      "gen_flag_id": "GF-EE78B8",
-      "pass": "INDIVIDUAL_QUALITY",
+      "gen_flag_id": "GF-28FCB7",
+      "pass": "INDIVIDUAL_ITEM_QUALITY",
       "type": "FINDING",
       "category": "COMPLETENESS",
       "severity": "CRITICAL",
@@ -275,14 +298,14 @@
           "role": "primary"
         }
       ],
-      "description": "'Prevent battery overcharge and deep discharge' lacks quantitative thresholds. The upper charge voltage limit and the lower discharge cutoff (in volts or % SoC) are not defined. Without these, the requirement is not verifiable and does not provide sufficient guidance for implementation.",
-      "recommendation": "Specify thresholds: e.g., 'The system shall disconnect the charging circuit when battery cell voltage exceeds [X] V per cell. The system shall stop all operations and enter safe-state when battery State of Charge (SoC) drops below [Y]%.' Reference applicable battery safety standards (e.g., IEC 62133).",
-      "reference": "ISO 26262-8 §6.4.2.1; IEC 62133",
-      "confidence": 0.93
+      "description": "'Prevent battery overcharge and deep discharge' specifies no voltage/current/SoC thresholds for overcharge cut-off or deep discharge cut-off. Without numeric thresholds, the requirement cannot be verified and engineers have no design target. This is safety-critical as both conditions can cause thermal runaway.",
+      "recommendation": "Specify measurable thresholds: e.g., 'The system shall terminate charging when cell voltage exceeds [X] V per cell and shall inhibit discharge when cell voltage drops below [Y] V per cell, compliant with [battery chemistry standard].'",
+      "reference": "ISO 26262-4; IEC 62133",
+      "confidence": 0.95
     },
     {
-      "gen_flag_id": "GF-4CEE1B",
-      "pass": "INDIVIDUAL_QUALITY",
+      "gen_flag_id": "GF-911DEA",
+      "pass": "INDIVIDUAL_ITEM_QUALITY",
       "type": "FINDING",
       "category": "COMPLETENESS",
       "severity": "CRITICAL",
@@ -294,17 +317,17 @@
           "role": "primary"
         }
       ],
-      "description": "'Monitor motor temperature and prevent overheating' does not define: (a) the temperature threshold(s) at which action is taken, (b) which motors are monitored, (c) the corrective action (reduce power, stop, alert user), or (d) the maximum response time. This renders the requirement untestable.",
-      "recommendation": "Specify: 'The system shall monitor the temperature of [drive motors / vacuum motor / all motors]. If any monitored motor temperature exceeds [X]°C, the system shall [reduce power / stop the motor] within [Y] ms and notify the user.'",
-      "reference": "ISO 26262-8 §6.4.2.1; ISO/IEC/IEEE 29148:2018 §5.2.6",
+      "description": "'Monitor motor temperature and prevent overheating' specifies no temperature threshold, no monitoring interval, and no defined response action (reduce power, stop motor, alert user?). As a safety requirement, all three are needed for verification and safe implementation.",
+      "recommendation": "Specify thresholds and responses: e.g., 'The system shall monitor motor temperature at intervals not exceeding [X] ms. If motor temperature exceeds [Y]°C, the system shall reduce motor power by [Z]%. If temperature exceeds [W]°C, the system shall shut down the motor and alert the user.'",
+      "reference": "ISO 26262-4; ISO/IEC/IEEE 29148:2018 §6.3.1",
       "confidence": 0.95
     },
     {
-      "gen_flag_id": "GF-E02610",
-      "pass": "INDIVIDUAL_QUALITY",
+      "gen_flag_id": "GF-53EB2D",
+      "pass": "INDIVIDUAL_ITEM_QUALITY",
       "type": "FINDING",
       "category": "COMPLETENESS",
-      "severity": "MAJOR",
+      "severity": "MINOR",
       "affected_items": [
         {
           "gen_uid": "GU-3380FA",
@@ -313,14 +336,14 @@
           "role": "primary"
         }
       ],
-      "description": "'Cleaning coverage efficiency >= 95%' does not define: (a) the test environment (room geometry, obstacle density), (b) the floor type, (c) the number of passes allowed, or (d) how 'coverage' is measured (area swept vs. area cleaned to a cleanliness standard).",
-      "recommendation": "Add test conditions: e.g., 'Cleaning coverage efficiency shall be ≥ 95% of the navigable floor area, measured in a rectangular room of [X] m² with [N] fixed obstacles, on a hard floor surface, in a single cleaning session.'",
-      "reference": "ISO/IEC/IEEE 29148:2018 §5.2.6",
-      "confidence": 0.9
+      "description": "'Cleaning coverage efficiency >= 95%' lacks: (a) definition of the test environment (room shape, area, furniture density), (b) definition of 'coverage' (sensor-confirmed passage, debris removal), (c) whether this applies per room, per session, or overall mission. Without these, test results will vary significantly.",
+      "recommendation": "Define test conditions and coverage metric: e.g., 'The system shall achieve a cleaning coverage of >= 95% of accessible floor area in a rectangular room of [X] m² with [Y] standard obstacles, measured as the percentage of floor area traversed by the cleaning path in a single session.'",
+      "reference": "ISO/IEC/IEEE 29148:2018 §6.3.1",
+      "confidence": 0.88
     },
     {
-      "gen_flag_id": "GF-AA76CF",
-      "pass": "INDIVIDUAL_QUALITY",
+      "gen_flag_id": "GF-F240EA",
+      "pass": "INDIVIDUAL_ITEM_QUALITY",
       "type": "FINDING",
       "category": "COMPLETENESS",
       "severity": "MINOR",
@@ -332,14 +355,14 @@
           "role": "primary"
         }
       ],
-      "description": "Maximum noise level <= 65 dB does not specify the measurement standard (e.g., IEC 60704-2-1 for floor care appliances), measurement distance, operating mode (which suction power level), or A-weighting (dB(A)).",
-      "recommendation": "Specify: e.g., 'Maximum noise level shall be ≤ 65 dB(A), measured at 1 m distance per [IEC 60704-2-1], at maximum suction power setting.'",
-      "reference": "ISO/IEC/IEEE 29148:2018 §5.2.6",
-      "confidence": 0.88
+      "description": "'Maximum noise level <= 65 dB' does not specify: (a) measurement distance from the unit, (b) measurement standard (A-weighted dB(A)?, ISO standard?), (c) operating mode (maximum suction, minimum, mopping only). Results will differ substantially depending on these conditions.",
+      "recommendation": "Specify measurement conditions: e.g., 'The system shall not exceed 65 dB(A) sound pressure level, measured at 1 m distance in free-field conditions per IEC 60704-1, during maximum suction operation on a hard floor surface.'",
+      "reference": "ISO/IEC/IEEE 29148:2018 §6.3.1; IEC 60704-1",
+      "confidence": 0.9
     },
     {
-      "gen_flag_id": "GF-E8D81F",
-      "pass": "INDIVIDUAL_QUALITY",
+      "gen_flag_id": "GF-487C02",
+      "pass": "INDIVIDUAL_ITEM_QUALITY",
       "type": "FINDING",
       "category": "COMPLETENESS",
       "severity": "MINOR",
@@ -351,36 +374,17 @@
           "role": "primary"
         }
       ],
-      "description": "'Operating time >= 120 minutes' does not specify the operating conditions: suction power level, floor type, room temperature, battery age/condition, or whether mopping is active. Results will vary significantly across these conditions.",
-      "recommendation": "Add conditions: e.g., 'Operating time shall be ≥ 120 minutes on a fully charged battery at [medium/standard] suction power setting on hard floor, at [20–25°C] ambient temperature, with new battery.'",
-      "reference": "ISO/IEC/IEEE 29148:2018 §5.2.5",
+      "description": "'Operating time >= 120 minutes' does not specify the operating conditions: suction mode (min/max), floor type, mopping on/off, ambient temperature. All significantly affect battery life. Without these, the test is not reproducible.",
+      "recommendation": "Specify conditions: e.g., 'The system shall provide >= 120 minutes of continuous cleaning operation in standard suction mode on a hard floor surface at an ambient temperature of 25°C ± 5°C, from a fully charged battery.'",
+      "reference": "ISO/IEC/IEEE 29148:2018 §6.3.1",
       "confidence": 0.88
     },
     {
-      "gen_flag_id": "GF-293CF1",
-      "pass": "INDIVIDUAL_QUALITY",
+      "gen_flag_id": "GF-3A09F2",
+      "pass": "INDIVIDUAL_ITEM_QUALITY",
       "type": "FINDING",
-      "category": "COMPLETENESS",
+      "category": "AMBIGUITY",
       "severity": "MINOR",
-      "affected_items": [
-        {
-          "gen_uid": "GU-6438D1",
-          "spec_item_id": "SYS-PERF-004",
-          "gen_hierarchy_number": "G5-004",
-          "role": "primary"
-        }
-      ],
-      "description": "'Charging time <= 4 hours' does not specify the initial SoC (e.g., from fully depleted), ambient temperature conditions, or the charging state considered 'complete' (100% SoC or a usable threshold).",
-      "recommendation": "Specify: e.g., 'Charging time from 0% to 100% SoC shall be ≤ 4 hours at [20–25°C] ambient temperature using the supplied charging dock.'",
-      "reference": "ISO/IEC/IEEE 29148:2018 §5.2.5",
-      "confidence": 0.87
-    },
-    {
-      "gen_flag_id": "GF-8D5217",
-      "pass": "INDIVIDUAL_QUALITY",
-      "type": "FINDING",
-      "category": "COMPLETENESS",
-      "severity": "MAJOR",
       "affected_items": [
         {
           "gen_uid": "GU-6F01C0",
@@ -389,33 +393,14 @@
           "role": "primary"
         }
       ],
-      "description": "'Support secure OTA firmware updates' is underspecified. 'Secure' is not defined in this context. Missing: integrity verification method (signature algorithm), rollback protection, authentication of the update source, and behavior on failed update.",
-      "recommendation": "Expand to cover distinct verifiable behaviors: e.g., 'The system shall verify the digital signature of any OTA firmware package before installation, using [algorithm]. The system shall reject and discard any firmware package that fails signature verification. The system shall maintain the current firmware version if an OTA update fails.'",
-      "reference": "ISO/SAE 21434 §10; ISO/IEC/IEEE 29148:2018 §5.2.5",
-      "confidence": 0.92
+      "description": "'Support secure OTA firmware updates' is vague: 'secure' is not defined in verifiable terms. It does not specify which security properties are required (integrity, authenticity, confidentiality, rollback protection) or reference a security standard. Two security engineers would implement very different controls.",
+      "recommendation": "Enumerate required security properties: e.g., 'OTA firmware update packages shall be authenticated using a cryptographic signature verified against the manufacturer's public key, and shall include a version counter to prevent rollback to a lower-versioned firmware.'",
+      "reference": "ISO/SAE 21434 §9; UNECE WP.29 R155",
+      "confidence": 0.9
     },
     {
-      "gen_flag_id": "GF-F29F43",
-      "pass": "INDIVIDUAL_QUALITY",
-      "type": "FINDING",
-      "category": "OVERCONSTRAINT",
-      "severity": "MAJOR",
-      "affected_items": [
-        {
-          "gen_uid": "GU-703B65",
-          "spec_item_id": "SYS-HW-001",
-          "gen_hierarchy_number": "G7.1-001",
-          "role": "primary"
-        }
-      ],
-      "description": "The requirement mandates a 'LIDAR or vision-based navigation sensor', which prescribes specific sensor technologies rather than stating the navigation sensing capability needed. Unless LIDAR/vision is a contractual or safety-driven constraint, this overconstrains the design.",
-      "recommendation": "If sensor technology is not contractually mandated, rewrite as a capability requirement: e.g., 'The system shall include a sensor capable of detecting obstacles and generating spatial data sufficient to support 2D SLAM-based navigation.' If LIDAR is mandated, document the rationale.",
-      "reference": "ISO/IEC/IEEE 29148:2018 §5.2.8",
-      "confidence": 0.82
-    },
-    {
-      "gen_flag_id": "GF-219AEE",
-      "pass": "INDIVIDUAL_QUALITY",
+      "gen_flag_id": "GF-BFE689",
+      "pass": "INDIVIDUAL_ITEM_QUALITY",
       "type": "FINDING",
       "category": "OVERCONSTRAINT",
       "severity": "MAJOR",
@@ -427,16 +412,16 @@
           "role": "primary"
         }
       ],
-      "description": "SYS-SW-001 mandates a specific three-layer software architecture (Application / Middleware / HAL). This is an implementation architecture decision and not a system-level need. At system requirements level, prescribing internal SW architecture is an overconstraint that restricts design freedom without adding verified value.",
-      "recommendation": "If architectural layering is a genuine system-level constraint (e.g., for safety isolation or third-party integration), retain with documented rationale. Otherwise, move this to the SW architecture design document and replace at system level with the capability it enables (e.g., 'The software shall support independent updating of hardware-specific and application-specific modules.').",
-      "reference": "ISO/IEC/IEEE 29148:2018 §5.2.8; ASPICE SWE.2.BP1",
+      "description": "SYS-SW-001 mandates a specific software architecture (three-layer: Application, Middleware, HAL) as a system-level requirement. This is an implementation architecture decision that belongs in the software design specification, not in the system requirements. It constrains the design without a documented system-level rationale.",
+      "recommendation": "If the layered architecture is genuinely required at system level (e.g., for safety isolation or supplier interface reasons), document the rationale and move to software architecture specification. Otherwise, remove from system requirements and state the functional need it serves (e.g., hardware portability, modular update capability).",
+      "reference": "ISO/IEC/IEEE 29148:2018 §6.3.1; ASPICE SYS.2.BP1",
       "confidence": 0.88
     },
     {
-      "gen_flag_id": "GF-848933",
-      "pass": "INDIVIDUAL_QUALITY",
+      "gen_flag_id": "GF-B9F7A4",
+      "pass": "INDIVIDUAL_ITEM_QUALITY",
       "type": "FINDING",
-      "category": "COMPLETENESS",
+      "category": "AMBIGUITY",
       "severity": "MINOR",
       "affected_items": [
         {
@@ -446,14 +431,14 @@
           "role": "primary"
         }
       ],
-      "description": "'Support modular firmware updates' does not define what 'modular' means in this context (individual subsystem updates vs. monolithic), nor does it specify constraints on partial-update integrity, atomicity, or the minimum granularity of an updatable module.",
-      "recommendation": "Specify: e.g., 'The system shall support independent firmware updates for each of the following modules: [list]. An update to one module shall not require re-flashing unrelated modules.' Add integrity and rollback requirements.",
-      "reference": "ISO/IEC/IEEE 29148:2018 §5.2.5",
+      "description": "'Support modular firmware updates' is vague. 'Modular' is undefined — it is unclear whether this means per-component updates (individual subsystem binaries), per-layer updates (HAL only), or delta updates. The term is not defined elsewhere in the specification.",
+      "recommendation": "Define 'modular' in context: e.g., 'The system shall support independent firmware updates for each functional subsystem (navigation, cleaning, connectivity) without requiring a full system firmware reflash.'",
+      "reference": "ISO/IEC/IEEE 29148:2018 §6.3.1",
       "confidence": 0.82
     },
     {
-      "gen_flag_id": "GF-4AB914",
-      "pass": "INDIVIDUAL_QUALITY",
+      "gen_flag_id": "GF-F15AB6",
+      "pass": "INDIVIDUAL_ITEM_QUALITY",
       "type": "FINDING",
       "category": "COMPLETENESS",
       "severity": "MINOR",
@@ -465,116 +450,34 @@
           "role": "primary"
         }
       ],
-      "description": "'Log diagnostic events with timestamps' does not specify: (a) which events qualify as 'diagnostic events', (b) timestamp resolution and reference (UTC or relative), (c) log storage capacity or retention duration, (d) how logs are accessed/exported, or (e) behavior when log storage is full.",
-      "recommendation": "Specify at minimum: event categories to be logged, timestamp format and resolution (e.g., UTC, 1-second resolution), minimum log retention (e.g., last 1000 events or 30 days), and log access mechanism (e.g., via mobile app or local interface).",
-      "reference": "ISO/IEC/IEEE 29148:2018 §5.2.5",
-      "confidence": 0.87
+      "description": "'Log diagnostic events with timestamps' does not specify: (a) which events qualify as diagnostic events, (b) timestamp resolution and reference clock, (c) minimum log retention period or storage capacity, (d) log access interface.",
+      "recommendation": "Specify event scope, timestamp resolution, and retention: e.g., 'The system shall log all fault events, state transitions, and sensor anomalies with a UTC timestamp resolution of >= 1 ms and retain the most recent [N] events in non-volatile storage.'",
+      "reference": "ISO/IEC/IEEE 29148:2018 §6.3.1; ASPICE SWE.1.BP5",
+      "confidence": 0.85
     },
     {
-      "gen_flag_id": "GF-97444D",
-      "pass": "INDIVIDUAL_QUALITY",
+      "gen_flag_id": "GF-372824",
+      "pass": "INDIVIDUAL_ITEM_QUALITY",
       "type": "OBSERVATION",
       "category": "TRACEABILITY",
       "severity": "INFO",
       "affected_items": [
         {
-          "gen_uid": "GU-DEAEC2",
-          "spec_item_id": "SYS-FUNC-004",
-          "gen_hierarchy_number": "G3.1-004",
-          "role": "primary"
-        },
-        {
-          "gen_uid": "GU-2E44D1",
-          "spec_item_id": "SYS-HW-002",
-          "gen_hierarchy_number": "G7.1-002",
-          "role": "related"
-        }
-      ],
-      "description": "SYS-FUNC-004 (cliff detection function) and SYS-HW-002 (cliff detection sensors) address the same capability but are not explicitly linked by a traceability tag. If upstream requirements management does not enforce this trace, the functional requirement may be implemented without its hardware dependency being tracked.",
-      "recommendation": "Ensure traceability links are established between SYS-FUNC-004 and SYS-HW-002 in the requirements management tool.",
-      "reference": "ASPICE SYS.2.BP6",
-      "confidence": 0.85
-    },
-    {
-      "gen_flag_id": "GF-A9D531",
-      "pass": "INDIVIDUAL_QUALITY",
-      "type": "QUESTION",
-      "category": "COMPLETENESS",
-      "severity": "MAJOR",
-      "affected_items": [
-        {
-          "gen_uid": "GU-81D6E1",
-          "spec_item_id": "SYS-FUNC-020",
-          "gen_hierarchy_number": "G3.3-001",
+          "gen_uid": "GU-703B65",
+          "spec_item_id": "SYS-HW-001",
+          "gen_hierarchy_number": "G7.1-001",
           "role": "primary"
         }
       ],
-      "description": "'Electronically controlled water dispensing' — is there a quantitative flow rate range or dispensing precision requirement? Without a numeric bound, this requirement cannot be fully verified as distinct from SYS-FUNC-021 which specifies Low/Medium/High levels.",
-      "recommendation": "Clarify whether SYS-FUNC-020 is intended to be a higher-level capability statement subsumed by SYS-FUNC-021, or if it carries additional requirements (e.g., on/off response time, flow precision). If the former, consider removing or marking as an informational parent.",
+      "description": "SYS-HW-001 ('LIDAR or vision-based navigation sensor') uses 'or' to allow two significantly different sensor technologies. While this provides design flexibility, it should be ensured that SYS-FUNC-001 (map generation) and SYS-FUNC-002 (±5 cm localization) are verifiably achievable with either option. No specific defect here, but the alternative should be formally evaluated.",
+      "recommendation": "Confirm that both LIDAR and vision-based alternatives are validated against all navigation performance requirements before final design selection.",
       "reference": null,
-      "confidence": 0.72
+      "confidence": 0.75
     },
     {
-      "gen_flag_id": "GF-636E03",
-      "pass": "INDIVIDUAL_QUALITY",
-      "type": "FINDING",
-      "category": "COMPLETENESS",
-      "severity": "MINOR",
-      "affected_items": [
-        {
-          "gen_uid": "GU-E8E4A5",
-          "spec_item_id": "SYS-FUNC-021",
-          "gen_hierarchy_number": "G3.3-002",
-          "role": "primary"
-        }
-      ],
-      "description": "'Adjustable water flow levels (Low/Medium/High)' does not define the actual flow rates (ml/min) for each level, making the requirement non-quantitatively testable. The distinction between levels cannot be verified without numeric bounds.",
-      "recommendation": "Add numeric bounds for each level: e.g., 'Low: [X–Y] ml/min, Medium: [Y–Z] ml/min, High: [Z–W] ml/min.' Specify tolerance.",
-      "reference": "ISO/IEC/IEEE 29148:2018 §5.2.6",
-      "confidence": 0.88
-    },
-    {
-      "gen_flag_id": "GF-CE871F",
-      "pass": "INDIVIDUAL_QUALITY",
-      "type": "FINDING",
-      "category": "COMPLETENESS",
-      "severity": "MAJOR",
-      "affected_items": [
-        {
-          "gen_uid": "GU-D666C8",
-          "spec_item_id": "SYS-FUNC-022",
-          "gen_hierarchy_number": "G3.3-003",
-          "role": "primary"
-        }
-      ],
-      "description": "'Lift the mop automatically when carpet is detected' does not specify: (a) the minimum lift height to prevent carpet wetting, (b) the response time from detection to full lift, or (c) whether water dispensing is also halted. Without these, water damage to carpet is not reliably prevented.",
-      "recommendation": "Specify: 'The system shall lift the mop to a height of ≥ [X] mm and cease water dispensing within [Y] ms of detecting a carpet surface.' Cross-reference SYS-FUNC-012 for carpet detection.",
-      "reference": "ISO/IEC/IEEE 29148:2018 §5.2.5",
-      "confidence": 0.9
-    },
-    {
-      "gen_flag_id": "GF-8719D8",
-      "pass": "INDIVIDUAL_QUALITY",
-      "type": "FINDING",
-      "category": "COMPLETENESS",
-      "severity": "MAJOR",
-      "affected_items": [
-        {
-          "gen_uid": "GU-169CD1",
-          "spec_item_id": "SYS-FUNC-030",
-          "gen_hierarchy_number": "G3.4-001",
-          "role": "primary"
-        }
-      ],
-      "description": "'Return to charging dock when battery < 20%' does not specify: (a) behavior if the dock is unreachable (blocked path), (b) whether the current cleaning task is paused or abandoned, or (c) what happens if the battery is depleted before reaching the dock.",
-      "recommendation": "Add failure mode handling: e.g., 'If the dock is unreachable within [X] minutes, the system shall stop in place and alert the user. The system shall save the current cleaning task state for resumption.'",
-      "reference": "ISO/IEC/IEEE 29148:2018 §5.2.5",
-      "confidence": 0.88
-    },
-    {
-      "gen_flag_id": "GF-00413F",
-      "pass": "INDIVIDUAL_QUALITY",
-      "type": "FINDING",
+      "gen_flag_id": "GF-16F7AC",
+      "pass": "INDIVIDUAL_ITEM_QUALITY",
+      "type": "QUESTION",
       "category": "COMPLETENESS",
       "severity": "MAJOR",
       "affected_items": [
@@ -585,15 +488,15 @@
           "role": "primary"
         }
       ],
-      "description": "'Stop all drive motors within 100 ms if lifted' does not specify: (a) the sensor/mechanism used to detect lifting, (b) whether brush and vacuum motors are also stopped, (c) the minimum lift displacement that triggers the response, or (d) behavior after being set back down.",
-      "recommendation": "Clarify scope: 'The system shall detect a lift condition (defined as [X] mm of wheel displacement) and stop all drive motors within 100 ms. Specify whether brush/vacuum motors are also stopped and whether restarting requires user action.'",
-      "reference": "ISO 26262-8 §6.4.2.1",
-      "confidence": 0.85
+      "description": "SYS-SAFE-001 requires stopping 'all drive motors within 100 ms if lifted.' It is unclear whether 'all drive motors' includes only wheel drive motors or also the vacuum motor, brush motor, and water pump. The scope of 'all' is ambiguous in a system with multiple actuator types.",
+      "recommendation": "Clarify the scope: explicitly list which motors/actuators must stop within 100 ms. If only drive motors are intended, remove 'all' or replace with 'drive motors'. If all actuators are intended, state that explicitly and verify the 100 ms constraint applies to each.",
+      "reference": "ISO/IEC/IEEE 29148:2018 §6.3.1",
+      "confidence": 0.82
     },
     {
-      "gen_flag_id": "GF-809A92",
-      "pass": "INDIVIDUAL_QUALITY",
-      "type": "FINDING",
+      "gen_flag_id": "GF-F8851C",
+      "pass": "INDIVIDUAL_ITEM_QUALITY",
+      "type": "QUESTION",
       "category": "COMPLETENESS",
       "severity": "MAJOR",
       "affected_items": [
@@ -604,10 +507,41 @@
           "role": "primary"
         }
       ],
-      "description": "'Prevent operation if the dustbin is removed' does not define: (a) which operations are prevented (all motors? only vacuum?), (b) the detection mechanism or timing, (c) behavior when dustbin is re-inserted (automatic resume or user-initiated), or (d) whether an alert is issued.",
-      "recommendation": "Specify: 'The system shall detect the absence of the dustbin within [X] ms and shall stop the vacuum motor and brush motor within [Y] ms. The system shall not resume vacuuming until the dustbin is re-inserted and confirmed seated.'",
-      "reference": "ISO/IEC/IEEE 29148:2018 §5.2.5",
-      "confidence": 0.87
+      "description": "'Prevent operation if the dustbin is removed' — it is unclear which operations are prevented. Does this include all cleaning and navigation, or only vacuuming? For example, should mopping and navigation still be possible without the dustbin?",
+      "recommendation": "Specify which operational modes are inhibited: e.g., 'The system shall inhibit vacuum motor operation and forward navigation when the dustbin is not installed, and shall alert the user.'",
+      "reference": "ISO/IEC/IEEE 29148:2018 §6.3.1",
+      "confidence": 0.78
+    },
+    {
+      "gen_flag_id": "GF-FDEDCA",
+      "pass": "INDIVIDUAL_ITEM_QUALITY",
+      "type": "OBSERVATION",
+      "category": "COMPLETENESS",
+      "severity": "INFO",
+      "affected_items": [
+        {
+          "gen_uid": "GU-D0584F",
+          "spec_item_id": "SYS-FUNC-012",
+          "gen_hierarchy_number": "G3.2-003",
+          "role": "primary"
+        },
+        {
+          "gen_uid": "GU-D666C8",
+          "spec_item_id": "SYS-FUNC-022",
+          "gen_hierarchy_number": "G3.3-003",
+          "role": "related"
+        },
+        {
+          "gen_uid": "GU-A72EFD",
+          "spec_item_id": "SYS-FUNC-011",
+          "gen_hierarchy_number": "G3.2-002",
+          "role": "related"
+        }
+      ],
+      "description": "SYS-FUNC-012 (detect carpet surfaces) is a prerequisite for both SYS-FUNC-011 (adjust suction) and SYS-FUNC-022 (lift mop). These three requirements share the same detection capability, but SYS-FUNC-012 does not specify the detection accuracy, false-positive rate, or response time. Poor carpet detection performance could impair the safety of mop lift (wet carpet damage) and cleaning effectiveness.",
+      "recommendation": "Consider adding a performance criterion to SYS-FUNC-012 such as detection accuracy >= [X]% and false-positive rate <= [Y]%.",
+      "reference": null,
+      "confidence": 0.75
     }
   ],
   "item_review": [
@@ -616,7 +550,7 @@
       "spec_item_id": "SYS-FUNC-001",
       "status": "FLAGGED",
       "flag_ids": [
-        "GF-0A54B5"
+        "GF-2E64AC"
       ]
     },
     {
@@ -624,7 +558,7 @@
       "spec_item_id": "SYS-FUNC-002",
       "status": "FLAGGED",
       "flag_ids": [
-        "GF-748C20"
+        "GF-6505B2"
       ]
     },
     {
@@ -632,7 +566,7 @@
       "spec_item_id": "SYS-FUNC-003",
       "status": "FLAGGED",
       "flag_ids": [
-        "GF-1F604C"
+        "GF-F84604"
       ]
     },
     {
@@ -640,8 +574,7 @@
       "spec_item_id": "SYS-FUNC-004",
       "status": "FLAGGED",
       "flag_ids": [
-        "GF-0AD516",
-        "GF-97444D"
+        "GF-E1493A"
       ]
     },
     {
@@ -649,7 +582,7 @@
       "spec_item_id": "SYS-FUNC-005",
       "status": "FLAGGED",
       "flag_ids": [
-        "GF-3FCAEC"
+        "GF-98423B"
       ]
     },
     {
@@ -657,7 +590,7 @@
       "spec_item_id": "SYS-FUNC-010",
       "status": "FLAGGED",
       "flag_ids": [
-        "GF-2D9F2E"
+        "GF-335984"
       ]
     },
     {
@@ -665,37 +598,36 @@
       "spec_item_id": "SYS-FUNC-011",
       "status": "FLAGGED",
       "flag_ids": [
-        "GF-A31689"
+        "GF-6989CB",
+        "GF-FDEDCA"
       ]
     },
     {
       "gen_uid": "GU-D0584F",
       "spec_item_id": "SYS-FUNC-012",
-      "status": "PASSED",
-      "flag_ids": []
+      "status": "FLAGGED",
+      "flag_ids": [
+        "GF-FDEDCA"
+      ]
     },
     {
       "gen_uid": "GU-81D6E1",
       "spec_item_id": "SYS-FUNC-020",
-      "status": "FLAGGED",
-      "flag_ids": [
-        "GF-A9D531"
-      ]
+      "status": "PASSED",
+      "flag_ids": []
     },
     {
       "gen_uid": "GU-E8E4A5",
       "spec_item_id": "SYS-FUNC-021",
-      "status": "FLAGGED",
-      "flag_ids": [
-        "GF-636E03"
-      ]
+      "status": "PASSED",
+      "flag_ids": []
     },
     {
       "gen_uid": "GU-D666C8",
       "spec_item_id": "SYS-FUNC-022",
       "status": "FLAGGED",
       "flag_ids": [
-        "GF-CE871F"
+        "GF-FDEDCA"
       ]
     },
     {
@@ -703,7 +635,7 @@
       "spec_item_id": "SYS-FUNC-023",
       "status": "FLAGGED",
       "flag_ids": [
-        "GF-170722"
+        "GF-968CD6"
       ]
     },
     {
@@ -711,8 +643,8 @@
       "spec_item_id": "SYS-FUNC-030",
       "status": "FLAGGED",
       "flag_ids": [
-        "GF-224611",
-        "GF-8719D8"
+        "GF-6D25EF",
+        "GF-67306A"
       ]
     },
     {
@@ -720,7 +652,7 @@
       "spec_item_id": "SYS-FUNC-031",
       "status": "FLAGGED",
       "flag_ids": [
-        "GF-AFAB5B"
+        "GF-B62E93"
       ]
     },
     {
@@ -728,7 +660,7 @@
       "spec_item_id": "SYS-FUNC-032",
       "status": "FLAGGED",
       "flag_ids": [
-        "GF-224611"
+        "GF-67306A"
       ]
     },
     {
@@ -736,7 +668,7 @@
       "spec_item_id": "SYS-FUNC-040",
       "status": "FLAGGED",
       "flag_ids": [
-        "GF-3BCC50"
+        "GF-A82531"
       ]
     },
     {
@@ -750,7 +682,7 @@
       "spec_item_id": "SYS-FUNC-042",
       "status": "FLAGGED",
       "flag_ids": [
-        "GF-59AAC5"
+        "GF-C7D61B"
       ]
     },
     {
@@ -758,7 +690,7 @@
       "spec_item_id": "SYS-SAFE-001",
       "status": "FLAGGED",
       "flag_ids": [
-        "GF-00413F"
+        "GF-16F7AC"
       ]
     },
     {
@@ -766,7 +698,7 @@
       "spec_item_id": "SYS-SAFE-002",
       "status": "FLAGGED",
       "flag_ids": [
-        "GF-1D0395"
+        "GF-C78E4E"
       ]
     },
     {
@@ -774,7 +706,7 @@
       "spec_item_id": "SYS-SAFE-003",
       "status": "FLAGGED",
       "flag_ids": [
-        "GF-809A92"
+        "GF-F8851C"
       ]
     },
     {
@@ -782,7 +714,7 @@
       "spec_item_id": "SYS-SAFE-010",
       "status": "FLAGGED",
       "flag_ids": [
-        "GF-EE78B8"
+        "GF-28FCB7"
       ]
     },
     {
@@ -790,7 +722,7 @@
       "spec_item_id": "SYS-SAFE-011",
       "status": "FLAGGED",
       "flag_ids": [
-        "GF-4CEE1B"
+        "GF-911DEA"
       ]
     },
     {
@@ -798,7 +730,7 @@
       "spec_item_id": "SYS-PERF-001",
       "status": "FLAGGED",
       "flag_ids": [
-        "GF-E02610"
+        "GF-53EB2D"
       ]
     },
     {
@@ -806,7 +738,7 @@
       "spec_item_id": "SYS-PERF-002",
       "status": "FLAGGED",
       "flag_ids": [
-        "GF-AA76CF"
+        "GF-F240EA"
       ]
     },
     {
@@ -814,16 +746,14 @@
       "spec_item_id": "SYS-PERF-003",
       "status": "FLAGGED",
       "flag_ids": [
-        "GF-E8D81F"
+        "GF-487C02"
       ]
     },
     {
       "gen_uid": "GU-6438D1",
       "spec_item_id": "SYS-PERF-004",
-      "status": "FLAGGED",
-      "flag_ids": [
-        "GF-293CF1"
-      ]
+      "status": "PASSED",
+      "flag_ids": []
     },
     {
       "gen_uid": "GU-DC42B5",
@@ -836,7 +766,7 @@
       "spec_item_id": "SYS-SEC-002",
       "status": "FLAGGED",
       "flag_ids": [
-        "GF-8D5217"
+        "GF-3A09F2"
       ]
     },
     {
@@ -850,16 +780,14 @@
       "spec_item_id": "SYS-HW-001",
       "status": "FLAGGED",
       "flag_ids": [
-        "GF-F29F43"
+        "GF-372824"
       ]
     },
     {
       "gen_uid": "GU-2E44D1",
       "spec_item_id": "SYS-HW-002",
-      "status": "FLAGGED",
-      "flag_ids": [
-        "GF-97444D"
-      ]
+      "status": "PASSED",
+      "flag_ids": []
     },
     {
       "gen_uid": "GU-0996AC",
@@ -908,7 +836,7 @@
       "spec_item_id": "SYS-SW-001",
       "status": "FLAGGED",
       "flag_ids": [
-        "GF-219AEE"
+        "GF-BFE689"
       ]
     },
     {
@@ -916,7 +844,7 @@
       "spec_item_id": "SYS-SW-002",
       "status": "FLAGGED",
       "flag_ids": [
-        "GF-848933"
+        "GF-B9F7A4"
       ]
     },
     {
@@ -924,7 +852,7 @@
       "spec_item_id": "SYS-SW-003",
       "status": "FLAGGED",
       "flag_ids": [
-        "GF-4AB914"
+        "GF-F15AB6"
       ]
     }
   ],
@@ -932,19 +860,19 @@
     "total_items": 42,
     "reviewed": 42,
     "skipped": 0,
-    "flagged": 31,
-    "passed": 11,
-    "total_flags": 31,
+    "flagged": 28,
+    "passed": 14,
+    "total_flags": 27,
     "by_severity": {
       "CRITICAL": 3,
-      "MAJOR": 19,
-      "MINOR": 8,
-      "INFO": 1
+      "MAJOR": 12,
+      "MINOR": 10,
+      "INFO": 2
     },
     "by_type": {
-      "FINDING": 29,
-      "QUESTION": 1,
-      "OBSERVATION": 1
+      "FINDING": 23,
+      "QUESTION": 2,
+      "OBSERVATION": 2
     }
   }
 }

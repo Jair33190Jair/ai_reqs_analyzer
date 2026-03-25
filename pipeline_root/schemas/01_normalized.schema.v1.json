@@ -2,11 +2,25 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "schema_version": "1.0",
   "type": "object",
-  "required": ["source_ref", "normalization", "pages"],
+  "required": ["source_meta", "normalization", "pages"],
   "properties": {
-    "source_ref": {
-      "type": "string",
-      "description": "Filename of the raw extract JSON this document was produced from."
+    "source_meta": {
+      "type": "object",
+      "required": ["filename"],
+      "properties": {
+        "filename": {
+          "type": "string",
+          "description": "Original PDF filename from S0 source_meta."
+        },
+        "doc_version": {
+          "type": ["string", "null"],
+          "description": "Document version/revision extracted by LLM, or null if not found."
+        },
+        "doc_last_modified": {
+          "type": ["string", "null"],
+          "description": "Document last-modified date extracted by LLM (YYYY-MM-DD when possible), or null if not found."
+        }
+      }
     },
     "normalization": {
       "type": "object",

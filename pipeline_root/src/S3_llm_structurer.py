@@ -138,15 +138,16 @@ def run_structurer(normalized: dict) -> tuple[str, dict]:
     """Input: parsed 01_normalized JSON dict.
     Output: (raw_response, 03_llm_structured dict) — not yet schema-validated."""
     normalization = normalized.get("normalization", {})
-    source_ref = normalized["source_ref"]
+    source_meta = normalized["source_meta"]
 
     system_prompt = _SYSTEM.format(
         heading_instruction=_heading_instruction(normalization.get("heading_pattern")),
         item_instruction=_item_instruction(normalization.get("item_id_pattern")),
         schema=json.dumps(_LLM_RESPONSE_SCHEMA, indent=2),
     )
-    raw_response, result = _call_llm(system_prompt, f"SOURCE_REF: {source_ref}\n\n{_format_pages(normalized['pages'])}")
-    result["source_ref"] = source_ref  # enforce regardless of what the LLM produced
+    raw_response, result = _call_llm(system_prompt, f"source_file: {source_meta['filename']}\n\n{_format_pages(normalized['pages'])}")
+    result.pop("source_file", None)  # LLM may echo this back
+    result["source_meta"] = source_meta  # enforce regardless of what the LLM produced
     return raw_response, result
 
 

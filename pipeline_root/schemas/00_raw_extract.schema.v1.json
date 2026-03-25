@@ -2,13 +2,13 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "schema_version": "1.0",
   "type": "object",
-  "required": ["source", "pages", "warnings"],
+  "required": ["source_meta", "pages", "warnings"],
   "properties": {
-    "source": {
+    "source_meta": {
       "type": "object",
       "required": ["filename", "type", "sha256", "page_count"],
       "properties": {
-        "filename":   { "type": "string" },
+        "filename":      { "type": "string" },
         "type":       { "type": "string" },
         "sha256":     { "type": "string" },
         "page_count": { "type": "integer" },

@@ -3,7 +3,7 @@
   "schema_version": "1.0",
   "description": "Never copy text — locate everything with loc.",
   "type": "object",
-  "required": ["source_ref", "sections", "spec_items"],
+  "required": ["sections", "spec_items"],
   "additionalProperties": false,
 
   "definitions": {
@@ -22,9 +22,13 @@
   },
 
   "properties": {
-    "source_ref": {
+    "source_file": {
       "type": "string",
-      "description": "Copy from 01_normalized source_ref."
+      "description": "Echoed filename — overridden by post-processing."
+    },
+    "source_meta": {
+      "type": "object",
+      "description": "Injected by post-processing — not produced by the LLM."
     },
 
     "skip_pages": {

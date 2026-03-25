@@ -63,6 +63,7 @@ header { margin-bottom: 2rem; }
   padding: 1.25rem;
   margin-bottom: 1.5rem;
   box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  color: #1f2937;
 }
 .total-count {
   font-size: 1rem;
@@ -178,7 +179,8 @@ def _esc(text) -> str:
 
 def _render_meta(data: dict) -> str:
     meta = data.get("analysis_meta", {})
-    source = _esc(data.get("source_ref", ""))
+    source_meta = data.get("source_meta", {})
+    source = _esc(source_meta.get("filename", ""))
     ts = meta.get("timestamp", "")
     try:
         dt = datetime.fromisoformat(ts)
@@ -186,12 +188,14 @@ def _render_meta(data: dict) -> str:
     except Exception:
         ts_display = _esc(ts)
     doc_ver = _esc(meta.get("doc_version") or "—")
+    doc_date = _esc(source_meta.get("doc_last_modified") or "—")
 
     return f"""<header>
   <h1>Requirements Analysis Report</h1>
   <dl class="meta-grid">
     <dt>Source</dt>       <dd>{source}</dd>
     <dt>Document ver.</dt><dd>{doc_ver}</dd>
+    <dt>Document date</dt><dd>{doc_date}</dd>
     <dt>Analyzed</dt>     <dd>{ts_display}</dd>
     <dt>Model</dt>        <dd>{_esc(meta.get("model", ""))}</dd>
     <dt>Pass</dt>         <dd>{_esc(meta.get("pass", ""))}</dd>
@@ -203,8 +207,8 @@ def _render_meta(data: dict) -> str:
 def _render_dashboard(stats: dict) -> str:
     sev = stats.get("by_severity", {})
     typ = stats.get("by_type", {})
-    total = stats.get("total", 0)
-    word = "finding" if total == 1 else "findings"
+    total = stats.get("total_flags", 0)
+    word = "flag" if total == 1 else "flags"
 
     sev_cells = "".join(
         f'<div class="stat-cell sev-{s.lower()}">'
@@ -230,7 +234,7 @@ def _render_dashboard(stats: dict) -> str:
 
 
 def _render_finding(f: dict) -> str:
-    fid = _esc(f.get("gen_find_id", ""))
+    fid = _esc(f.get("gen_flag_id", ""))
     ftype = f.get("type", "")
     category = _esc(f.get("category", ""))
     severity = f.get("severity", "INFO")
@@ -243,7 +247,7 @@ def _render_finding(f: dict) -> str:
     items_parts = []
     for ai in affected:
         label = _esc(
-            ai.get("item_id") or ai.get("gen_hierarchy_number", "?")
+            ai.get("spec_item_id") or ai.get("gen_hierarchy_number", "?")
         )
         role = ai.get("role", "")
         if role != "primary":
@@ -301,7 +305,7 @@ def _render_findings(findings: list) -> str:
         findings,
         key=lambda f: (
             sev_rank.get(f.get("severity", "INFO"), 99),
-            f.get("gen_find_id", ""),
+            f.get("gen_flag_id", ""),
         ),
     )
     cards = "".join(_render_finding(f) for f in sorted_findings)
@@ -314,8 +318,8 @@ def render(data: dict) -> str:
     """Input: parsed 04_llm_analyzed dict.
     Output: self-contained HTML string."""
     stats = data.get("stats", {})
-    total = stats.get("total", 0)
-    title = f"Requirements Analysis — {total} findings"
+    total = stats.get("total_flags", 0)
+    title = f"Requirements Analysis — {total} flags"
 
     return (
         f"<!DOCTYPE html>\n"
@@ -330,7 +334,7 @@ def render(data: dict) -> str:
         f"<body>\n"
         f"{_render_meta(data)}\n"
         f"{_render_dashboard(stats)}\n"
-        f"{_render_findings(data.get('findings', []))}\n"
+        f"{_render_findings(data.get('flags', []))}\n"
         f"</body>\n"
         f"</html>"
     )
@@ -345,7 +349,7 @@ def save_result(input_path: Path) -> Path:
         raise FileNotFoundError(f"Input not found: {input_path}")
     with open(input_path, encoding="utf-8") as f:
         data = json.load(f)
-    if "findings" not in data:
+    if "flags" not in data:
         raise ValueError(
             f"Expected 04_llm_analyzed.json (S4 output), "
             f"got: {input_path.name}\n"

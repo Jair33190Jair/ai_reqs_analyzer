@@ -1,6 +1,6 @@
 ```json
 {
-  "source_ref": "00_raw_extract.json",
+  "source_file": "arvms_spec.pdf",
   "skip_pages": [],
   "sections": [
     {
@@ -99,7 +99,7 @@
       "loc": {
         "page": 2,
         "line_start": 20,
-        "line_end": 25
+        "line_end": 24
       }
     },
     {

@@ -1,5 +1,5 @@
 {
-  "source_ref": "00_raw_extract_AUTOSAR_AP_SWS_TimeSynchronization.json",
+  "source_file": "00_raw_extract_AUTOSAR_AP_SWS_TimeSynchronization.json",
   "normalization": {
     "dehyphenation": true,
     "ligature_map": true,

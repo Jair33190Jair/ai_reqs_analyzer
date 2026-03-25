@@ -83,7 +83,7 @@ def _compute_score(
     return round(max(0.0, score), 4)
 
 
-def run_preflight(normalized: dict, source_ref: str) -> dict:
+def run_preflight(normalized: dict) -> dict:
     normalization = normalized.get("normalization", {})
     pages = normalized.get("pages", [])
 
@@ -121,8 +121,7 @@ def run_preflight(normalized: dict, source_ref: str) -> dict:
     passed = unparseable_line_ratio <= UNPARSEABLE_LINE_THRESHOLD and score >= MIN_SCORE
 
     return {
-        "doc_id": Path(source_ref).stem,
-        "source_ref": source_ref,
+        "source_meta": normalized["source_meta"],
         "checks": {
             "has_item_ids": has_item_ids,
             "item_id_count": len(item_ids),
@@ -145,7 +144,7 @@ def save_result(input_path: Path) -> Path:
         raise FileNotFoundError(f"Input not found: {input_path}")
     with open(input_path, encoding="utf-8") as f:
         normalized = json.load(f)
-    result = run_preflight(normalized, source_ref=input_path.name)
+    result = run_preflight(normalized)
     schema = json.loads(_SCHEMA_PATH.read_text(encoding="utf-8"))
     try:
         jsonschema.validate(result, schema)

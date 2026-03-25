@@ -3,7 +3,7 @@
   "schema_version": "1.0",
   "description": "Stage 04 resolved artifact — LLM raw flags enriched by post-processing: stable IDs assigned, aggregate stats computed.",
   "type": "object",
-  "required": ["source_ref", "analysis_meta", "flags", "item_review", "stats"],
+  "required": ["source_meta", "analysis_meta", "flags", "item_review", "stats"],
   "additionalProperties": false,
 
   "definitions": {
@@ -41,11 +41,11 @@
         "gen_flag_id": {
           "type": "string",
           "pattern": "^GF-[0-9A-F]{6}$",
-          "description": "Flag ID assigned by post-processing. sha256(source_ref + spec_item_id_or_gen_hierarchy_number + category + pass)[:6 hex uppercase]. Uses spec_item_id when present, gen_hierarchy_number as fallback for raw specs."
+          "description": "Flag ID assigned by post-processing. sha256(filename + spec_item_id_or_gen_hierarchy_number + category + pass)[:6 hex uppercase]. Uses spec_item_id when present, gen_hierarchy_number as fallback for raw specs."
         },
         "pass": {
           "type": "string",
-          "enum": ["INDIVIDUAL_QUALITY"],
+          "enum": ["INDIVIDUAL_ITEM_QUALITY"],
           "description": "Which analysis pass generated this flag. Extend enum when new passes are introduced."
         },
         "type": {
@@ -149,9 +149,19 @@
   },
 
   "properties": {
-    "source_ref": {
-      "type": "string",
-      "description": "Filename of the stage-03 resolved artifact this analysis was run against."
+    "source_meta": {
+      "type": "object",
+      "required": ["filename"],
+      "description": "Document identity from S1 source_meta.",
+      "properties": {
+        "filename": { "type": "string" },
+        "doc_version": {
+          "type": ["string", "null"]
+        },
+        "doc_last_modified": {
+          "type": ["string", "null"]
+        }
+      }
     },
 
     "analysis_meta": {
@@ -161,7 +171,7 @@
       "properties": {
         "pass": {
           "type": "string",
-          "enum": ["INDIVIDUAL_QUALITY"]
+          "enum": ["INDIVIDUAL_ITEM_QUALITY"]
         },
         "model": {
           "type": "string",
