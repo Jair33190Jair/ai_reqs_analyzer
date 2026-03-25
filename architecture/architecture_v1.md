@@ -147,15 +147,14 @@ Avoid wasting money on broken input.
 
 ## Gate Policy
 
-LLM is called only if:
+Thresholds are authoritative in code — see
+`MIN_SCORE` and `UNPARSEABLE_LINE_THRESHOLD` in
+`pipeline_root/src/S2_preflight.py`.
 
-* Unparseable-line ratio ≥ 0.50
-* Extraction-quality score ≥ 0.80 (Considers duplicate ratios, and unparseable line ratio)
-
-Otherwise:
-
-* Abort LLM call
-* Emit guidance
+The gate aborts the pipeline and emits guidance
+if the score falls below `MIN_SCORE` or the
+unparseable-line ratio exceeds
+`UNPARSEABLE_LINE_THRESHOLD`.
 
 ---
 

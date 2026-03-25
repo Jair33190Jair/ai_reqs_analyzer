@@ -36,7 +36,7 @@ end note
     2. LLM Identify item id and heading patterns as regex
   O: 01_normalized.json;
 
-if ((S2) Preflight (Gate-only)\n I: 01_normalized.json\n  1.Computes: ID count, duplicate count, \n unparseable-line ratio and extraction-quality score \n O: 02_preflight.json (Diagnostics artifact) \n O: pass/fail status) then (fail\n unparseable-line ratio > 0.50 \n extraction-quality score < 0.80)
+if ((S2) Preflight (Gate-only)\n I: 01_normalized.json\n  1.Computes: ID count, duplicate count, \n unparseable-line ratio and extraction-quality score \n O: 02_after_preflight.json (Diagnostics artifact) \n O: pass/fail status) then (fail\n unparseable-line ratio > UNPARSEABLE_LINE_THRESHOLD \n extraction-quality score < MIN_SCORE \n see S2_preflight.py)
   stop
 endif
 !ifdef show_notes

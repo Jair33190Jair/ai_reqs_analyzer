@@ -19,24 +19,18 @@ Accepts a born-digital PDF specification, runs it through a deterministic prepro
 | Constraint     | Value                  |
 |----------------|------------------------|
 | Format         | Born-digital PDF       |
-| Max pages      | 10                     |
-| Max characters | 30,000                 |
-| Requirement ID | `SYS-[A-Z]{2,8}-\d{3}` |
+| Max pages + Max Characters| See MAX_PAGES and MAX_CHARS at `pipeline_root/src/S0_extractor.py` |
 
 ---
 
-## Output Artifacts
+## Pipeline Stages & Artifacts
 
-Each stage writes an intermediate artifact to `pipeline_root/artifacts/<project>/`:
+See the [stage map in CLAUDE.md](CLAUDE.md) for the
+authoritative stage-to-artifact mapping, and
+[`architecture/pipeline_overview_v1.puml`](architecture/pipeline_overview_v1.puml)
+for the visual flow.
 
-| File                    | Stage         | Contents                              |
-|-------------------------|---------------|---------------------------------------|
-| `00_raw_extract.json`   | S0 Extractor  | Per-page text, SHA-256, warnings      |
-| `01_normalized_text.json` | S1 Normalizer | Cleaned text, normalization metadata |
-| `02_after_preflight.json` | S2 Preflight  | Check results, score, gate decision  |
-| `03_llm_structured.json`  | S3 Structurer | Structured spec with verbatim content resolved from loc coordinates |
-| `04_llm_analyzed.json`    | S5 Analyzer   | Flags, statistics, AI analysis summary |
-| `05_report.html`          | S6 Renderer   | Human-readable report                |
+Artifacts land in `pipeline_root/artifacts/<project>/<spec>/`.
 
 ---
 
@@ -65,19 +59,18 @@ cp .env.example .env
 
 ## Usage
 
-Run each stage from `pipeline_root/`:
-
 ```bash
-cd pipeline_root
+source venv/bin/activate
 
-# S0 — Extract text from PDF
-python src/S0_extractor.py input/<project>/<spec>.pdf
+make s0   # through s4, or:
+make pipeline
 
-# S1 — Normalize extracted text
-python src/S1_normalizer.py artifacts/<project>/00_raw_extract.json
-
-# S2–S5 — In development (see Status below)
+# Custom input:
+SPEC_NAME=myfile.pdf INPUT_TO_SPEC_PARENT=mydir/ make s0
 ```
+
+See [CLAUDE.md](CLAUDE.md) for the full run command
+reference and stage details.
 
 ---
 
@@ -106,22 +99,25 @@ reqs_analyzer/
 
 ## Status
 
-| Stage | Name         | Status       |
-|-------|--------------|--------------|
+| Stage | Name           | Status   |
+|-------|----------------|----------|
 | S0    | Extractor      | Complete |
 | S1    | Normalizer     | Complete |
 | S2    | Preflight      | Complete |
 | S3    | LLM Structurer | Complete |
-| S5    | LLM Analyzer   | Planned  |
-| S6    | Renderer       | Planned  |
+| S4    | LLM Analyzer   | Complete |
+| S5    | Renderer       | Planned  |
 
 ---
 
 ## Domain Context
 
-This tool is designed for embedded systems and safety-critical software engineering, targeting documents that follow standards such as ISO 26262 and ASPICE. The LLM analysis prompt is scoped to flag:
+This tool is designed for embedded systems and safety-critical engineering, targeting documents that follow standards such as ISO 26262 and ASPICE. The LLM analysis prompt is scoped to flag:
 
-- Verifiability / testability issues
+V1.0: 
+- Requirements quality including:
+  - Ambiguity, testability, atomicity, overconstraint, completeness and terminology.
+Future:
 - Ambiguity and underspecification
 - Missing safety or ASIL context
 - Traceability gaps
@@ -135,7 +131,7 @@ MIT — see [LICENSE](LICENSE)
 
 ---
 
-## uthor
+## Author
 
 This project was developed by Jair Jimenez, Systems & Software Architect 
 specialized in AI-augmented embedded and safety-critical system development with ADAS expertise.

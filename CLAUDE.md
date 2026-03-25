@@ -51,7 +51,7 @@ Requires:
 | `S1` | `pipeline_root/src/S1_normalizer.py` | LLM (Haiku) | `00_raw_extract.json` -> `01_normalized.json` |
 | `S2` | `pipeline_root/src/S2_preflight.py` | Deterministic gate | `01_normalized.json` -> `02_after_preflight.json` |
 | `S3` | `pipeline_root/src/S3_llm_structurer.py` | LLM (Haiku) | `01_normalized.json` -> `03_llm_structured.json` |
-| `S4` | `pipeline_root/src/S4_llm_analyzer.py` | LLM (Sonnet) | `03_llm_structured.json` -> `04_llm_analyzed.json` |
+| `S4` | `pipeline_root/src/S4_llm_analyzer.py` | LLM (Sonnet) | `03_llm_structured.json` + `01_normalized.json` -> `04_llm_analyzed.json` |
 | Planned renderer | `pipeline_root/src/S6_renderer.py` | Deterministic placeholder | `04_llm_analyzed.json` -> report output |
 
 ## Working rules
@@ -75,27 +75,28 @@ Requires:
   `01_normalized.json`, not from `02_after_preflight.json`.
   Treat `S2` as a gate/reporting stage unless you are
   explicitly changing that contract.
-- `S0_extractor.py` currently enforces
-  `MAX_PAGES = 150` and `MAX_CHARS = 300_000`.
-  Those are the code-authoritative limits.
+- `S0` page and character limits: see `MAX_PAGES` and
+  `MAX_CHARS` in `pipeline_root/src/S0_extractor.py`.
 - `S6_renderer.py` exists only as a placeholder. It is not
   implemented, and the stage numbering around the renderer
   is not fully consistent across repo docs yet.
 
 ## Pipeline-specific invariants
 
-- `S2` exits with code `1` if `score < 0.70` or
-  `unparseable_line_ratio >= 0.50`.
-- `S2` score weights are:
-  unparseable lines `60%`, duplicate IDs `30%`,
-  duplicate sections `10%`.
-- `S3` is two-phase:
-  the LLM returns locations first, then Python resolves
-  those locations to verbatim content and adds derived
-  fields such as `gen_uid` and `gen_hierarchy_number`.
-- `S4` uses deterministic flag IDs:
-  `gen_flag_id` is derived from
-  `source_ref + item_key + category`.
+Numeric thresholds and derived-field rules are
+authoritative in source — do not maintain copies here.
+
+- `S2` gate thresholds: see `MIN_SCORE` and
+  `UNPARSEABLE_LINE_THRESHOLD` in
+  `pipeline_root/src/S2_preflight.py`.
+- `S2` score weights: see `_compute_score()` in
+  `pipeline_root/src/S2_preflight.py`.
+- `S3` is two-phase: the LLM returns locations first,
+  then Python resolves those locations to verbatim
+  content and adds derived fields (`gen_uid`,
+  `gen_hierarchy_number`). See `S3_llm_structurer.py`.
+- `S4` flag ID derivation: see `gen_flag_id` logic in
+  `pipeline_root/src/S4_llm_analyzer.py`.
 
 ## Review commands
 
@@ -111,7 +112,7 @@ Use the review system when asked to run any of these:
 
 Detailed review workflow, output contract, lifecycle rules,
 and per-review instructions live in:
-`guidelines/reviews/README.md`
+`review_instructions/README.md`
 
 ## What good work looks like here
 

@@ -1,7 +1,7 @@
 # Review System
 
-This folder contains the detailed review workflow for this
-repo.
+This folder contains the instructions for running
+structured reviews of this repo.
 
 Use `CLAUDE.md` as the front door. Use these files when you
 need to run or maintain the review system.
@@ -13,15 +13,15 @@ Read these in this order:
 1. `contract.md`
    Shared JSON contract, lifecycle rules, schema versioning,
    and `/review <path>` behavior.
-2. `diagram.md`
+2. `01_diagram.md`
    Instructions for `/review diagram`.
-3. `code.md`
+3. `02_code.md`
    Instructions for `/review code`.
-4. `consistency.md`
+4. `03_consistency.md`
    Instructions for `/review consistency`.
-5. `architecture.md`
+5. `04_architecture.md`
    Instructions for `/review architecture`.
-6. `project.md`
+6. `05_project.md`
    Instructions for `/review project`.
 
 ## Command index
