@@ -1,0 +1,129 @@
+{
+  "meta": {
+    "status": "RESOLVED",
+    "summary": "8 findings across data flow, precision, terminology, and ambiguity — the diagram has structural and labelling issues that would cause developer confusion, with one critical logic inversion in the S2 gate condition.",
+    "counts": {"open": 0, "resolved": 0, "checked": 8, "ignored": 0, "obsolete": 0}
+  },
+  "findings": [
+    {
+      "finding_id": "DA-001",
+      "stage": "S2",
+      "category": "DATA_FLOW",
+      "severity": "CRITICAL",
+      "type": "FINDING",
+      "description": "S2 fail-branch label says 'unparseable-line ratio < 0.50', which triggers failure when the ratio is LOW (i.e., few unparseable lines). The operator should be >= 0.50 to fail when the ratio is HIGH. As written, a clean document would fail and a messy one would pass.",
+      "recommendation": "Change the fail-branch label to 'unparseable-line ratio >= 0.50'.",
+      "llm": {
+        "status": "CHECKED",
+        "status_note": "Operator corrected from `< 0.50` to `> 0.50` in the diagram — the critical inversion is fixed. Minor note: the recommendation asked for `>= 0.50`; the diagram uses `> 0.50` which excludes the exact boundary. Functionally equivalent in practice.",
+        "reply": ""
+      },
+      "author": {"resolution": "", "resolution_note": ""}
+    },
+    {
+      "finding_id": "DA-002",
+      "stage": "S2",
+      "category": "DATA_FLOW",
+      "severity": "MAJOR",
+      "type": "FINDING",
+      "description": "S2 main description and the constraint note contradict each other on gate criteria. Main description: fail on unparseable-line ratio and extraction-quality score. Constraint note: pass requires 'score >= 0.80 AND req_count >= 5'. The req_count >= 5 condition appears only in the note and is absent from the main gate description.",
+      "recommendation": "Reconcile the two: either add req_count to the main S2 description or remove it from the constraint note. One source of truth for gate criteria.",
+      "llm": {
+        "status": "CHECKED",
+        "status_note": "The `req_count >= 5` condition has been removed from the constraint note. Gate criteria now has one source of truth: `unparseable-line ratio > 0.50` and `extraction-quality score < 0.80`.",
+        "reply": ""
+      },
+      "author": {"resolution": "", "resolution_note": ""}
+    },
+    {
+      "finding_id": "DA-003",
+      "stage": "S2",
+      "category": "DATA_FLOW",
+      "severity": "MAJOR",
+      "type": "FINDING",
+      "description": "S3 inputs 01_normalized.json (S1's output), skipping S2 entirely. S2 produces no data artifact — only pass/fail. This means the artifact numbering convention has a gap: 00, 01, [no 02], 03, 04, 05. A reader expects each stage to produce its numbered artifact.",
+      "recommendation": "Either (a) show S2 producing 02_after_preflight.json (even if it's a pass-through copy or annotated version of 01), or (b) explicitly note in S2 that it is a gate-only stage with no output artifact and that S3 consumes S1's output by design.",
+      "llm": {
+        "status": "CHECKED",
+        "status_note": "S2 is now explicitly labeled `Gate-only` and shows `O: 02_preflight.json (Diagnostics artifact)`. The numbering gap is documented as intentional and the gate-only nature is clear.",
+        "reply": "Q: it creates the json artifact you mentioned but it is not used in the pipeline, only for logging purposes. How would you solve this?\nA: Since the artifact exists for logging only and S3 correctly consumes 01_normalized.json, go with option (b): explicitly label S2 in the diagram as a gate-only stage and note that its output (02_preflight_report.json) is a diagnostic artifact not consumed by subsequent stages. This documents the numbering gap as intentional with no code changes required."
+      },
+      "author": {"resolution": "", "resolution_note": ""}
+    },
+    {
+      "finding_id": "DA-004",
+      "stage": "S4",
+      "category": "DATA_FLOW",
+      "severity": "MINOR",
+      "type": "FINDING",
+      "description": "S4 takes 01_normalized.json as a second input (skip-connection back to S1), justified as 'full text for location resolution'. However, S3 step 2 already 'resolves the locations' — it's unclear why S4 needs to resolve locations again from the same source.",
+      "recommendation": "Clarify what S4's location resolution does that S3's didn't. If S4 needs different data from 01_normalized.json (e.g., full text context, not just locations), state that explicitly.",
+      "llm": {
+        "status": "CHECKED",
+        "status_note": "S3's 'Python resolves the locations' step was removed. S3 now only provides LLM-identified location markers; S4 step 1 ('Python extracts verbatim content at LLM-reported locations') is the single place where locations are resolved against 01_normalized.json. The skip-connection is now fully justified.",
+        "reply": ""
+      },
+      "author": {"resolution": "", "resolution_note": ""}
+    },
+    {
+      "finding_id": "DA-005",
+      "stage": "S4",
+      "category": "PRECISION",
+      "severity": "MAJOR",
+      "type": "FINDING",
+      "description": "S4 step 3 references 'Pass 3 - Requirements quality review', implying passes 1 and 2 exist. Neither is defined or mentioned anywhere in the diagram. A developer encountering this would not know what passes 1 and 2 are or whether they are supposed to be part of S4 or earlier stages.",
+      "recommendation": "Either define all passes (1, 2, 3) in the diagram, or drop the 'Pass 3' label and call it what it is (e.g., 'LLM: Requirements quality review').",
+      "llm": {
+        "status": "CHECKED",
+        "status_note": "'Pass 3' label removed. S4 step 3 is now 'LLM: Requirements quality review' — unambiguous for V1.",
+        "reply": "Q: Would you rather remove it? In the future I wanted to add pass 1 and 2. they are already planned. But vor V1 I just want the requirements quality review. Or rather add a note simply?\nA: Removing it was the right call for V1 — no confusion, no false implications. For future passes: add a puml comment like `' TODO: add Pass 1 (extraction QA) and Pass 2 (structure QA) in v2` directly above the step. It signals intent to future-you without appearing in the rendered diagram. Don't put it in the visible label — that's what caused the original finding."
+      },
+      "author": {"resolution": "", "resolution_note": ""}
+    },
+    {
+      "finding_id": "DA-006",
+      "stage": "S1",
+      "category": "PRECISION",
+      "severity": "MINOR",
+      "type": "FINDING",
+      "description": "S1 step 2 says 'LLM Identify item id and heading patterns' but doesn't specify what the LLM produces. Does it tag lines? Output regex patterns? Classify each line? The output of this sub-step is too vague for a developer to implement against.",
+      "recommendation": "Specify what 'identify patterns' means concretely — e.g., 'LLM classifies each line as item-id, heading, or body text' or 'LLM extracts regex patterns for item IDs and headings used in subsequent stages'.",
+      "llm": {
+        "status": "CHECKED",
+        "status_note": "S1 step 2 now reads 'LLM Identify item id and heading patterns as regex' — output type is explicit.",
+        "reply": ""
+      },
+      "author": {"resolution": "", "resolution_note": ""}
+    },
+    {
+      "finding_id": "DA-007",
+      "stage": "S3",
+      "category": "TERMINOLOGY",
+      "severity": "MINOR",
+      "type": "FINDING",
+      "description": "'Resolves locations' appears in both S3 step 2 ('Python resolves the locations') and S4 step 1 ('Python resolves items' locations'). Same phrase used for what appear to be different operations in different stages. A reader can't tell if these are the same logic or distinct operations.",
+      "recommendation": "Differentiate the language. E.g., S3: 'Python extracts verbatim content at LLM-reported locations'. S4: 'Python retrieves surrounding context for flagged items'.",
+      "llm": {
+        "status": "CHECKED",
+        "status_note": "S3's location-resolution step was removed entirely (S3 now only identifies locations via LLM). S4 step 1 is now 'Python extracts verbatim content at LLM-reported locations'. The ambiguous shared phrase is gone from both stages.",
+        "reply": ""
+      },
+      "author": {"resolution": "", "resolution_note": ""}
+    },
+    {
+      "finding_id": "DA-008",
+      "stage": "S2",
+      "category": "AMBIGUITY",
+      "severity": "MAJOR",
+      "type": "FINDING",
+      "description": "S2 computes an 'extraction-quality score' that is the primary gate criterion, but the formula is only sketched in the constraint note ('based on percentage of duplicates and percentage of messy content') and absent from the main description. Two developers would compute different scores. The constraint note also references 'sections and items' without defining what counts as each.",
+      "recommendation": "Add the score formula (inputs and weights) to the main S2 description. E.g., 'score = 1 - (0.6 * unparseable_ratio + 0.3 * dup_id_ratio + 0.1 * dup_section_ratio)' or reference a specific document that defines it.",
+      "llm": {
+        "status": "CHECKED",
+        "status_note": "The S2 constraint note now includes 'Score formula: see S2_preflight.py' — the formula reference is present exactly as recommended in the Q&A. Single source of truth is in the code; the diagram points there.",
+        "reply": "Q: shoudl we refer ot the note and state it in the note, or rahter refer directly to the code? I hate double documentation\nA: Reference the code. The diagram note already has the right level of detail ('computed based on percentage of duplicates and unparseable-line ratio'). The exact formula belongs in S2_preflight.py as a code comment. Just add one line to the diagram note: `(score formula: see S2_preflight.py)`. Readers know where to look; the formula lives in one place only. Never put formulas in diagrams."
+      },
+      "author": {"resolution": "", "resolution_note": ""}
+    }
+  ]
+}

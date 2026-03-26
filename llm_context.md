@@ -53,7 +53,7 @@ Requires:
 | `S2` | `pipeline_root/src/S2_preflight.py` | Deterministic gate | `01_normalized.json` -> `02_after_preflight.json` |
 | `S3` | `pipeline_root/src/S3_llm_structurer.py` | LLM (Haiku) | `01_normalized.json` -> `03_llm_structured.json` |
 | `S4` | `pipeline_root/src/S4_llm_analyzer.py` | LLM (Sonnet) | `03_llm_structured.json` + `01_normalized.json` -> `04_llm_analyzed.json` |
-| Planned renderer | `pipeline_root/src/S5_renderer.py` | Deterministic placeholder | `04_llm_analyzed.json` -> report output |
+| Planned renderer | `pipeline_root/src/S5_renderer.py` | Deterministic placeholder | `04_llm_analyzed.json` -> `pipeline_root/output/my_project/my_spec/my_spec_llm_analysis.html` (Same structure asine  INPUT_PDF) |
 
 ## Working rules
 
@@ -111,11 +111,8 @@ Use the review system when asked to run any of these:
 - `/review <path>`
 - `/review all`
 
-When an AI agent writes a new review file, add an agent suffix
-before `.json` so review outputs stay distinguishable.
-Examples:
-- Codex: `reviews/{ddmmyy}_{type}_codex.json`
-- Claude: `reviews/{ddmmyy}_{type}_claude.json`
+Write review files to:
+`reviews/{ddmmyy}_{type}.json`
 
 Detailed review workflow, output contract, lifecycle rules,
 and per-review instructions live in:

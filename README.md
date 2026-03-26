@@ -37,7 +37,7 @@ Artifacts land in `pipeline_root/artifacts/<project>/<spec>/`.
 ## Requirements
 
 - Python 3.11+
-- An LLM API key, for example [Anthropic's](https://console.anthropic.com)
+- An Anthropic API key (required — pipeline runs on Claude)
 
 ---
 
@@ -132,29 +132,6 @@ After the run, you can inspect:
 
 If you want to open the HTML report locally in a browser, use the file
 under `pipeline_root/output/...`.
-
----
-
-## Project Structure
-
-```
-reqs_analyzer/
-  architecture/           Architecture diagrams and design docs (PlantUML)
-  pipeline_root/
-    src/
-      S0_extractor.py     Stage 0 — PDF text extraction
-      S1_normalizer.py    Stage 1 — Text normalization
-      S2_preflight.py     Stage 2 — Preflight gate
-      S3_llm_structurer.py  Stage 3 — LLM structuring + content resolution
-      S5_llm_analyzer.py  Stage 5 — LLM analysis (planned)
-      S5_renderer.py      Stage 6 — Report rendering (planned)
-      prompts/            LLM prompt definitions
-    artifacts/            Intermediate JSON outputs (gitignored in production)
-    input/                Input PDF specs — see input/arvms_specs/ for examples
-    tests/                Test plans and test inputs
-  requirements.txt
-  .env.example
-```
 
 ---
 

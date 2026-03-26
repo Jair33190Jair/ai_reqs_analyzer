@@ -1,7 +1,7 @@
 .env
 venv/
 __pycache__/
+.pytest_cache/
 architecture/notes
 pipeline_root/logs/
 pipeline_root/src/trash/
-reviews/*.json 

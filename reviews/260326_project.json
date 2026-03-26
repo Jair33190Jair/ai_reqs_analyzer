@@ -1,0 +1,122 @@
+{
+  "meta": {
+    "schema_version": "1.0",
+    "status": "RESOLVED",
+    "summary": "Repo presents well overall — clear purpose, good AI front-door, and a solid demo setup — but the README project structure block is stale and carries wrong stage names and numbers that could mislead a new reader.",
+    "counts": {
+      "open": 0,
+      "llm_fixed": 7,
+      "human_fixed": 0,
+      "skipped": 0,
+      "obsolete": 0
+    }
+  },
+  "findings": [
+    {
+      "_guide": {
+        "status": "OPEN | LLM_FIXED | HUMAN_FIXED | SKIPPED | OBSOLETE",
+        "human_command": "apply | skip | verify | ask",
+        "severity": "CRITICAL | MAJOR | MINOR",
+        "human_comment_or_question": "optional comment; question text when human_command is ask"
+      }
+    },
+    {
+      "finding_id": "PR-001",
+      "category": "DOCUMENTATION",
+      "severity": "MAJOR",
+      "type": "FINDING",
+      "effort": "LOW",
+      "path": "README.md",
+      "description": "Project structure block in README lists wrong filenames and stage labels. It shows 'S5_llm_analyzer.py — Stage 5 — LLM analysis (planned)' and 'S5_renderer.py — Stage 6 — Report rendering (planned)', but the real analyzer file is S4_llm_analyzer.py (complete, not planned), and there is no Stage 6.",
+      "recommendation": "Update the structure block to use the actual filenames (S4_llm_analyzer.py, S5_renderer.py) and correct the stage labels to match the authoritative stage map in llm_context.md.",
+      "status": "LLM_FIXED",
+      "how_it_stands": "Removed the Project Structure code block from README.md. Coverage is preserved: the Pipeline Stages section links to llm_context.md for the authoritative stage map, and the Status table shows all stage names.",
+      "human_command": "",
+      "human_comment_or_question": ""
+    },
+    {
+      "finding_id": "PR-002",
+      "category": "DOCUMENTATION",
+      "severity": "MINOR",
+      "type": "FINDING",
+      "effort": "LOW",
+      "path": "README.md",
+      "description": "Project structure block in README lists a 'tests/' directory, but the actual directory is 'pipeline_root/testing/'.",
+      "recommendation": "Replace 'tests/' with 'pipeline_root/testing/' in the structure block.",
+      "status": "LLM_FIXED",
+      "how_it_stands": "Updated README.md: 'tests/' replaced with 'testing/' in the project structure block (block since removed by PR-001).",
+      "human_command": "",
+      "human_comment_or_question": ""
+    },
+    {
+      "finding_id": "PR-003",
+      "category": "HYGIENE",
+      "severity": "MINOR",
+      "type": "FINDING",
+      "effort": "LOW",
+      "path": ".gitignore",
+      "description": ".pytest_cache/ is present at the repo root but is not listed in .gitignore.",
+      "recommendation": "Add '.pytest_cache/' to .gitignore.",
+      "status": "LLM_FIXED",
+      "how_it_stands": "Added '.pytest_cache/' to .gitignore after the __pycache__/ entry.",
+      "human_command": "",
+      "human_comment_or_question": ""
+    },
+    {
+      "finding_id": "PR-004",
+      "category": "FILE_NAMING",
+      "severity": "MINOR",
+      "type": "FINDING",
+      "effort": "LOW",
+      "path": "PROJECT_PLAN.md",
+      "description": "PROJECT_PLAN.md uses ALL_CAPS while all other markdown files use Title Case (README.md) or lowercase (llm_context.md). Inconsistent, and ALL_CAPS signals something system-level rather than a planning doc.",
+      "recommendation": "Rename to project_plan.md or Project_Plan.md to match the prevailing convention. If it's intended as a read-only artifact, lowercase is idiomatic.",
+      "status": "LLM_FIXED",
+      "how_it_stands": "Renamed PROJECT_PLAN.md to project_plan.md.",
+      "human_command": "",
+      "human_comment_or_question": ""
+    },
+    {
+      "finding_id": "PR-005",
+      "category": "DOCUMENTATION",
+      "severity": "MINOR",
+      "type": "FINDING",
+      "effort": "LOW",
+      "path": "llm_context.md",
+      "description": "The stage map in llm_context.md lists only JSON artifacts. README references a pipeline_root/output/ directory for HTML reports (the renderer output), but this location is not mentioned in the stage map or working rules.",
+      "recommendation": "Add a note to the stage map for the planned S5 renderer that its output lands in pipeline_root/output/, so the two docs agree.",
+      "status": "LLM_FIXED",
+      "how_it_stands": "Updated S5 renderer row in llm_context.md stage map to include the HTML output path pattern.",
+      "human_command": "",
+      "human_comment_or_question": ""
+    },
+    {
+      "finding_id": "PR-006",
+      "category": "HYGIENE",
+      "severity": "MINOR",
+      "type": "QUESTION",
+      "effort": "LOW",
+      "path": ".gitignore",
+      "description": "reviews/*.json is gitignored, meaning all review output files (including the two that already exist locally) are not tracked. This looks intentional, but it means review history is local-only and lost on a fresh clone.",
+      "recommendation": "Remove 'reviews/*.json' from .gitignore and commit existing review files.",
+      "status": "LLM_FIXED",
+      "how_it_stands": "Removed 'reviews/*.json' from .gitignore. Review files will now be tracked.",
+      "human_command": "",
+      "human_comment_or_question": ""
+    },
+    {
+      "finding_id": "PR-007",
+      "category": "DOCUMENTATION",
+      "severity": "MINOR",
+      "type": "FINDING",
+      "effort": "LOW",
+      "path": "README.md",
+      "description": "Requirements section says 'An LLM API key, for example Anthropic\u2019s'. The pipeline is hardwired to Claude via the anthropic SDK — it is not LLM-agnostic. The phrasing implies portability that does not exist.",
+      "recommendation": "Replace with 'An Anthropic API key (required — pipeline runs on Claude)' or similar.",
+      "status": "LLM_FIXED",
+      "how_it_stands": "Updated README.md Requirements section to 'An Anthropic API key (required — pipeline runs on Claude)'.",
+      "human_command": "",
+      "human_comment_or_question": ""
+    }
+  ]
+}
