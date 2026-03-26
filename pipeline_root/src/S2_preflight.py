@@ -157,7 +157,8 @@ def save_result(input_path: Path) -> Path:
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+    from log_setup import setup_logging
+    setup_logging()
     if len(sys.argv) < 2:
         logging.error("Usage: python S2_preflight.py <path_to_normalized.json>")
         sys.exit(1)
