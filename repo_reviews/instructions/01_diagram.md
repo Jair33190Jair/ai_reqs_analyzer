@@ -22,7 +22,7 @@ Do not flag:
 
 Output file:
 
-- `repo_reviews/{ddmmyy}_diagram.json`
+- `repo_reviews/reviews/{ddmmyy}_diagram.json`
 
 Finding fields:
 

@@ -31,7 +31,7 @@ Rules:
 
 Output file:
 
-- `repo_reviews/{ddmmyy}_project.json`
+- `repo_reviews/reviews/{ddmmyy}_project.json`
 
 Finding fields:
 

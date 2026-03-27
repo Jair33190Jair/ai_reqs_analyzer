@@ -112,11 +112,11 @@ Use the review system when asked to run any of these:
 - `/review all`
 
 Write review files to:
-`repo_reviews/{ddmmyy}_{type}.json`
+`repo_reviews/reviews/{ddmmyy}_{type}.json`
 
 Detailed review workflow, output contract, lifecycle rules,
 and per-review instructions live in:
-`repo_review_instructions/README.md`
+`repo_reviews/instructions/README.md`
 
 ## What good work looks like here
 
