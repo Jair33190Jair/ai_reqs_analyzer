@@ -31,33 +31,34 @@ The fastest path to value is end-to-end validation, not stage-by-stage perfectio
               analysis.
 - [x] **1.4** `S3_llm_structurer.py` — cheap LLM identifies structure (items, attributes and locations). Python resolves loc coordinates to verbatim content via map_content() and generates internal ids; validated against two schemas: llm_response (internal) and resolved (artifact).
   - V2 adds: strap context blocks to pass to the analyzer (non-llm), identify context_blocks with script
-- [ ] **1.5** `S4_llm_analyzer.py` — Calls the analyzer
+- [x] **1.5** `S4_llm_analyzer.py` — Calls the analyzer
   - V2 adds: context caching for refining spec. Three independent identifiers govern change classification: item_id, gen_uid, gen_hierarchy_number -> new, content_changed,position_changed,unchanged,deleted then does different reactions on the anlyzer
-- [ ] **1.6** `S5_renderer.py` — Jinja2 HTML report generation
-- [ ] **1.8** Decide invocation strategy: how are stages chained?
-  Options: a) shell script, b) Python `run_pipeline.py`, c) manual per-stage
-  → write the decision down and implement it
+- [x] **1.6** `S5_renderer.py` — Jinja2 HTML report generation
+- [x] **1.8** Decide invocation strategy: how are stages chained?
+  Options: a) shell script, b) Python `run_pipeline.py`, c) manual per-stage, d) Makefile.
+  Decision: Chose Makefile do to simplicity and modularity
+
 
 ---
 
 ## Phase 2 — Run end-to-end on one real spec
 > Don't test in isolation. Run the full pipeline and see what breaks.
 
-- [ ] **2.1** Run S0→S5 on `input/arvms_specs/01_arvms_spec_clean/` (cleanest input)
-- [ ] **2.2** Fix every breakage before moving on
-- [ ] **2.3** Verify all 5 intermediate artifacts are present and non-empty
-- [ ] **2.4** Verify HTML report renders in a browser without errors
+- [x] **2.1** Run S0→S5 on `input/arvms_specs/01_arvms_spec_clean/` (cleanest input)
+- [x] **2.2** Fix every breakage before moving on
+- [x] **2.3** Verify all 5 intermediate artifacts are present and non-empty
+- [x] **2.4** Verify HTML report renders in a browser without errors
 
 ---
 
 ## Phase 3 — Stress the pipeline with the test corpus
 > Your corpus already exists. Use it.
 
-- [ ] **3.1** `00_arvms_spec` — baseline (has ligatures + hyphenation)
-- [ ] **3.2** `02_arvms_spec_10_pages` — at page limit, must pass
-- [ ] **3.3** `03_arvms_spec_11_pages` — exceeds limit, S0 must reject cleanly
-- [ ] **3.4** `04_arvms_spec_30000p_chars` — at char limit
-- [ ] **3.5** Fix any new breakages found
+- [x] **3.1** `00_arvms_spec` — baseline (has ligatures + hyphenation)
+- [x] **3.2** `02_arvms_spec_10_pages` — at page limit, must pass
+- [x] **3.3** `03_arvms_spec_11_pages` — exceeds limit, S0 must reject cleanly
+- [x] **3.4** `04_arvms_spec_30000p_chars` — at char limit
+- [x] **3.5** Fix any new breakages found
 
 ---
 
