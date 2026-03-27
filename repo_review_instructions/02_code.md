@@ -33,7 +33,7 @@ Rules:
 
 Output file:
 
-- `reviews/{ddmmyy}_code.json`
+- `repo_reviews/{ddmmyy}_code.json`
 
 Finding fields:
 

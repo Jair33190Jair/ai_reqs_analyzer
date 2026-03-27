@@ -23,7 +23,7 @@ Rules:
 
 Output file:
 
-- `reviews/{ddmmyy}_consistency.json`
+- `repo_reviews/{ddmmyy}_consistency.json`
 
 Finding fields:
 

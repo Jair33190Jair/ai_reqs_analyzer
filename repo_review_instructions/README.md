@@ -28,11 +28,11 @@ Read these in this order:
 
 | Command | Purpose | Output |
 | --- | --- | --- |
-| `/review diagram` | Review the architecture diagram on its own | `reviews/{ddmmyy}_diagram.json` |
-| `/review code` | Review Python code quality | `reviews/{ddmmyy}_code.json` |
-| `/review consistency` | Cross-check diagram vs code | `reviews/{ddmmyy}_consistency.json` |
-| `/review architecture` | Assess overall architecture | `reviews/{ddmmyy}_architecture.json` |
-| `/review project` | Review repo presentation and navigability | `reviews/{ddmmyy}_project.json` |
+| `/review diagram` | Review the architecture diagram on its own | `repo_reviews/{ddmmyy}_diagram.json` |
+| `/review code` | Review Python code quality | `repo_reviews/{ddmmyy}_code.json` |
+| `/review consistency` | Cross-check diagram vs code | `repo_reviews/{ddmmyy}_consistency.json` |
+| `/review architecture` | Assess overall architecture | `repo_reviews/{ddmmyy}_architecture.json` |
+| `/review project` | Review repo presentation and navigability | `repo_reviews/{ddmmyy}_project.json` |
 | `/review <path>` | Process human commands in an existing review file | update that file in place |
 | `/review all` | Run all five reviews in sequence | five JSON files with one shared date prefix |
 
@@ -43,7 +43,7 @@ Read these in this order:
   style opinions.
 - When unsure, use `type: "QUESTION"` instead of forcing a
   `FINDING`.
-- Write review files to `reviews/` using
+- Write review files to `repo_reviews/` using
   `{ddmmyy}_{type}.json`.
 - Use the model named in the relevant review spec.
 - If the client supports subagents, use one for standalone
