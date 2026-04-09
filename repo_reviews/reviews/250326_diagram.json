@@ -5,7 +5,7 @@
     "summary": "The diagram still communicates the pipeline well overall, but it has four concrete accuracy issues around stage ownership and artifact paths that can mislead readers.",
     "counts": {
       "open": 4,
-      "llm_fixed": 0,
+      "ai_fixed": 0,
       "human_fixed": 0,
       "skipped": 0,
       "obsolete": 0
@@ -14,7 +14,7 @@
   "findings": [
     {
       "_guide": {
-        "status": "OPEN | LLM_FIXED | HUMAN_FIXED | SKIPPED | OBSOLETE",
+        "status": "OPEN | ai_FIXED | HUMAN_FIXED | SKIPPED | OBSOLETE",
         "human_command": "apply | skip | verify | ask",
         "severity": "CRITICAL | MAJOR | MINOR",
         "human_comment_or_question": "optional comment; question text when human_command is ask"
@@ -26,8 +26,8 @@
       "stage": "S4",
       "category": "DATA_FLOW",
       "severity": "MAJOR",
-      "description": "The diagram gives S4 a second input of `01_normalized.json` for 'full text for location resolution' and says S4 'extracts verbatim content at LLM-reported locations'. In the current pipeline, `S4_llm_analyzer.py` runs only from `03_llm_structured.json`, while `S3_llm_structurer.py` already resolves locations to verbatim content before writing that artifact.",
-      "recommendation": "Move the location-resolution wording into S3 and remove `01_normalized.json` as an S4 input. Rephrase S4 to describe review preparation and flag generation from `03_llm_structured.json`.",
+      "description": "The diagram gives S4 a second input of `01_normalized.json` for 'full text for location resolution' and says S4 'extracts verbatim content at AI-reported locations'. In the current pipeline, `S4_ai_analyzer.py` runs only from `03_ai_structured.json`, while `S3_ai_structurer.py` already resolves locations to verbatim content before writing that artifact.",
+      "recommendation": "Move the location-resolution wording into S3 and remove `01_normalized.json` as an S4 input. Rephrase S4 to describe review preparation and flag generation from `03_ai_structured.json`.",
       "status": "OPEN",
       "how_it_stands": "",
       "human_command": "",
@@ -52,7 +52,7 @@
       "stage": "S5",
       "category": "PRECISION",
       "severity": "MAJOR",
-      "description": "The renderer output is labeled `05_flag_dashboard.html` with a note of `output/<project>/<doc>.html`. The current renderer writes `<source_stem>_llm_analysis.html` under `pipeline_root/output/<project>/<spec>/`. A reader following the diagram will look for the wrong filename and a shallower directory layout.",
+      "description": "The renderer output is labeled `05_flag_dashboard.html` with a note of `output/<project>/<doc>.html`. The current renderer writes `<source_stem>_ai_analysis.html` under `pipeline_root/output/<project>/<spec>/`. A reader following the diagram will look for the wrong filename and a shallower directory layout.",
       "recommendation": "Change the S5 output label and note to match the current renderer output naming and directory structure, or intentionally mark the label as conceptual rather than literal.",
       "status": "OPEN",
       "how_it_stands": "",
@@ -65,8 +65,8 @@
       "stage": "S4",
       "category": "AMBIGUITY",
       "severity": "MINOR",
-      "description": "S4 step 4 says Python 'provides report', but the diagram also has a separate renderer stage that turns `04_llm_analyzed.json` into HTML. Two reasonable readers could disagree on whether S4 already emits the user-facing report or only the analysis artifact consumed by S5.",
-      "recommendation": "Change S4 step 4 to describe the JSON artifact it actually produces, such as 'collects flags and analysis metadata into 04_llm_analyzed.json'.",
+      "description": "S4 step 4 says Python 'provides report', but the diagram also has a separate renderer stage that turns `04_ai_analyzed.json` into HTML. Two reasonable readers could disagree on whether S4 already emits the user-facing report or only the analysis artifact consumed by S5.",
+      "recommendation": "Change S4 step 4 to describe the JSON artifact it actually produces, such as 'collects flags and analysis metadata into 04_ai_analyzed.json'.",
       "status": "OPEN",
       "how_it_stands": "",
       "human_command": "",

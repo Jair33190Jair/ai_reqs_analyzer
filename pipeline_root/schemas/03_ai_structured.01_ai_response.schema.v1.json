@@ -28,7 +28,7 @@
     },
     "source_meta": {
       "type": "object",
-      "description": "Injected by post-processing — not produced by the LLM."
+      "description": "Injected by post-processing — not produced by the AI."
     },
 
     "skip_pages": {

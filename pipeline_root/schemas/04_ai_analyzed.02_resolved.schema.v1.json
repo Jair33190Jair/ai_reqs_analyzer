@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "schema_version": "1.0",
-  "description": "Stage 04 resolved artifact — LLM raw flags enriched by post-processing: stable IDs assigned, aggregate stats computed.",
+  "description": "Stage 04 resolved artifact — AI raw flags enriched by post-processing: stable IDs assigned, aggregate stats computed.",
   "type": "object",
   "required": ["source_meta", "analysis_meta", "flags", "item_review", "stats"],
   "additionalProperties": false,
@@ -208,7 +208,7 @@
       "type": "object",
       "required": ["total_items", "reviewed", "skipped", "flagged", "passed", "total_flags", "by_severity", "by_type"],
       "additionalProperties": false,
-      "description": "Aggregate counts. Computed by post-processing, not the LLM.",
+      "description": "Aggregate counts. Computed by post-processing, not the AI.",
       "properties": {
         "total_items":  { "type": "integer", "minimum": 0, "description": "Total spec_items in stage 03 input." },
         "reviewed":     { "type": "integer", "minimum": 0, "description": "Items in reviewed_items list." },

@@ -3,7 +3,7 @@
 This folder contains the instructions for running
 structured reviews of this repo.
 
-Use `llm_context.md` as the front door. Use these files when you
+Use `ai_context.md` as the front door. Use these files when you
 need to run or maintain the review system.
 
 ## Layout

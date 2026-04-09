@@ -9,8 +9,8 @@ from pathlib import Path
 
 import jsonschema
 from dotenv import load_dotenv
-from llm_pricing import get_cost
-from llm_guard import get_anthropic_client
+from projects.business.reqs_analyzer.pipeline_root.src.ai_pricing import get_cost
+from projects.business.reqs_analyzer.pipeline_root.src.ai_guard import get_anthropic_client
 
 _SCHEMA_PATH = Path(__file__).parent.parent / "schemas" / "01_normalized.schema.v1.json"
 

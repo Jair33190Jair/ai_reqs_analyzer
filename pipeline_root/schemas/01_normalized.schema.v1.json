@@ -14,11 +14,11 @@
         },
         "doc_version": {
           "type": ["string", "null"],
-          "description": "Document version/revision extracted by LLM, or null if not found."
+          "description": "Document version/revision extracted by AI, or null if not found."
         },
         "doc_last_modified": {
           "type": ["string", "null"],
-          "description": "Document last-modified date extracted by LLM (YYYY-MM-DD when possible), or null if not found."
+          "description": "Document last-modified date extracted by AI (YYYY-MM-DD when possible), or null if not found."
         }
       }
     },

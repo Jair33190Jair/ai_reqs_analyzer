@@ -11,14 +11,14 @@
 
 This document defines the complete **V1 production-ready pipeline specification** for:
 
-PDF → Text Extraction → Normalization → Preflight → LLM Structuring → LLM Analysis → Human-Readable Report
+PDF → Text Extraction → Normalization → Preflight → AI Structuring → AI Analysis → Human-Readable Report
 
 The design prioritizes:
 
 * ✅ Low testing cost
 * ✅ Deterministic preprocessing
 * ✅ Stable JSON contracts
-* ✅ LLM usage only where necessary
+* ✅ AI usage only where necessary
 * ✅ Sellable output (HTML report)
 * ✅ Clear schema versioning.
 
@@ -34,8 +34,8 @@ The design prioritizes:
 
 ### Design Philosophy
 
-* Layers 0 and 2 are fully deterministic; Layer 1 uses LLM but with constrained output (regex of identified patterns).
-* LLM is never used to compensate for broken extraction.
+* Layers 0 and 2 are fully deterministic; Layer 1 uses AI but with constrained output (regex of identified patterns).
+* AI is never used to compensate for broken extraction.
 * All intermediate artifacts are stored for traceability.
 * Each stage has a strict interface contract.
 
@@ -51,8 +51,8 @@ pipeline_run/
     00_raw_extract.json
     01_normalized.json
     02_after_preflight.json  (logging/traceability only, not consumed downstream)
-    03_llm_structured.json
-    04_llm_analyzed.json
+    03_ai_structured.json
+    04_ai_analyzed.json
     05_flag_dashboard.html
   logs/
     pipeline.log
@@ -119,9 +119,9 @@ Replace:
 * ﬃ → ffi
 * ﬄ → ffl
 
-### 3. LLM: Identify item ID and heading patterns
+### 3. AI: Identify item ID and heading patterns
 
-* LLM identifies the regex patterns for requirement IDs and section headings present in the document
+* AI identifies the regex patterns for requirement IDs and section headings present in the document
 * These patterns are used downstream by S2 (Preflight) for counting and validation. And later by S3 (Structurer) for identifying the document structure.
 
 ---
@@ -158,7 +158,7 @@ unparseable-line ratio exceeds
 
 ---
 
-# 7️⃣ Stage (3) LLM Structurer
+# 7️⃣ Stage (3) AI Structurer
 
 ## Purpose
 
@@ -166,11 +166,11 @@ Convert normalized text into structured specification JSON.
 
 ## Input → `01_normalized.json`
 
-## Output → `03_llm_structured.json`
+## Output → `03_ai_structured.json`
 
 Schema: `spec.schema.v1`
 
-@import "../pipeline_root/schemas/03_llm_structured.schema.v1.json"
+@import "../pipeline_root/schemas/03_ai_structured.schema.v1.json"
 
 ## Structurer Rules
 
@@ -182,7 +182,7 @@ Schema: `spec.schema.v1`
 
 ---
 
-# 8️⃣ Stage (4) LLM Analyzer
+# 8️⃣ Stage (4) AI Analyzer
 
 ## Purpose
 
@@ -190,10 +190,10 @@ Assess quality, completeness, safety, and sellable insights.
 
 ## Input
 
-* `03_llm_structured.json`
+* `03_ai_structured.json`
 * `01_normalized.json` (full text for location resolution)
 
-## Output → `04_llm_analyzed.json`
+## Output → `04_ai_analyzed.json`
 
 Schema: `analysis.schema.v1`
 
@@ -282,7 +282,7 @@ Transform JSON into human-consumable report.
 * Hard max token limit
 * Chunk by section if too large (Using chapters as sections)
 * Always store raw artifacts
-* Log LLM cost per run
+* Log AI cost per run
 
 ---
 

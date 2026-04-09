@@ -15,7 +15,7 @@ Every review file uses this top-level shape:
     "summary": "One honest sentence about what was reviewed and the key takeaway.",
     "counts": {
       "open": 0,
-      "llm_fixed": 0,
+      "ai_fixed": 0,
       "human_fixed": 0,
       "skipped": 0,
       "obsolete": 0
@@ -24,7 +24,7 @@ Every review file uses this top-level shape:
   "findings": [
     {
       "_guide": {
-        "status": "OPEN | LLM_FIXED | HUMAN_FIXED | SKIPPED | OBSOLETE",
+        "status": "OPEN | ai_FIXED | HUMAN_FIXED | SKIPPED | OBSOLETE",
         "human_command": "apply | skip | verify | ask",
         "severity": "CRITICAL | MAJOR | MINOR",
         "human_comment_or_question": "optional comment; question text when human_command is ask"
@@ -38,7 +38,7 @@ Every review file uses this top-level shape:
 Shared rules:
 
 - `meta.schema_version` is currently `"1.0"`.
-- `meta.status` is LLM-managed:
+- `meta.status` is AI-managed:
   `OPEN`, `RESOLVED`, or `OBSOLETE`.
 - Only set `meta.status` to `RESOLVED` when
   `meta.counts.open == 0`.
@@ -61,7 +61,7 @@ Every finding has:
 Status meanings:
 
 - `OPEN`: not yet actioned
-- `LLM_FIXED`: Claude applied the fix
+- `ai_FIXED`: Claude applied the fix
 - `HUMAN_FIXED`: human applied the fix and Claude verified
   it
 - `SKIPPED`: intentionally not acted on
@@ -120,7 +120,7 @@ For each finding where `human_command` is set:
 - State in one sentence what file will change and what will
   change.
 - Apply only the requested recommendation.
-- Set `status` to `LLM_FIXED`.
+- Set `status` to `ai_FIXED`.
 - Set `how_it_stands` to one sentence describing what was
   changed and where.
 - Reset `human_command` and

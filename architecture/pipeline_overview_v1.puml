@@ -33,7 +33,7 @@ end note
 : (S1) Normalizer
   I: 00_raw_extract.json
     1. ligature replacement and dehyphenation 
-    2. LLM Identify item id and heading patterns as regex
+    2. AI Identify item id and heading patterns as regex
   O: 01_normalized.json;
 
 if ((S2) Preflight (Gate-only)\n I: 01_normalized.json\n  1.Computes: ID count, duplicate count, \n unparseable-line ratio and extraction-quality score \n O: 02_after_preflight.json (Diagnostics artifact) \n O: pass/fail status) then (fail\n unparseable-line ratio > UNPARSEABLE_LINE_THRESHOLD \n extraction-quality score < MIN_SCORE \n see S2_preflight.py)
@@ -48,13 +48,13 @@ note right
 end note
 !endif
 
-: (S3) LLM Structurer
+: (S3) AI Structurer
   I: 01_normalized.json
-    1. Asks LLM to identify and provide item locations
+    1. Asks AI to identify and provide item locations
         (e.g. id: REQ-123 loc: [page: 1, lines: 3-6])
     2. Python computes items' hierarchy number 
     3. Python computes unique ids for change tracking
-  O: 03_llm_structured.json;
+  O: 03_ai_structured.json;
 !ifdef show_notes
 note right
   Note:
@@ -64,17 +64,17 @@ note right
 end note
 !endif
 
-: (S4) LLM Analyzer
-  I: 03_llm_structured.json
+: (S4) AI Analyzer
+  I: 03_ai_structured.json
   I: 01_normalized.json (full text for location resolution)
-    1. Python extracts verbatim content at LLM-reported locations
+    1. Python extracts verbatim content at AI-reported locations
     2. Python prepares relevant items and attributes for the review
-    3. LLM: Requirements quality review
+    3. AI: Requirements quality review
     4. Python: Collects flags, metadata and provides report
-  O: 04_llm_analyzed.json;
+  O: 04_ai_analyzed.json;
 
 : (S5) Renderer
-  I: 04_llm_analyzed.json
+  I: 04_ai_analyzed.json
     1. Generates single-page HTML dashboard
   O: 05_flag_dashboard.html;
 !ifdef show_constraints

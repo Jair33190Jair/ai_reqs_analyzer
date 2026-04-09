@@ -1,4 +1,4 @@
-# llm_context.md
+# ai_context.md
 
 This file is the front door for working in this repository.
 Keep it practical. Keep it current. Prefer repo truths over
@@ -12,10 +12,10 @@ specifications.
 Current flow:
 
 - `S0` extracts text from a born-digital PDF.
-- `S1` normalizes the extracted content with an LLM.
+- `S1` normalizes the extracted content with an AI.
 - `S2` runs a deterministic preflight gate.
-- `S3` structures the document with an LLM.
-- `S4` analyzes requirement quality with an LLM.
+- `S3` structures the document with an AI.
+- `S4` analyzes requirement quality with an AI.
 - A renderer is planned, but not implemented yet.
 
 Primary diagram:
@@ -49,11 +49,11 @@ Requires:
 | Stage | File | Type | Current input -> output |
 | --- | --- | --- | --- |
 | `S0` | `pipeline_root/src/S0_extractor.py` | Deterministic | PDF -> `00_raw_extract.json` |
-| `S1` | `pipeline_root/src/S1_normalizer.py` | LLM (Haiku) | `00_raw_extract.json` -> `01_normalized.json` |
+| `S1` | `pipeline_root/src/S1_normalizer.py` | AI (Haiku) | `00_raw_extract.json` -> `01_normalized.json` |
 | `S2` | `pipeline_root/src/S2_preflight.py` | Deterministic gate | `01_normalized.json` -> `02_after_preflight.json` |
-| `S3` | `pipeline_root/src/S3_llm_structurer.py` | LLM (Haiku) | `01_normalized.json` -> `03_llm_structured.json` |
-| `S4` | `pipeline_root/src/S4_llm_analyzer.py` | LLM (Sonnet) | `03_llm_structured.json` + `01_normalized.json` -> `04_llm_analyzed.json` |
-| Planned renderer | `pipeline_root/src/S5_renderer.py` | Deterministic placeholder | `04_llm_analyzed.json` -> `pipeline_root/output/my_project/my_spec/my_spec_llm_analysis.html` (Same structure asine  INPUT_PDF) |
+| `S3` | `pipeline_root/src/S3_ai_structurer.py` | AI (Haiku) | `01_normalized.json` -> `03_ai_structured.json` |
+| `S4` | `pipeline_root/src/S4_ai_analyzer.py` | AI (Sonnet) | `03_ai_structured.json` + `01_normalized.json` -> `04_ai_analyzed.json` |
+| Planned renderer | `pipeline_root/src/S5_renderer.py` | Deterministic placeholder | `04_ai_analyzed.json` -> `pipeline_root/output/my_project/my_spec/my_spec_ai_analysis.html` (Same structure asine  INPUT_PDF) |
 
 ## Working rules
 
@@ -65,7 +65,7 @@ Requires:
 - Use "item" for parsed spec elements. Do not rename that
   concept to "object" or "entry".
 - Every stage should validate its output before writing it.
-- Keep LLM prompts reusable and explicit. Avoid scattering
+- Keep AI prompts reusable and explicit. Avoid scattering
   prompt strings inline unless there is a strong reason.
 
 ## Repo truths that matter - may be deleted in the future
@@ -92,12 +92,12 @@ authoritative in source — do not maintain copies here.
   `pipeline_root/src/S2_preflight.py`.
 - `S2` score weights: see `_compute_score()` in
   `pipeline_root/src/S2_preflight.py`.
-- `S3` is two-phase: the LLM returns locations first,
+- `S3` is two-phase: the AI returns locations first,
   then Python resolves those locations to verbatim
   content and adds derived fields (`gen_uid`,
-  `gen_hierarchy_number`). See `S3_llm_structurer.py`.
+  `gen_hierarchy_number`). See `S3_ai_structurer.py`.
 - `S4` flag ID derivation: see `gen_flag_id` logic in
-  `pipeline_root/src/S4_llm_analyzer.py`.
+  `pipeline_root/src/S4_ai_analyzer.py`.
 
 ## Review commands
 
@@ -122,7 +122,7 @@ and per-review instructions live in:
 
 - Clear stage boundaries.
 - Deterministic logic where it is sufficient.
-- LLM use only where it adds clear value.
+- AI use only where it adds clear value.
 - JSON artifacts that are easy to inspect and diff.
 - Docs that describe the repo as it exists today, not as it
   might exist later.

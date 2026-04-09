@@ -20,8 +20,8 @@ from pathlib import Path
 
 import jsonschema
 from dotenv import load_dotenv
-from llm_guard import get_anthropic_client
-from llm_pricing import get_cost
+from projects.business.reqs_analyzer.pipeline_root.src.ai_guard import get_anthropic_client
+from projects.business.reqs_analyzer.pipeline_root.src.ai_pricing import get_cost
 
 load_dotenv()
 

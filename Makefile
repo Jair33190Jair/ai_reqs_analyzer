@@ -6,7 +6,7 @@ PDF_STEM := $(basename $(PDF_NAME))
 INPUT_TO_SPEC_PARENT := $(patsubst pipeline_root/input/%,%,$(dir $(INPUT_PDF)))
 ARTIFACTS := pipeline_root/artifacts/$(INPUT_TO_SPEC_PARENT)
 OUTPUT_DIR := pipeline_root/output/$(INPUT_TO_SPEC_PARENT)
-REPORT_PATH := $(OUTPUT_DIR)$(PDF_STEM)_llm_analyzes.html
+REPORT_PATH := $(OUTPUT_DIR)$(PDF_STEM)_ai_analyzes.html
 
 s0:
 	python3 $(SRC)/S0_extractor.py $(INPUT_PDF)
@@ -18,13 +18,13 @@ s2:
 	python3 $(SRC)/S2_preflight.py $(ARTIFACTS)/01_normalized.json
 
 s3:
-	python3 $(SRC)/S3_llm_structurer.py $(ARTIFACTS)/01_normalized.json
+	python3 $(SRC)/S3_ai_structurer.py $(ARTIFACTS)/01_normalized.json
 
 s4:
-	python3 $(SRC)/S4_llm_analyzer.py $(ARTIFACTS)/03_llm_structured.json
+	python3 $(SRC)/S4_ai_analyzer.py $(ARTIFACTS)/03_ai_structured.json
 
 s5:
-	python3 $(SRC)/S5_renderer.py $(ARTIFACTS)/04_llm_analyzed.json
+	python3 $(SRC)/S5_renderer.py $(ARTIFACTS)/04_ai_analyzed.json
 
 pipeline: s0 s1 s2 s3 s4 s5
 	@printf "HTML report: %s\n" "$(REPORT_PATH)"

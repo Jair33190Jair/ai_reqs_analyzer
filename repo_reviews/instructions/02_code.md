@@ -18,9 +18,9 @@ Check:
 AI integration hygiene includes:
 
 - prompts should be reusable, not scattered inline
-- every LLM response must be parsed and validated before use
-- flag raw LLM output flowing downstream unvalidated
-- flag oversized prompts or LLM calls that should be
+- every AI response must be parsed and validated before use
+- flag raw AI output flowing downstream unvalidated
+- flag oversized prompts or AI calls that should be
   deterministic instead
 - only push for typed structures if the codebase is large
   enough for that to matter

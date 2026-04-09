@@ -29,9 +29,9 @@ The fastest path to value is end-to-end validation, not stage-by-stage perfectio
   - V2 adds: validate returned patternS (size, matches), validate exact fields' names + ask user
               if he is okay with the amount of requirements, chapters and total cost of the
               analysis.
-- [x] **1.4** `S3_llm_structurer.py` — cheap LLM identifies structure (items, attributes and locations). Python resolves loc coordinates to verbatim content via map_content() and generates internal ids; validated against two schemas: llm_response (internal) and resolved (artifact).
-  - V2 adds: strap context blocks to pass to the analyzer (non-llm), identify context_blocks with script
-- [x] **1.5** `S4_llm_analyzer.py` — Calls the analyzer
+- [x] **1.4** `S3_ai_structurer.py` — cheap AI identifies structure (items, attributes and locations). Python resolves loc coordinates to verbatim content via map_content() and generates internal ids; validated against two schemas: ai_response (internal) and resolved (artifact).
+  - V2 adds: strap context blocks to pass to the analyzer (non-ai), identify context_blocks with script
+- [x] **1.5** `S4_ai_analyzer.py` — Calls the analyzer
   - V2 adds: context caching for refining spec. Three independent identifiers govern change classification: item_id, gen_uid, gen_hierarchy_number -> new, content_changed,position_changed,unchanged,deleted then does different reactions on the anlyzer
 - [x] **1.6** `S5_renderer.py` — Jinja2 HTML report generation
 - [x] **1.8** Decide invocation strategy: how are stages chained?
@@ -76,14 +76,14 @@ The fastest path to value is end-to-end validation, not stage-by-stage perfectio
 - [ ] **4.2** S1: ligature replacement, dehyphenation, req ID preservation
 - [ ] **4.3** S2: ID count, duplicate detection, score threshold gate
 
-**LLM stages (S3, S5) — don't unit test with real LLM calls:**
-- [ ] **4.4** Test with a fixture (saved real LLM response) to validate parsing/schema logic only
+**AI stages (S3, S5) — don't unit test with real AI calls:**
+- [ ] **4.4** Test with a fixture (saved real AI response) to validate parsing/schema logic only
 
 **Renderer (S5) — one test:**
 - [ ] **4.5** Known analysis JSON → HTML contains all req IDs and issue counts
 
 **Golden end-to-end criteria (per run):**
-- All expected requirement IDs present in `03_llm_structured.json`
+- All expected requirement IDs present in `03_ai_structured.json`
 - All intermediate artifacts present and schema-valid
 - HTML report renders in browser without manual edits
 
@@ -117,5 +117,5 @@ The fastest path to value is end-to-end validation, not stage-by-stage perfectio
 |---------|-----|
 | Per-stage sequence diagrams | One pipeline overview diagram is enough; per-stage diagrams go stale fast |
 | Scalability review | Explicitly out of scope for V1 (single-document, occasional-use tool) |
-| Exhaustive edge case tests for LLM stages | LLM output is non-deterministic; schema validation is your real contract |
+| Exhaustive edge case tests for AI stages | AI output is non-deterministic; schema validation is your real contract |
 | Stage-by-stage security review | Only 3 real attack surfaces exist; reviewing 6 stages separately is redundant |

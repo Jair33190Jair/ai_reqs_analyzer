@@ -1,4 +1,4 @@
-# reqs_analyzer
+# ai_reqs_analyzer
 
 AI-powered review pipeline for embedded software and systems requirements documents.
 
@@ -25,7 +25,7 @@ Accepts a born-digital PDF specification, runs it through a deterministic prepro
 
 ## Pipeline Stages & Artifacts
 
-See the [stage map in llm_context.md](llm_context.md) for the
+See the [stage map in ai_context.md](ai_context.md) for the
 authoritative stage-to-artifact mapping, and
 [`architecture/pipeline_overview_v1.puml`](architecture/pipeline_overview_v1.puml)
 for the visual flow.
@@ -45,7 +45,7 @@ Artifacts land in `pipeline_root/artifacts/<project>/<spec>/`.
 
 ```bash
 git clone <repo-url>
-cd reqs_analyzer
+cd ai_reqs_analyzer
 
 python -m venv venv
 source venv/bin/activate      # Windows: venv\Scripts\activate
@@ -69,7 +69,7 @@ make pipeline
 INPUT_PDF=pipeline_root/input/my_project/my_spec/my_spec.pdf make analyze
 ```
 
-See [llm_context.md](llm_context.md) for the full run command
+See [ai_context.md](ai_context.md) for the full run command
 reference and stage details.
 
 To analyze your own specification:
@@ -86,12 +86,12 @@ source venv/bin/activate
 INPUT_PDF=pipeline_root/input/my_project/my_spec/my_spec.pdf make analyze
 ```
 
-LLM-backed stages (`S1`, `S3`, `S4`) require explicit approval on
+AI-backed stages (`S1`, `S3`, `S4`) require explicit approval on
 every run before they call the Anthropic API. In an interactive shell,
 the script will prompt you to type `yes`. For non-interactive usage,
-set `ALLOW_LLM_EXECUTION=1` on that command invocation only.
+set `ALLOW_ai_EXECUTION=1` on that command invocation only.
 
-The guard configuration is read from `~/.reqs_analyzer/llm_guard.json`,
+The guard configuration is read from `~/.ai_reqs_analyzer/ai_guard.json`,
 outside this repository. If that file is missing, the guard stays
 enabled by default. To disable the guard intentionally, create:
 
@@ -103,7 +103,7 @@ Because this file lives outside the repo, an in-repo code change cannot
 silently disable the guard.
 
 Repository policy: direct `anthropic.Anthropic(...)` calls are only
-allowed in `pipeline_root/src/llm_guard.py`. All LLM-backed stages must
+allowed in `pipeline_root/src/ai_guard.py`. All AI-backed stages must
 go through the shared guard.
 
 ---
@@ -126,7 +126,7 @@ the `Makefile`.
 After the run, you can inspect:
 
 - The generated HTML report in
-  `pipeline_root/output/arvms_specs/arvms_spec/arvms_spec_llm_analysis.html`
+  `pipeline_root/output/arvms_specs/arvms_spec/arvms_spec_ai_analysis.html`
 - The generated pipeline artifacts in
   `pipeline_root/artifacts/arvms_specs/arvms_spec/`
 
@@ -142,15 +142,15 @@ under `pipeline_root/output/...`.
 | S0    | Extractor      | Complete |
 | S1    | Normalizer     | Complete |
 | S2    | Preflight      | Complete |
-| S3    | LLM Structurer | Complete |
-| S4    | LLM Analyzer   | Complete |
+| S3    | AI Structurer | Complete |
+| S4    | AI Analyzer   | Complete |
 | S5    | Renderer       | Planned  |
 
 ---
 
 ## Domain Context
 
-This tool is designed for embedded systems and safety-critical engineering, targeting documents that follow standards such as ISO 26262 and ASPICE. The LLM analysis prompt is scoped to flag:
+This tool is designed for embedded systems and safety-critical engineering, targeting documents that follow standards such as ISO 26262 and ASPICE. The AI analysis prompt is scoped to flag:
 
 V1.0: 
 - Requirements quality including:
